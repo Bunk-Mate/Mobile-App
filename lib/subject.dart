@@ -1,105 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class TimeTable extends StatefulWidget {
-  const TimeTable({Key? key}) : super(key: key);
+  const TimeTable({super.key});
 
   @override
   State<TimeTable> createState() => _TimeTableState();
 }
 
 class _TimeTableState extends State<TimeTable> {
-  TextEditingController customController = TextEditingController();
-  List<String> Monday = ['MATHS', 'SCIENCE', 'PHYSICS'];
-
-  Future<String?> createAlertDialog(BuildContext context) {
-    return showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Enter the Subject Name"),
-          content: TextField(
-            controller: customController,
-          ),
-          actions: [
-            MaterialButton(
-              elevation: 5.0,
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop(customController.text);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
+  Map<String, dynamic> map1 = {'Maths': "Present", 'Science': "Present", 'Social Science': 2,'Physics':1,"Chemistry":1,"Electronics":1,"OOPS":1,"ADM":1,"MAOM":2};
   @override
   Widget build(BuildContext context) {
+    final currentDay = DateFormat('EEEE').format(DateTime.now());
+    print(currentDay);
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 19, 21, 28),
-      appBar: AppBar(backgroundColor: Color.fromARGB(255, 31, 36, 47),title: Text("Monday",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 32),)),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-             TableCalendar(
-  firstDay: DateTime.utc(2010, 10, 16),
-  lastDay: DateTime.utc(2030, 3, 14),
-  focusedDay: DateTime.now(),
-),
-            SizedBox(
-              width: 24,
-              height: 24,
-            ),  
-            Expanded(
-              child: ListView(
-                children: Monday.map((element) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1000000),
-                        ),
-                        child: Icon(Icons.mail,
-                            size: 52, color: Colors.white24),
-                      ),
-                      tileColor: Color.fromARGB(255, 19, 21, 28),
-                      title: Center(
-                        child: Text(
-                          element,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-       ],
+      backgroundColor: Color.fromARGB(255, 7, 9, 15),
+      appBar: AppBar(
+        title: Text(
+          currentDay,
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
         ),
+        backgroundColor: Color.fromARGB(255, 7, 9, 15),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          createAlertDialog(context).then((value) {
-            if (value != null) {
-              setState(() {
-                Monday.add(value);
-              });
-            }
-          });
-        },
-        child: Icon(Icons.add),
-      ),
+      body: ListView.builder(
+          itemCount: map1.length,
+          itemBuilder: (BuildContext context, int index) {
+            String key = map1.keys.elementAt(index);
+            return new Column(
+              children: [
+                GestureDetector(onTap: () {
+                        setState(() {
+                          map1[key] = "Absent";
+                        });
+                      },
+                      onDoubleTap: () {
+                        setState(() {
+                          map1[key] = "Cancelled";
+                        });
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          map1[key] = "Present";
+                        });
+                      }, child:ListTile(
+                    title: Text(
+                      "$key",
+                      style: TextStyle(color: Colors.white,fontSize: 32),
+                    ),
+                    trailing: Text(
+                      "${map1[key]}",
+                      style: TextStyle(color: Colors.white,fontSize: 15),
+                    ),
+                    
+                     
+                    )),
+                new Divider(
+                  height: 2.0,
+                )
+              ],
+            );
+          }),
     );
   }
 }

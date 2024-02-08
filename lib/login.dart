@@ -4,6 +4,7 @@ import 'package:attendence1/signup.dart';
 import 'package:attendence1/subject.dart';
 import 'package:attendence1/timetable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final apiUrl =
-      "https://1a39-2401-4900-2621-1db0-b3be-c063-762b-4f48.ngrok-free.app/login";
+      "https://80c3-2401-4900-32e5-8f4f-3f2d-483a-2617-7cdd.ngrok-free.app/login";
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   Future<void> sendPostRequest() async {
@@ -28,15 +29,55 @@ class _LoginPageState extends State<LoginPage> {
         }));
 
     if (response.statusCode == 202) {
+      print(response.body);
+      String token = response.body;
+      dynamic token1 = await getToken();
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Sign Succesfull"),
       ));
+      await saveToken(token1);
+      await verifyToken();
     } else {
       print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Your Password is weak/User already exists"),
       ));
     }
+  }
+
+  Future<void> verifyToken() async {
+    bool tokenExists = await isTokenStored();
+    if (tokenExists) {
+      String? token = await getToken();
+      print('Token exists: $token');
+    } else {
+      print('Token does not exist');
+    }
+  }
+
+  Future<bool> isTokenStored() async {
+    bool tokenExists = await storage.containsKey(key: 'token');
+    return tokenExists;
+  }
+
+  final storage = FlutterSecureStorage();
+
+  Future<void> saveToken(String token) async {
+    await storage.write(key: 'token', value: token);
+  }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: 'token');
+  }
+
+  Future<http.Response> makeAuthenticatedRequest(String apiUrl) async {
+    final token = await getToken();
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    return response;
   }
 
   @override
@@ -156,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignupPage()));
+                                  builder: (context) => MyWidget()));
                             },
                             child: Container(
                               child: Text("Signup ? ",

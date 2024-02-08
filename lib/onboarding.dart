@@ -1,11 +1,14 @@
+import 'package:attendence1/homepage.dart';
 import 'package:attendence1/login.dart';
 import 'package:attendence1/subject.dart';
+import 'package:attendence1/timetable.dart';
 import 'package:attendence1/timetablefinal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:date_field/date_field.dart';
+import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,9 +16,17 @@ Future<void> main() async {
   runApp(const OnBoard());
 }
 
-class OnBoard extends StatelessWidget {
+class OnBoard extends StatefulWidget {
   const OnBoard({super.key});
 
+  @override
+  State<OnBoard> createState() => _OnBoardState();
+}
+
+class _OnBoardState extends State<OnBoard> {
+  final apiUrl =
+      "https://80c3-2401-4900-32e5-8f4f-3f2d-483a-2617-7cdd.ngrok-free.app/logout";
+      
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,12 +75,12 @@ class OnBoard extends StatelessWidget {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ], // Only numbers can be entered
-                    initialValue: "75",
+
                     style: TextStyle(color: Colors.white24),
                     decoration: const InputDecoration(
                         hintText: 'Minimum Attendence',
                         border: OutlineInputBorder(),
-                        hintStyle: TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Colors.white24),
                         filled: true,
                         fillColor: Color.fromARGB(255, 17, 20, 27)),
                   ),
@@ -114,7 +125,7 @@ class OnBoard extends StatelessWidget {
                   GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => TimeTable()));
+                            builder: (context) => MyWidget()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

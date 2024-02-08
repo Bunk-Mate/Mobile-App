@@ -61,10 +61,12 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
+    
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
+    
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
@@ -105,11 +107,13 @@ class _MyWidgetState extends State<MyWidget> {
             radius: 30.0,
             backgroundImage: const NetworkImage(''),
             backgroundColor: Colors.transparent,
-            child: ClipOval(
+            child: GestureDetector( onTap: () {
+
+            },child:ClipOval(
               child: Image.network(
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
               ),
-            ),
+            )),
           ),
         ),
       ),
