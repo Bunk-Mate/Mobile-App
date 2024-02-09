@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:attendence1/global.dart';
 import 'package:attendence1/login.dart';
 import 'package:attendence1/onboarding.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +16,15 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final apiUrl =
-      "http://80c3-2401-4900-32e5-8f4f-3f2d-483a-2617-7cdd.ngrok-free.app/register";
+  final signUpUrl = apiUrl + '/register';
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   Future<void> sendPostRequest() async {
-    var response = await http.post(Uri.parse(apiUrl),
+    var response = await http.post(Uri.parse(signUpUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "username": UserNameController.text,
           "password": PasswordController.text,
-          
         }));
 
     if (response.statusCode == 201) {
@@ -39,7 +38,6 @@ class _SignupPageState extends State<SignupPage> {
       ));
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +100,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   TextField(
                     controller: PasswordController,
+                    
                     style: TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                         hintText: 'Password',
@@ -138,7 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                         child: Container(
                           child: Center(
                               child: Text(
-                            "SIGNUP",
+                            "Signup",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,

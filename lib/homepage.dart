@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:attendence1/global.dart';
+import 'package:attendence1/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,27 +53,58 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  final List<Subject> subjects = [
-    Subject(name: 'English', attendance: 76, bunks: 1),
-    Subject(name: 'Maths', attendance: 88, bunks: 0),
-    Subject(name: 'Science', attendance: 92, bunks: 0),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-    Subject(name: 'Maths ', attendance: 68, bunks: 2),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-    Subject(name: 'History', attendance: 68, bunks: 2),
-  ];
+  final storage = FlutterSecureStorage();
+  Future<String> getToken() async {
+    dynamic token = await storage.read(key: 'token');
+    print(token);
+    return token;
+  }
+
+  late dynamic stats = [];
+
+  Future<dynamic> getStats() async {
+    final response = await http.get(
+      Uri.parse(apiUrl + '/statquery'),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+      },
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        stats = jsonDecode(response.body);
+      });
+      print(stats);
+    } else {
+      throw Exception('Failed to retrieve statistics');
+    }
+  }
+
+  Future<dynamic> logout() async {
+    final response = await http.post(
+      Uri.parse(apiUrl + '/logout'),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+      },
+    );
+    if (response.statusCode == 200) {
+      print("It works");
+    } else {
+      throw Exception('Failed to retrieve statistics');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getStats();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
-    
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
@@ -88,7 +126,7 @@ class _MyWidgetState extends State<MyWidget> {
                   ),
                 ),
                 Text(
-                  "Abhinav Saxena",
+                  "User",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -107,13 +145,16 @@ class _MyWidgetState extends State<MyWidget> {
             radius: 30.0,
             backgroundImage: const NetworkImage(''),
             backgroundColor: Colors.transparent,
-            child: GestureDetector( onTap: () {
-
-            },child:ClipOval(
-              child: Image.network(
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
-              ),
-            )),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => TimeTable()));
+                },
+                child: ClipOval(
+                  child: Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
+                  ),
+                )),
           ),
         ),
       ),
@@ -122,39 +163,18 @@ class _MyWidgetState extends State<MyWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 300,
-              child: LineChart(
-                LineChartData(
-                  titlesData: FlTitlesData(),
-                  borderData: FlBorderData(show: true),
-                  gridData: FlGridData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: subjects
-                          .asMap()
-                          .map((index, subject) => MapEntry(
-                              index.toDouble(),
-                              FlSpot(index.toDouble(),
-                                  subject.attendance.toDouble())))
-                          .values
-                          .toList(),
-                      isCurved: true,
-                      color: Colors.blue,
-                      barWidth: 2,
-                      isStrokeCapRound: true,
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ElevatedButton(
+                onPressed: () {
+                  logout();
+                },
+                child: Text("Logout")),
             SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: subjects.length,
+                itemCount: stats.length,
                 itemBuilder: (context, index) {
-                  final subject = subjects[index];
+                  final subject = stats[index];
+
                   return ListTile(
                     leading: Icon(
                       getRandomSubjectIcon(),
@@ -162,11 +182,11 @@ class _MyWidgetState extends State<MyWidget> {
                       color: Colors.white,
                     ),
                     title: Text(
-                      subject.name,
+                      subject["name"],
                       style: TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(
-                      "Attendance: ${subject.attendance}%   Bunks: ${subject.bunks}",
+                      "Attendance: ${subject["percentage"]}%   Bunks: ${subject["bunks_available"]}",
                       style: TextStyle(color: Colors.white),
                     ),
                   );

@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:attendence1/global.dart';
 
 class LoginPage extends StatefulWidget {
+  
   const LoginPage({super.key});
 
   @override
@@ -16,12 +18,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final apiUrl =
-      "https://80c3-2401-4900-32e5-8f4f-3f2d-483a-2617-7cdd.ngrok-free.app/login";
+  late String username = UserNameController.text; 
+
+  final storage = FlutterSecureStorage();
+  final loginUrl = apiUrl + "/login";
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
-  Future<void> sendPostRequest() async {
-    var response = await http.post(Uri.parse(apiUrl),
+  Future<dynamic> sendPostRequest() async {
+    var response = await http.post(Uri.parse(loginUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "username": UserNameController.text,
@@ -29,54 +33,19 @@ class _LoginPageState extends State<LoginPage> {
         }));
 
     if (response.statusCode == 202) {
-      print(response.body);
-      String token = response.body;
-      dynamic token1 = await getToken();
+      String token = jsonDecode(response.body)["token"];
+      
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Sign Succesfull"),
+        content: Text("Sign in Succesfull"),
       ));
-      await saveToken(token1);
-      await verifyToken();
+      print(token);
+      await storage.write(key: 'token', value: token);
     } else {
-      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Your Password is weak/User already exists"),
+        content: Text("Login failed, please try again"),
       ));
     }
-  }
-
-  Future<void> verifyToken() async {
-    bool tokenExists = await isTokenStored();
-    if (tokenExists) {
-      String? token = await getToken();
-      print('Token exists: $token');
-    } else {
-      print('Token does not exist');
-    }
-  }
-
-  Future<bool> isTokenStored() async {
-    bool tokenExists = await storage.containsKey(key: 'token');
-    return tokenExists;
-  }
-
-  final storage = FlutterSecureStorage();
-
-  Future<void> saveToken(String token) async {
-    await storage.write(key: 'token', value: token);
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: 'token');
-  }
-
-  Future<http.Response> makeAuthenticatedRequest(String apiUrl) async {
-    final token = await getToken();
-    final response = await http.get(
-      Uri.parse(apiUrl),
-      headers: {'Authorization': 'Bearer $token'},
-    );
     return response;
   }
 
@@ -147,15 +116,20 @@ class _LoginPageState extends State<LoginPage> {
                       width: 50,
                       height: 10,
                     ),
-                    Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          "Forgot Password ?",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        )),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => MyWidget()));
+                        },
+                        child: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              "Forgot Password ?",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ))),
                     SizedBox(
                       width: 50,
                       height: 20,
@@ -164,12 +138,22 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                           onTap: () {
-                            sendPostRequest();
+                            sendPostRequest().then(
+                              (response) => {
+                                if (response.statusCode == 202)
+                                  {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) => MyWidget()),
+                                    ),
+                                  }
+                              },
+                            );
                           },
                           child: Container(
                             child: Center(
                                 child: Text(
-                              "LOGIN",
+                              "Login",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 24,
@@ -194,10 +178,14 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.w300),
                           ),
                         ),
+                        SizedBox(
+                          width: 25,
+                          height: 2,
+                        ),
                         GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MyWidget()));
+                                  builder: (context) => SignupPage()));
                             },
                             child: Container(
                               child: Text("Signup ? ",
