@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:line_icons/line_icons.dart';
 
 class TimeTable extends StatefulWidget {
   const TimeTable({super.key});
@@ -16,15 +17,36 @@ class TimeTable extends StatefulWidget {
 }
 
 class _TimeTableState extends State<TimeTable> with RouteAware {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Likes',
+      style: optionStyle,
+    ),
+    Text(
+      'Search',
+      style: optionStyle,
+    ),
+    Text(
+      'Profile',
+      style: optionStyle,
+    ),
+  ];
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
+    //ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override
   void dispose() {
-    ObserverUtils.routeObserver.unsubscribe(this);
+    //ObserverUtils.routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -67,7 +89,7 @@ class _TimeTableState extends State<TimeTable> with RouteAware {
     final response = await http.patch(
       Uri.parse(url),
       //http://8204-2401-4900-32f5-8fbf-3bb0-90ee-d369-d2bb.ngrok-free.app/session/32498
-       body: jsonEncode({"status": status}),
+      body: jsonEncode({"status": status}),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
         HttpHeaders.contentTypeHeader: "application/json",

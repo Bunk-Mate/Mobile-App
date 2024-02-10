@@ -5,12 +5,18 @@ import 'package:attendence1/global.dart';
 import 'package:attendence1/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:line_icons/line_icons.dart';
 
 void main() {
   runApp(MyApp());
+}
+extension StringCasingExtension on String {
+  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }
 
 List<IconData> subjectIcons = [
@@ -47,12 +53,20 @@ class Subject {
 
 class MyWidget extends StatefulWidget {
   const MyWidget({Key? key});
+  
 
   @override
   State<MyWidget> createState() => _MyWidgetState();
 }
 
 class _MyWidgetState extends State<MyWidget> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+  static const List<Widget> _children = <Widget>[
+  MyWidget(),
+  TimeTable(),
+];
   final storage = FlutterSecureStorage();
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
@@ -158,6 +172,7 @@ class _MyWidgetState extends State<MyWidget> {
           ),
         ),
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -182,7 +197,7 @@ class _MyWidgetState extends State<MyWidget> {
                       color: Colors.white,
                     ),
                     title: Text(
-                      subject["name"],
+                      subject["name"].toString().toTitleCase(),
                       style: TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(

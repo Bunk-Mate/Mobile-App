@@ -1,4 +1,5 @@
 import 'package:attendence1/homepage.dart';
+import 'package:attendence1/navigator.dart';
 import 'package:attendence1/onboarding.dart';
 import 'package:attendence1/signup.dart';
 import 'package:attendence1/subject.dart';
@@ -119,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MyWidget()));
+                              builder: (context) => Navigation()));
                         },
                         child: Align(
                             alignment: Alignment.topRight,
@@ -142,10 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                               (response) => {
                                 if (response.statusCode == 202)
                                   {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) => MyWidget()),
-                                    ),
+                                    Navigator.pushNamed(context, '/2')
                                   }
                               },
                             );

@@ -43,6 +43,7 @@ dependencies:
   http: ^1.2.0
   google_nav_bar: ^5.0.6
   flutter_secure_storage: ^9.0.0
+  line_icons: ^2.0.3
   
 
 dev_dependencies:
