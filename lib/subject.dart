@@ -9,55 +9,27 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:line_icons/line_icons.dart';
 
-class TimeTable extends StatefulWidget {
-  const TimeTable({super.key});
-
-  @override
-  State<TimeTable> createState() => _TimeTableState();
+Future<void> getStatus() async {
+  final state = TimeTableState();
+  await state.getStatus();
 }
 
-class _TimeTableState extends State<TimeTable> with RouteAware {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Likes',
-      style: optionStyle,
-    ),
-    Text(
-      'Search',
-      style: optionStyle,
-    ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
-  ];
+class TimeTable extends StatefulWidget {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    //ObserverUtils.routeObserver.subscribe(this, ModalRoute.of(context)!);
-  }
+  State<TimeTable> createState() => TimeTableState();
+}
 
-  @override
-  void dispose() {
-    //ObserverUtils.routeObserver.unsubscribe(this);
-    super.dispose();
-  }
-
-  @override
-  void didPush() {
-    super.didPush();
-    getStatus();
-  }
-
+class TimeTableState extends State<TimeTable> with RouteAware {
   late dynamic courses = [];
   final storage = FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    getStatus();
+    print('init state called');
+  }
+
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
     print(token);
@@ -68,10 +40,14 @@ class _TimeTableState extends State<TimeTable> with RouteAware {
     DateTime now = new DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(now);
 
+    //TEMP
+    today = DateFormat("yyyy-MM-dd").format(DateTime(2024, 2, 5));
+
     final response = await http.get(
       Uri.parse(apiUrl + '/datequery?date=$today'),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+        HttpHeaders.contentTypeHeader: "application/json"
       },
     );
     if (response.statusCode == 200) {

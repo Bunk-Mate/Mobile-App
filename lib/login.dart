@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
 class _LoginPageState extends State<LoginPage> {
   late String username = UserNameController.text; 
 
@@ -32,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           "username": UserNameController.text,
           "password": PasswordController.text,
         }));
-
+      
     if (response.statusCode == 202) {
       String token = jsonDecode(response.body)["token"];
       
@@ -54,8 +53,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      body: Center(
-        child: Column(
+      body: SingleChildScrollView(child:Center(
+        child:  Column(
           children: [
             Container(
                 color: Color.fromARGB(255, 13, 15, 21),
@@ -143,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                               (response) => {
                                 if (response.statusCode == 202)
                                   {
-                                    Navigator.pushNamed(context, '/2')
+                                    Navigator.pushNamed(context, '/4')
                                   }
                               },
                             );
@@ -197,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                 ))
           ],
         ),
-      ),
+      ),) 
     );
   }
 }

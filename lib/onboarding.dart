@@ -123,10 +123,10 @@ class _OnBoardState extends State<OnBoard> {
                     height: 50,
                   ),
                   GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MyWidget()));
-                      },
+                      // onTap: () {
+                      //   Navigator.of(context).push(MaterialPageRoute(
+                      //       builder: (context) => MyWidget()));
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(

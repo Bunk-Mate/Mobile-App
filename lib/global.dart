@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 
 String apiUrl =
-    "https://f3f6-2401-4900-22d5-9bb0-a276-f6db-efdc-c58d.ngrok-free.app";
+    "http://192.168.80.120:8000";
 
 
-// // class ObserverUtils {
-// static final RouteObserver<ModalRoute> routeObserver =
-//       RouteObserver<ModalRoute>();
-// }
+class ObserverUtils {
+static final RouteObserver<PageRoute> routeObserver =
+      RouteObserver<PageRoute>();
+}
+
