@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 String apiUrl =
-    "http://192.168.80.120:8000";
+    "https://attendencebackend.azurewebsites.net";
 
 
 class ObserverUtils {

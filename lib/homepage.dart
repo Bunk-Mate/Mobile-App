@@ -22,7 +22,59 @@ extension StringCasingExtension on String {
       .join(' ');
 }
 
-
+List<String> Hello = [
+    "Hello",            // English
+    "Hola",             // Spanish
+    "Bonjour",          // French
+    "Ciao",             // Italian
+    "Hallo",            // German
+    "Olá",              // Portuguese
+    "你好",               // Chinese (Simplified)
+    "こんにちは",           // Japanese
+    "नमस्ते",              // Hindi
+    "여보세요",              // Korean
+    "Merhaba",          // Turkish
+    "Привет",           // Russian
+    "مرحبا",             // Arabic
+    "Hej",              // Swedish
+    "Aloha",            // Hawaiian
+    "Hallå",            // Swedish
+    "Halo",             // Indonesian
+    "Sawubona",         // Zulu
+    "Hei",              // Finnish
+    "Բարև",              // Armenian
+    "გამარჯობა",          // Georgian
+    "Salut",            // Romanian
+    "Hei",              // Norwegian
+    "नमस्कार",            // Nepali
+    "Ողջույն",            // Armenian
+    "សួស្តី",              // Khmer
+    "Hej",              // Danish
+    "Szia",             // Hungarian
+    "ഹലോ",              // Malayalam
+    "Прывітанне",          // Belarusian
+    "ਸਤ ਸ੍ਰੀ ਅਕਾਲ",         // Punjabi
+    "வணக்கம்",             // Tamil
+    "Xin chào",          // Vietnamese
+    "Привіт",            // Ukrainian
+    "مرحبا",             // Urdu
+    "হ্যালো",              // Bengali
+    "ಹಲೋ",                // Kannada
+    "Բարև",               // Armenian
+    "नमस्कार",             // Marathi
+    "Բարև",               // Armenian
+    "ສະບາຍດີ",            // Lao
+    "မင်္ဂလာပါ",          // Burmese
+    "բարև",               // Armenian
+    "Բարև",               // Armenian
+    "بەخێربێیت",            // Kurdish
+    "Салам",             // Tajik
+    "ನಮಸ್ಕಾರ",             // Kannada
+    "سلام",               // Kurdish
+    "Բարև",               // Armenian
+    "բարև",               // Armenian
+    "سلام"                // Pashto
+];
 
 
 List<IconData> subjectIcons = [
@@ -152,157 +204,155 @@ class MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    List<AttendenceData> attendanceData = [
-      AttendenceData(75, "Maths"),
-      AttendenceData(75, "Science"),
-      AttendenceData(75, "Chemistry"),
-      AttendenceData(80, "English"),
-      // AttendenceData(70, "History"),
-      // AttendenceData(65, "Geography"),
-      //  AttendenceData(65, "EEE"),
-      //   AttendenceData(65, "MATHS"),
-      //    AttendenceData(65, "ECE"),
-      //     AttendenceData(65, "CSE"),
-    ];
+
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
+    String getRandomHello() {
+      var randomIndex = Random().nextInt(Hello.length);
+      return Hello[randomIndex];
+    }
 
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      appBar: AppBar(
-        toolbarHeight: 100,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "Good Morning,",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'alpha',
-                    fontWeight: FontWeight.w200,
-                  ),
-                ),
-                Text(
-                  "Alpha Beta Gamma",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    fontFamily: 'alpha',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        backgroundColor: const Color.fromARGB(255, 7, 9, 15),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: CircleAvatar(
-            radius: 30.0,
-            backgroundImage: const NetworkImage(''),
-            backgroundColor: Colors.transparent,
-            child: GestureDetector(
-                onTap: () async {
-                  final data = await SideSheet.left(
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      sheetColor: Color.fromARGB(255, 7, 9, 15),
-                      body: Column(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.3,
-                            height: MediaQuery.of(context).size.width * 0.3,
-                          ),
-                          IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () =>
-                                  Navigator.pop(context, 'Data Returns Left')),
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Color.fromARGB(255, 211, 255, 153))),
-                              onPressed: () {
-                                logout();
-                                Navigator.pushNamed(context, '/');
-                              },
-                              child: Text(
-                                "Logout",
-                                style: TextStyle(color: Colors.black),
-                              ))
-                        ],
+    return Container(
+      child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 7, 9, 15),
+        appBar: AppBar(
+          toolbarHeight: 100,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Text(
+                  //   "Good Morning,",
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //     fontFamily: 'alpha',
+                  //     fontWeight: FontWeight.w200,
+                  //   ),
+                  // ),
+                  Container(
+     
+                    child: Text(
+                      getRandomHello(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontFamily: 'alpha',
                       ),
-                      context: context);
-
-                  print(data);
-                },
-                child: ClipOval(
-                  child: Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
+                    ),
                   ),
-                )),
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Row(
-            //   children: [
-
-            //     // Padding(
-            //     //   padding: const EdgeInsets.all(15),
-            //     //   child: SizedBox (width: 350,height: 250, child:SfCartesianChart(
-            //     //     primaryXAxis: CategoryAxis(),
-            //     //     series: <BarSeries<AttendenceData, String>>[
-            //     //       BarSeries<AttendenceData, String>(
-            //     //         dataSource: attendanceData,
-            //     //         xValueMapper: (AttendenceData attendenceData, _) => attendenceData.subject,
-            //     //         yValueMapper: (AttendenceData attendenceData, _) => attendenceData.percentage,
-            //     //          width: 0.6,
-            //     //                       // Spacing between the bars
-            //     //                       spacing: 0.3 ,
-            //     //                       color: Color.fromARGB(255, 211, 255, 153),
-            //     //       )
-            //     //     ],
-            //     //   ),
-            //     // )),
-            //   ],
-            // ),
-            // SizedBox(height:  MediaQuery.of(context).size.width *  0.3),
-            Expanded(
-              child: ListView.builder(
-                itemCount: stats.length,
-                itemBuilder: (context, index) {
-                  final subject = stats[index];
-
-                  return ListTile(
-                    leading: Icon(
-                      getRandomSubjectIcon(),
-                      size: 62,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      subject["name"].toString().toTitleCase(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      "Attendance: ${subject["percentage"]}%   Bunks: ${subject["bunks_available"]}",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                },
+                ],
               ),
             ),
           ],
+          backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: CircleAvatar(
+              radius: 30.0,
+              backgroundImage: const NetworkImage(''),
+              backgroundColor: Colors.transparent,
+              child: GestureDetector(
+                  onTap: () async {
+                    final data = await SideSheet.left(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        sheetColor: Color.fromARGB(255, 7, 9, 15),
+                        body: Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.width * 0.3,
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => Navigator.pop(
+                                    context, 'Data Returns Left')),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all<
+                                            Color>(
+                                        Color.fromARGB(255, 211, 255, 153))),
+                                onPressed: () {
+                                  logout();
+                                  Navigator.pushNamed(context, '/');
+                                },
+                                child: Text(
+                                  "Logout",
+                                  style: TextStyle(color: Colors.black),
+                                ))
+                          ],
+                        ),
+                        context: context);
+
+                    print(data);
+                  },
+                  child: ClipOval(
+                    child: Image.network(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
+                    ),
+                  )),
+            ),
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Row(
+              //   children: [
+
+              //     // Padding(
+              //     //   padding: const EdgeInsets.all(15),
+              //     //   child: SizedBox (width: 350,height: 250, child:SfCartesianChart(
+              //     //     primaryXAxis: CategoryAxis(),
+              //     //     series: <BarSeries<AttendenceData, String>>[
+              //     //       BarSeries<AttendenceData, String>(
+              //     //         dataSource: attendanceData,
+              //     //         xValueMapper: (AttendenceData attendenceData, _) => attendenceData.subject,
+              //     //         yValueMapper: (AttendenceData attendenceData, _) => attendenceData.percentage,
+              //     //          width: 0.6,
+              //     //                       // Spacing between the bars
+              //     //                       spacing: 0.3 ,
+              //     //                       color: Color.fromARGB(255, 211, 255, 153),
+              //     //       )
+              //     //     ],
+              //     //   ),
+              //     // )),
+              //   ],
+              // ),
+              // SizedBox(height:  MediaQuery.of(context).size.width *  0.3),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: stats.length,
+                  itemBuilder: (context, index) {
+                    final subject = stats[index];
+
+                    return ListTile(
+                      leading: Icon(
+                        getRandomSubjectIcon(),
+                        size: 62,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        subject["name"].toString().toTitleCase(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        "Attendance: ${subject["percentage"]}%   Bunks: ${subject["bunks_available"]}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

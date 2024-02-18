@@ -229,11 +229,10 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
                                 height: 25,
                               ),
                               DropdownButtonFormField<String>(
-                                
                                 decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
-    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
                                     fillColor:
                                         Color.fromARGB(255, 211, 255, 153),
                                     filled: true,
@@ -262,10 +261,8 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
                             ],
                           ),
                         ),
-                       
                         Center(
                             child: Column(
-                              
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             DropdownButtonFormField<String>(
@@ -307,6 +304,13 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
 
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            _settingModalBottomSheet(context);
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         body: Center(
           child: SafeArea(
               child: Column(
@@ -341,7 +345,9 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
                           return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                color: Color.fromARGB(255, 13, 15, 21),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Color.fromARGB(255, 13, 15, 21)),
                                 child: ListTile(
                                   leading: Icon(
                                     getRandomSubjectIcon(),
@@ -361,15 +367,6 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
                   );
                 },
               )),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton(
-                      onPressed: () {
-                        _settingModalBottomSheet(context);
-                      },
-                      mini: true,
-                      child: Icon(Icons.add),
-                      shape: CircleBorder()))
             ],
           )),
         ));
