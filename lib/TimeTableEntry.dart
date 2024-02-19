@@ -446,7 +446,9 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                           return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                color: Color.fromARGB(255, 13, 15, 21),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Color.fromARGB(255, 13, 15, 21)),
                                 child: ListTile(
                                   leading: Icon(
                                     getRandomSubjectIcon(),
