@@ -9,23 +9,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:line_icons/line_icon.dart';
 
-List<String> days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-];
-String currentDay = days[0];
+Map<int, String> days = {
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+};
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
 class TimeTableEntry extends StatefulWidget {
-  const TimeTableEntry({super.key});
-
   @override
-  State<TimeTableEntry> createState() => _TimeTableEntryState();
+  State<TimeTableEntry> createState() => TimeTableEntryState();
 }
 
 List<IconData> subjectIcons = [
@@ -81,7 +76,7 @@ List<IconData> subjectIcons = [
   Icons.local_dining,
 ];
 
-class _TimeTableEntryState extends State<TimeTableEntry> {
+class TimeTableEntryState extends State<TimeTableEntry> {
   Future<void> showAlert() async {
     showDialog(
         context: context,
@@ -100,38 +95,8 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
         });
   }
 
-  Map<String, dynamic> schedule = {
-    // "monday": [
-    //   {"url": "http://127.0.0.1:8000/schedule/440", "name": "geometry"},
-    //   {"url": "http://127.0.0.1:8000/schedule/425", "name": "maths"},
-    //   {"url": "http://127.0.0.1:8000/schedule/434", "name": "algebra"},
-    //   {"url": "http://127.0.0.1:8000/schedule/443", "name": "calculus"},
-    // ],
-    // "tuesday": [
-    //   {"url": "http://127.0.0.1:8000/schedule/435", "name": "literature"},
-    //   {"url": "http://127.0.0.1:8000/schedule/426", "name": "English"},
-    //   {"url": "http://127.0.0.1:8000/schedule/427", "name": "English"},
-    //   {"url": "http://127.0.0.1:8000/schedule/436", "name": "literature"}
-    // ],
-    // "wednesday": [
-    //   {"url": "http://127.0.0.1:8000/schedule/441", "name": "world history"},
-    //   {"url": "http://127.0.0.1:8000/schedule/444", "name": "US history"},
-    //   {"url": "http://127.0.0.1:8000/schedule/428", "name": "history"},
-    //   {"url": "http://127.0.0.1:8000/schedule/437", "name": "geography"}
-    // ],
-    // "thursday": [
-    //   {"url": "http://127.0.0.1:8000/schedule/429", "name": "chemistry"},
-    //   {"url": "http://127.0.0.1:8000/schedule/438", "name": "biology"},
-    //   {"url": "http://127.0.0.1:8000/schedule/430", "name": "chemistry"},
-    //   {"url": "http://127.0.0.1:8000/schedule/432", "name": "physics"}
-    // ],
-    // "friday": [
-    //   {"url": "http://127.0.0.1:8000/schedule/439", "name": "computer science"},
-    //   {"url": "http://127.0.0.1:8000/schedule/431", "name": "physics"},
-    //   {"url": "http://127.0.0.1:8000/schedule/433", "name": "physics"},
-    //   {"url": "http://127.0.0.1:8000/schedule/442", "name": "art"}
-    // ]
-  };
+  List<dynamic> courses = [];
+  Map<String, dynamic> schedule = {};
   final storage = FlutterSecureStorage();
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
@@ -152,10 +117,27 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
       setState(() {
         schedule = jsonDecode(response.body);
       });
-      print(schedule);
-      getList();
+      getScheduleList();
     } else {
       throw Exception('Failed to retrieve schedule');
+    }
+  }
+
+  void getCourses() async {
+    final response = await http.get(
+      Uri.parse(apiUrl + '/courses'),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+      },
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        courses = jsonDecode(response.body);
+      });
+      print(
+          "= = = === === = ==  COURSES HAVE BEEN UPDATED! =  ===== = == == == ");
+    } else {
+      throw Exception('Failed to retrieve courses');
     }
   }
 
@@ -167,14 +149,14 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
       },
     );
     if (response.statusCode == 200) {
-      print("It works");
     } else {
       throw Exception('Failed to retrieve statistics');
     }
   }
 
   List<Map<String, dynamic>> schedule_list = [];
-  void getList() {
+  void getScheduleList() {
+    schedule_list.clear();
     schedule.forEach((key, value) {
       schedule_list.add({key: value});
     });
@@ -182,10 +164,8 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
 
   @override
   void initState() {
-    currentDay = days[0];
     getSchedule();
-
-    print(schedule);
+    getCourses();
     super.initState();
   }
 
@@ -197,115 +177,240 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
     }
 
     void _settingModalBottomSheet(context) {
+      late int _day;
+      String _course = "Course";
+      late String _scheduleUrl;
+      bool _useCourseDropDown = true;
+      TextEditingController _courseTextFieldController =
+          TextEditingController();
+
+      void activateDropDown() {
+        setState(() {
+          _useCourseDropDown = true;
+        });
+      }
+
+      void clearDropDown() {
+        setState(() {
+          _useCourseDropDown = false;
+        });
+      }
+
+      void addSchedule() async {
+        final response = await http.post(
+          Uri.parse(_scheduleUrl),
+          headers: {
+            HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+            HttpHeaders.contentTypeHeader: "application/json"
+          },
+          body: jsonEncode({"day_of_week": _day}),
+        );
+        if (response.statusCode == 201) {
+          Navigator.pop(context);
+          getSchedule();
+          // Signal updates on navigation
+          statusUpdate = true;
+          statsUpdate = true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Schedule has been added for pre-existing course!"),
+            ),
+          );
+        } else {
+          print(response.body);
+          print(response.statusCode);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Failed to add Schedule"),
+            ),
+          );
+          throw Exception('Failed to add schedule for pre-existing course');
+        }
+      }
+
+      void addCourse() async {
+        final response = await http.post(
+          Uri.parse(apiUrl + "/courses"),
+          headers: {
+            HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+            HttpHeaders.contentTypeHeader: "application/json"
+          },
+          body: jsonEncode(
+            {
+              "name": _course,
+              "schedules": {"day_of_week": _day},
+            },
+          ),
+        );
+        if (response.statusCode == 201) {
+          Navigator.pop(context);
+          getSchedule();
+          statusUpdate = true;
+          statsUpdate = true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Course had been added!"),
+            ),
+          );
+        } else {
+          print(response.body);
+          print(response.statusCode);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Failed to add course!"),
+            ),
+          );
+          throw Exception('Failed to add course!');
+        }
+      }
+
+      void submit() {
+        // If course already exists, just add a new schedule
+        if (_useCourseDropDown) {
+          addSchedule();
+        } else {
+          addCourse();
+        }
+        // _courseTextFieldController.dispose();
+      }
+
       showModalBottomSheet(
-          backgroundColor: Color.fromARGB(255, 13, 15, 21),
-          context: context,
-          builder: (BuildContext bc) {
-            return Padding(
-                padding: const EdgeInsets.all(12),
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    child: Wrap(
-                      children: <Widget>[
-                        TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Color.fromARGB(255, 211, 255, 153),
-                            border: OutlineInputBorder(),
-                            hintText: 'Enter your Subject Name(New**)',
+        backgroundColor: Color.fromARGB(255, 13, 15, 21),
+        context: context,
+        builder: (BuildContext bc) {
+          return Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: _courseTextFieldController,
+                  onChanged: (courseName) {
+                    if (courseName.isEmpty) {
+                      _course = "Course";
+                      activateDropDown();
+                    } else {
+                      _course = courseName;
+                      clearDropDown();
+                    }
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 211, 255, 153),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    hintText: 'Enter your Subject Name',
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownMenu<int>(
+                      inputDecorationTheme: InputDecorationTheme(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ),
-                        SizedBox(
-                          width: 25,
-                          height: 25,
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SizedBox(
-                                width: 25,
-                                height: 25,
-                              ),
-                              DropdownButtonFormField<String>(
-                                
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
-    ),
-                                    fillColor:
-                                        Color.fromARGB(255, 211, 255, 153),
-                                    filled: true,
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20))),
-                                isExpanded: true,
-                                value: currentDay,
-                                items: days.map((String e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e,
-                                    child: Text(
-                                      e,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String? value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      currentDay = value;
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
+                          fillColor: Color.fromARGB(255, 211, 255, 153),
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      hintText: "Day",
+                      onSelected: (day) {
+                        _day = day!;
+                      },
+                      dropdownMenuEntries: days.entries.map(
+                        (day) {
+                          return DropdownMenuEntry<int>(
+                            value: day.key,
+                            label: day.value,
+                          );
+                        },
+                      ).toList(),
+                    ),
+                    DropdownMenu<String>(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      inputDecorationTheme: InputDecorationTheme(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ),
-                       
-                        Center(
-                            child: Column(
-                              
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  fillColor: Color.fromARGB(255, 211, 255, 153),
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              isExpanded: true,
-                              value: currentDay,
-                              items: days.map((String e) {
-                                return DropdownMenuItem<String>(
-                                  value: e,
-                                  child: Text(
-                                    e,
-                                    style: TextStyle(color: Colors.black),
+                          fillColor: Color.fromARGB(255, 211, 255, 153),
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      initialSelection:
+                          _useCourseDropDown ? null : "New Course",
+                      hintText: "Course",
+                      onSelected: (scheduleUrl) {
+                        _courseTextFieldController.clear();
+                        activateDropDown();
+                        _scheduleUrl = scheduleUrl!;
+                      },
+                      dropdownMenuEntries: _useCourseDropDown
+                          ? courses.map(
+                              (course) {
+                                String courseName = course["name"]!;
+                                return DropdownMenuEntry<String>(
+                                  value: course["schedules_url"]!,
+                                  label: courseName,
+                                  labelWidget: Text(
+                                    courseName,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                if (value != null) {
-                                  setState(() {
-                                    currentDay = value;
-                                  });
-                                }
                               },
-                            ),
-                            Text(currentDay),
-                            ElevatedButton(
-                                onPressed: () {}, child: Text("Submit"))
-                          ],
-                        )),
-                      ],
+                            ).toList()
+                          : courses.map(
+                                (course) {
+                                  String courseName = course["name"]!;
+                                  return DropdownMenuEntry<String>(
+                                    value: course["schedules_url"]!,
+                                    label: courseName,
+                                    labelWidget: Text(
+                                      courseName,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                },
+                              ).toList() +
+                              [
+                                const DropdownMenuEntry(
+                                  value: "New Course",
+                                  label: "New Course",
+                                )
+                              ],
                     ),
-                  ),
-                ));
-          });
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 211, 255, 153),
+                          foregroundColor: Colors.black,
+                        ),
+                        onPressed: submit,
+                        child: Text("Submit"))),
+              ],
+            ),
+          );
+        },
+      );
     }
 
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _settingModalBottomSheet(context);
+          },
+          backgroundColor: Color.fromARGB(255, 211, 255, 153),
+          child: Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         body: Center(
           child: SafeArea(
@@ -361,15 +466,6 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
                   );
                 },
               )),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton(
-                      onPressed: () {
-                        _settingModalBottomSheet(context);
-                      },
-                      mini: true,
-                      child: Icon(Icons.add),
-                      shape: CircleBorder()))
             ],
           )),
         ));

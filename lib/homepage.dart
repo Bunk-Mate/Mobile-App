@@ -22,9 +22,6 @@ extension StringCasingExtension on String {
       .join(' ');
 }
 
-
-
-
 List<IconData> subjectIcons = [
   Icons.school,
   Icons.book,
@@ -124,7 +121,7 @@ class MyWidgetState extends State<MyWidget> {
       setState(() {
         stats = jsonDecode(response.body);
       });
-      print(stats);
+      statsUpdate = false;
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -138,7 +135,6 @@ class MyWidgetState extends State<MyWidget> {
       },
     );
     if (response.statusCode == 200) {
-      print("It works");
     } else {
       throw Exception('Failed to retrieve statistics');
     }

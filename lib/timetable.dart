@@ -19,12 +19,14 @@ class beta extends StatelessWidget {
     );
   }
 }
+
 class india extends StatefulWidget {
   const india({super.key});
 
   @override
   State<india> createState() => _TimeTableState();
 }
+
 class Subject {
   final String name;
   final int attendance;
@@ -36,12 +38,14 @@ class Subject {
     required this.bunks,
   });
 }
+
 List<IconData> subjectIcons = [
   Icons.school,
   Icons.book,
   Icons.star,
   Icons.people,
 ];
+
 class _TimeTableState extends State<india> {
   final storage = FlutterSecureStorage();
   Future<String> getToken() async {
@@ -51,7 +55,6 @@ class _TimeTableState extends State<india> {
   }
 
   late dynamic stats = [];
-  
 
   Future<dynamic> getStats() async {
     final response = await http.get(
@@ -64,7 +67,6 @@ class _TimeTableState extends State<india> {
       setState(() {
         stats = jsonDecode(response.body);
       });
-      print(stats);
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -75,10 +77,12 @@ class _TimeTableState extends State<india> {
     super.initState();
     getStats();
   }
+
   IconData getRandomSubjectIcon() {
-      var randomIndex = Random().nextInt(subjectIcons.length);
-      return subjectIcons[randomIndex];
-    }
+    var randomIndex = Random().nextInt(subjectIcons.length);
+    return subjectIcons[randomIndex];
+  }
+
   final List<Subject> monday = [
     Subject(name: 'English', attendance: 76, bunks: 1),
     Subject(name: 'Maths', attendance: 88, bunks: 0),
@@ -168,31 +172,30 @@ class _TimeTableState extends State<india> {
     return PageView(
       children: [
         Expanded(
-              child: ListView.builder(
-                itemCount: monday.length,
-                itemBuilder: (context, index) {
-                  final subject = monday[index];
-                  return ListTile(
-                    leading: Icon(
-                      getRandomSubjectIcon(),
-                      size: 62,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      subject.name,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      "Attendance: ${subject.attendance}%   Bunks: ${subject.bunks}",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-
+          child: ListView.builder(
+            itemCount: monday.length,
+            itemBuilder: (context, index) {
+              final subject = monday[index];
+              return ListTile(
+                leading: Icon(
+                  getRandomSubjectIcon(),
+                  size: 62,
+                  color: Colors.white,
+                ),
+                title: Text(
+                  subject.name,
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: Text(
+                  "Attendance: ${subject.attendance}%   Bunks: ${subject.bunks}",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 }
+
