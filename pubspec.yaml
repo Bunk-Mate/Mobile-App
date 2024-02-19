@@ -43,6 +43,10 @@ dependencies:
   http: ^1.2.0
   google_nav_bar: ^5.0.6
   flutter_secure_storage: ^9.0.0
+  line_icons: ^2.0.3
+  simple_drawer: ^0.0.11
+  side_sheet: ^1.0.4
+  syncfusion_flutter_charts: ^24.2.5
   
 
 dev_dependencies:

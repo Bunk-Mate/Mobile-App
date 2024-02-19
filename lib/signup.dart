@@ -37,13 +37,13 @@ class _SignupPageState extends State<SignupPage> {
         content: Text("Your Password is weak/User already exists"),
       ));
     }
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      body: Column(
+      body: SingleChildScrollView( child:Column(
         children: [
           Container(
               color: Color.fromARGB(255, 13, 15, 21),
@@ -177,6 +177,6 @@ class _SignupPageState extends State<SignupPage> {
               ))
         ],
       ),
-    );
+    ));
   }
 }
