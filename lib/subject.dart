@@ -71,6 +71,7 @@ Future<void> getStatus() async {
 }
 
 class TimeTable extends StatefulWidget {
+  TimeTable({required Key key}) : super(key: key);
   @override
   State<TimeTable> createState() => TimeTableState();
 }
@@ -83,7 +84,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
   void initState() {
     super.initState();
     getStatus();
-    print('init state called');
   }
 
   Future<String> getToken() async {
@@ -110,7 +110,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       setState(() {
         courses = jsonDecode(response.body);
       });
-      print(courses);
+      statusUpdate = false;
     } else {
       print(response.body);
       throw Exception('Failed to retrieve status');
@@ -129,11 +129,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     );
     if (response.statusCode == 200) {
       getStatus();
-      print(status);
+      // Signal the statistics page to update on navigation
+      statsUpdate = true;
     } else {
       print(response.body);
       print(response.statusCode);
-      print(url);
       throw Exception('Failed to update status');
     }
   }

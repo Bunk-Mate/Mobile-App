@@ -22,7 +22,8 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  GlobalKey<MyWidgetState> _childKey = GlobalKey();
+  GlobalKey<MyWidgetState> _statsGlobalKey = GlobalKey();
+  GlobalKey<TimeTableState> _statusGlobalKey = GlobalKey();
   int currentIndex = 0;
 
   static const TextStyle optionStyle =
@@ -34,7 +35,8 @@ class _NavigationState extends State<Navigation> {
       },
     );
     SimpleDrawer.activate("bottom");
-    _childKey.currentState?.getStats();
+    if (statsUpdate) _statsGlobalKey.currentState?.getStats();
+    if (statusUpdate) _statusGlobalKey.currentState?.getStatus();
   }
 
   @override
@@ -55,8 +57,8 @@ class _NavigationState extends State<Navigation> {
       id: "bottom",
     );
     List<Widget> _children = <Widget>[
-      MyWidget(key: _childKey),
-      TimeTable(),
+      MyWidget(key: _statsGlobalKey),
+      TimeTable(key: _statusGlobalKey),
       TimeTableEntry(),
     ];
 
@@ -65,7 +67,6 @@ class _NavigationState extends State<Navigation> {
         children: _children,
         index: currentIndex,
       ),
-      
       bottomNavigationBar: Stack(
         children: [
           Container(

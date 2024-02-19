@@ -23,59 +23,58 @@ extension StringCasingExtension on String {
 }
 
 List<String> Hello = [
-    "Hello",            // English
-    "Hola",             // Spanish
-    "Bonjour",          // French
-    "Ciao",             // Italian
-    "Hallo",            // German
-    "Olá",              // Portuguese
-    "你好",               // Chinese (Simplified)
-    "こんにちは",           // Japanese
-    "नमस्ते",              // Hindi
-    "여보세요",              // Korean
-    "Merhaba",          // Turkish
-    "Привет",           // Russian
-    "مرحبا",             // Arabic
-    "Hej",              // Swedish
-    "Aloha",            // Hawaiian
-    "Hallå",            // Swedish
-    "Halo",             // Indonesian
-    "Sawubona",         // Zulu
-    "Hei",              // Finnish
-    "Բարև",              // Armenian
-    "გამარჯობა",          // Georgian
-    "Salut",            // Romanian
-    "Hei",              // Norwegian
-    "नमस्कार",            // Nepali
-    "Ողջույն",            // Armenian
-    "សួស្តី",              // Khmer
-    "Hej",              // Danish
-    "Szia",             // Hungarian
-    "ഹലോ",              // Malayalam
-    "Прывітанне",          // Belarusian
-    "ਸਤ ਸ੍ਰੀ ਅਕਾਲ",         // Punjabi
-    "வணக்கம்",             // Tamil
-    "Xin chào",          // Vietnamese
-    "Привіт",            // Ukrainian
-    "مرحبا",             // Urdu
-    "হ্যালো",              // Bengali
-    "ಹಲೋ",                // Kannada
-    "Բարև",               // Armenian
-    "नमस्कार",             // Marathi
-    "Բարև",               // Armenian
-    "ສະບາຍດີ",            // Lao
-    "မင်္ဂလာပါ",          // Burmese
-    "բարև",               // Armenian
-    "Բարև",               // Armenian
-    "بەخێربێیت",            // Kurdish
-    "Салам",             // Tajik
-    "ನಮಸ್ಕಾರ",             // Kannada
-    "سلام",               // Kurdish
-    "Բարև",               // Armenian
-    "բարև",               // Armenian
-    "سلام"                // Pashto
+  "Hello", // English
+  "Hola", // Spanish
+  "Bonjour", // French
+  "Ciao", // Italian
+  "Hallo", // German
+  "Olá", // Portuguese
+  "你好", // Chinese (Simplified)
+  "こんにちは", // Japanese
+  "नमस्ते", // Hindi
+  "여보세요", // Korean
+  "Merhaba", // Turkish
+  "Привет", // Russian
+  "مرحبا", // Arabic
+  "Hej", // Swedish
+  "Aloha", // Hawaiian
+  "Hallå", // Swedish
+  "Halo", // Indonesian
+  "Sawubona", // Zulu
+  "Hei", // Finnish
+  "Բարև", // Armenian
+  "გამარჯობა", // Georgian
+  "Salut", // Romanian
+  "Hei", // Norwegian
+  "नमस्कार", // Nepali
+  "Ողջույն", // Armenian
+  "សួស្តី", // Khmer
+  "Hej", // Danish
+  "Szia", // Hungarian
+  "ഹലോ", // Malayalam
+  "Прывітанне", // Belarusian
+  "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", // Punjabi
+  "வணக்கம்", // Tamil
+  "Xin chào", // Vietnamese
+  "Привіт", // Ukrainian
+  "مرحبا", // Urdu
+  "হ্যালো", // Bengali
+  "ಹಲೋ", // Kannada
+  "Բարև", // Armenian
+  "नमस्कार", // Marathi
+  "Բարև", // Armenian
+  "ສະບາຍດີ", // Lao
+  "မင်္ဂလာပါ", // Burmese
+  "բարև", // Armenian
+  "Բարև", // Armenian
+  "بەخێربێیت", // Kurdish
+  "Салам", // Tajik
+  "ನಮಸ್ಕಾರ", // Kannada
+  "سلام", // Kurdish
+  "Բարև", // Armenian
+  "բարև", // Armenian
+  "سلام" // Pashto
 ];
-
 
 List<IconData> subjectIcons = [
   Icons.school,
@@ -176,7 +175,7 @@ class MyWidgetState extends State<MyWidget> {
       setState(() {
         stats = jsonDecode(response.body);
       });
-      print(stats);
+      statsUpdate = false;
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -190,7 +189,6 @@ class MyWidgetState extends State<MyWidget> {
       },
     );
     if (response.statusCode == 200) {
-      print("It works");
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -204,11 +202,11 @@ class MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
+
     String getRandomHello() {
       var randomIndex = Random().nextInt(Hello.length);
       return Hello[randomIndex];
@@ -235,7 +233,6 @@ class MyWidgetState extends State<MyWidget> {
                   //   ),
                   // ),
                   Container(
-     
                     child: Text(
                       getRandomHello(),
                       style: TextStyle(
