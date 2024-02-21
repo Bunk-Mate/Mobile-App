@@ -66,7 +66,6 @@ List<IconData> subjectIcons = [
   Icons.local_dining,
 ];
 
-TextEditingController textField = TextEditingController();
 Future<void> getStatus() async {
   final state = TimeTableState();
   await state.getStatus();
@@ -97,9 +96,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
   Future<dynamic> getStatus() async {
     DateTime now = new DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(now);
-
-    //TEMP
-    // today = DateFormat("yyyy-MM-dd").format(DateTime(2024, 2, 25));
 
     final response = await http.get(
       Uri.parse(apiUrl + '/datequery?date=$today'),
@@ -172,12 +168,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    if (courses.isEmpty) {
-      coursePresent = false;
-    } else {
-      coursePresent = true;
-    }
-
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
@@ -293,8 +283,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdownvalue = newValue!;
-                            textField.text =
-                                (items.indexOf(newValue) + 1).toString();
                             hello = items.indexOf(newValue) + 1;
                           });
                           addHoliday();

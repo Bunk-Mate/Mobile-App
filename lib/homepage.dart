@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendence1/global.dart';
+import 'package:attendence1/onboarding.dart';
 import 'package:attendence1/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -270,18 +271,37 @@ class MyWidgetState extends State<MyWidget> {
                                 onPressed: () => Navigator.pop(
                                     context, 'Data Returns Left')),
                             ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<
-                                            Color>(
-                                        Color.fromARGB(255, 211, 255, 153))),
-                                onPressed: () {
-                                  logout();
-                                  Navigator.pushNamed(context, '/');
-                                },
-                                child: Text(
-                                  "Logout",
-                                  style: TextStyle(color: Colors.black),
-                                ))
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 211, 255, 153),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => OnBoard()));
+                              },
+                              child: Text(
+                                "Timetable",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 211, 255, 153),
+                                ),
+                              ),
+                              onPressed: () {
+                                logout();
+                                Navigator.pushNamed(context, '/');
+                              },
+                              child: Text(
+                                "Logout",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            )
                           ],
                         ),
                         context: context);

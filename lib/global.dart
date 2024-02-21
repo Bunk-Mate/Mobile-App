@@ -8,4 +8,3 @@ class ObserverUtils {
   static final RouteObserver<PageRoute> routeObserver =
       RouteObserver<PageRoute>();
 }
-
