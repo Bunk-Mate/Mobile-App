@@ -8,15 +8,20 @@ import 'package:attendence1/subject.dart';
 import 'package:attendence1/timetable.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   // This widget is the root of your application.
+  bool _tokenExists = true;
+  void read_token() async {
+    final storage = FlutterSecureStorage();
+    _tokenExists = await storage.containsKey(key: 'token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,15 +29,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'alpha',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 211, 255, 153)),
         useMaterial3: true,
       ),
-      navigatorObservers: [ObserverUtils.routeObserver],  
+      navigatorObservers: [ObserverUtils.routeObserver],
       initialRoute: '/',
-      routes: {
-        '/': (context) => LoginPage(),
-        '/4': (context) => Navigation()
-      },
+      routes: {'/': (context) => LoginPage(), '/4': (context) => Navigation()},
     );
   }
 }

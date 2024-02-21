@@ -64,7 +64,6 @@ List<IconData> subjectIcons = [
   Icons.local_dining,
 ];
 
-
 Future<void> getStatus() async {
   final state = TimeTableState();
   await state.getStatus();
@@ -95,9 +94,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
   Future<dynamic> getStatus() async {
     DateTime now = new DateTime.now();
     String today = DateFormat('yyyy-MM-dd').format(now);
-
-    //TEMP
-    today = DateFormat("yyyy-MM-dd").format(DateTime(2024, 2, 5));
 
     final response = await http.get(
       Uri.parse(apiUrl + '/datequery?date=$today'),
@@ -140,11 +136,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    
     IconData getRandomSubjectIcon() {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
+
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
@@ -176,14 +172,17 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                       updateStatus(courses[index]["session_url"], "present");
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left:8.0,right: 8.0),
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Color.fromARGB(255, 13, 15, 21)),
-                        
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Color.fromARGB(255, 13, 15, 21)),
                         child: ListTile(
-                          leading: Icon(getRandomSubjectIcon(),size: 32,),
+                          leading: Icon(
+                            getRandomSubjectIcon(),
+                            size: 32,
+                          ),
                           iconColor: Colors.white,
-                        
                           title: Text(
                             "$name",
                             style: TextStyle(color: Colors.white, fontSize: 32),
@@ -195,8 +194,10 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         ),
                       ),
                     )),
-               SizedBox(width: 10,height: 10,)
-                
+                SizedBox(
+                  width: 10,
+                  height: 10,
+                )
               ],
             );
           }),
