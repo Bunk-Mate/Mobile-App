@@ -11,6 +11,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:line_icons/line_icons.dart';
 
+bool coursePresent = false;
+late int hello;
 List<IconData> subjectIcons = [
   Icons.school,
   Icons.book,
@@ -76,7 +78,7 @@ class TimeTable extends StatefulWidget {
 }
 
 class TimeTableState extends State<TimeTable> with RouteAware {
-  late dynamic courses = [];
+  dynamic courses = [];
   final storage = FlutterSecureStorage();
 
   @override
@@ -105,9 +107,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     if (response.statusCode == 200) {
       setState(() {
         courses = jsonDecode(response.body);
+        print(courses);
       });
       statusUpdate = false;
     } else {
+      print(response.statusCode);
       print(response.body);
       throw Exception('Failed to retrieve status');
     }
@@ -134,6 +138,34 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
+  void addHoliday() async {
+    final response = await http.post(
+      Uri.parse(apiUrl + "/schedule_selector"),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+        HttpHeaders.contentTypeHeader: "application/json"
+      },
+      body: jsonEncode(
+        {"day_of_week": hello},
+      ),
+    );
+    if (response.statusCode == 201) {
+      print(hello);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("TimeTable Selected"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("TimeTable not Selected"),
+        ),
+      );
+      throw Exception('Failed to add TimeTable');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     IconData getRandomSubjectIcon() {
@@ -141,66 +173,125 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       return subjectIcons[randomIndex];
     }
 
+    String dropdownvalue = 'Monday';
+    var items = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+    ];
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          currentDay,
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
-        ),
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      ),
-      body: ListView.builder(
-          itemCount: courses.length,
-          itemBuilder: (BuildContext context, int index) {
-            String name = courses[index]["name"].toString().toCapitalized();
-            String status = courses[index]["status"];
-            return new Column(
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      updateStatus(courses[index]["session_url"], "bunked");
-                    },
-                    onDoubleTap: () {
-                      updateStatus(courses[index]["session_url"], "cancelled");
-                    },
-                    onLongPress: () {
-                      //courses[index]["status"] = "Present";
-                      updateStatus(courses[index]["session_url"], "present");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color.fromARGB(255, 13, 15, 21)),
-                        child: ListTile(
-                          leading: Icon(
-                            getRandomSubjectIcon(),
-                            size: 32,
-                          ),
-                          iconColor: Colors.white,
-                          title: Text(
-                            "$name",
-                            style: TextStyle(color: Colors.white, fontSize: 32),
-                          ),
-                          trailing: Text(
-                            "$status",
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            currentDay,
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+          ),
+          backgroundColor: Color.fromARGB(255, 7, 9, 15),
+        ),
+        body: courses.isNotEmpty
+            ? ListView.builder(
+                itemCount: courses.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String name =
+                      courses[index]["name"].toString().toCapitalized();
+                  String status = courses[index]["status"];
+                  if (courses.isEmpty) {
+                    return Container(
+                      child: ElevatedButton(
+                          onPressed: () {}, child: Text("Hello World")),
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        if (currentDay == "Saturday") ...[
+                          Container(
+                            color: Colors.white,
+                            width: 20000,
+                            height: 20000,
+                          )
+                        ],
+                        GestureDetector(
+                            onTap: () {
+                              updateStatus(
+                                  courses[index]["session_url"], "bunked");
+                            },
+                            onDoubleTap: () {
+                              updateStatus(
+                                  courses[index]["session_url"], "cancelled");
+                            },
+                            onLongPress: () {
+                              //courses[index]["status"] = "Present";
+                              updateStatus(
+                                  courses[index]["session_url"], "present");
+                            },
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Color.fromARGB(255, 13, 15, 21)),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      getRandomSubjectIcon(),
+                                      size: 32,
+                                    ),
+                                    iconColor: Colors.white,
+                                    title: Text(
+                                      "$name",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 32),
+                                    ),
+                                    trailing: Text(
+                                      "$status",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    ),
+                                  ),
+                                ))),
+                        SizedBox(
+                          width: 10,
+                          height: 10,
+                        )
+                      ],
+                    );
+                  }
+                })
+            : Center(
+                child: DropdownMenuItem(
+                  child: Center(
+                    child: Container(
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
                       ),
-                    )),
-                SizedBox(
-                  width: 10,
-                  height: 10,
-                )
-              ],
-            );
-          }),
-    );
+                      child: DropdownButton(
+                        focusColor: Colors.white,
+                        value: dropdownvalue,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownvalue = newValue!;
+                            hello = items.indexOf(newValue) + 1;
+                          });
+                          addHoliday();
+                          getStatus();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ));
   }
 }
