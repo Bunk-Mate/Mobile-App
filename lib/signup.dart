@@ -32,7 +32,6 @@ class _SignupPageState extends State<SignupPage> {
         content: Text("SignUp Succesfull"),
       ));
     } else {
-      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Your Password is weak/User already exists"),
       ));
