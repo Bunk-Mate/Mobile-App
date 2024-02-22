@@ -34,8 +34,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       navigatorObservers: [ObserverUtils.routeObserver],
-      initialRoute: '/',
-      routes: {'/': (context) => LoginPage(), '/4': (context) => Navigation()},
+      initialRoute: _tokenExists ? '/mainPage' : '/',
+      routes: {
+        '/': (context) => LoginPage(),
+        '/mainPage': (context) => Navigation()
+      },
     );
   }
 }
