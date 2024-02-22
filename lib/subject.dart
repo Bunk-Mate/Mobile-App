@@ -7,11 +7,10 @@ import 'package:attendence1/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
-import 'package:line_icons/line_icons.dart';
 
 bool coursePresent = false;
+late int _day;
 late int hello;
 List<IconData> subjectIcons = [
   Icons.school,
@@ -71,6 +70,14 @@ Future<void> getStatus() async {
   await state.getStatus();
 }
 
+Map<int, String> days = {
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+};
+
 class TimeTable extends StatefulWidget {
   TimeTable({required Key key}) : super(key: key);
   @override
@@ -89,7 +96,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
-    print(token);
     return token;
   }
 
@@ -146,7 +152,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
         HttpHeaders.contentTypeHeader: "application/json"
       },
       body: jsonEncode(
-        {"day_of_week": hello},
+        {"day_of_week": _day},
       ),
     );
     if (response.statusCode == 201) {
@@ -173,14 +179,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       return subjectIcons[randomIndex];
     }
 
-    String dropdownvalue = 'Monday';
-    var items = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-    ];
+
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
@@ -265,31 +264,57 @@ class TimeTableState extends State<TimeTable> with RouteAware {
             : Center(
                 child: DropdownMenuItem(
                   child: Center(
-                    child: Container(
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: DropdownButton(
-                        focusColor: Colors.white,
-                        value: dropdownvalue,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownvalue = newValue!;
-                            hello = items.indexOf(newValue) + 1;
-                          });
-                          addHoliday();
-                          getStatus();
-                        },
-                      ),
-                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                              child: Text(
+                            "Select Schedule for the day : ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'alpha',
+                                fontSize: 25,
+                                fontWeight: FontWeight.w100),
+                          )),
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                          ),
+                          
+
+                             DropdownMenu(
+                              inputDecorationTheme: InputDecorationTheme(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  fillColor:
+                                      const Color.fromARGB(255, 211, 255, 153),
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                              dropdownMenuEntries: days.entries.map(
+                                (days) {
+                                  return DropdownMenuEntry<int>(
+                                      value: days.key, label: days.value
+                                      );
+                                },
+                              ).toList(),
+                              onSelected: (days) {
+                                _day = days!;
+                                addHoliday();
+                                getStatus();
+                              },
+                            ),
+
+                            //items.entries.map((String items) {
+                            //   return DropdownMenuItem(
+                            //     value: items,
+                            //     child: Text(items),
+                            //   );
+                            // }).toList(),
+                          
+                        ]),
                   ),
                 ),
               ));
