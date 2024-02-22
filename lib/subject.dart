@@ -7,9 +7,7 @@ import 'package:attendence1/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
-import 'package:line_icons/line_icons.dart';
 
 bool coursePresent = false;
 late int hello;
