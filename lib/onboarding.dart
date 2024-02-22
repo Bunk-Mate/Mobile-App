@@ -53,6 +53,7 @@ class _OnBoardState extends State<OnBoard> {
     if (response.statusCode == 201) {
       Navigator.pop(context);
       // Signal updates on navigation
+      statsUpdate = true;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Timetable details have been updated"),

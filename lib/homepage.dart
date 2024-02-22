@@ -164,8 +164,6 @@ class MyWidgetState extends State<MyWidget> {
   late dynamic stats = [];
 
   Future<dynamic> getStats() async {
-    print(
-        "= = = === === = ==  STATISTICS HAVE BEEN UPDATED! =  ===== = == == == ");
     final response = await http.get(
       Uri.parse(apiUrl + '/statquery'),
       headers: {
@@ -177,6 +175,11 @@ class MyWidgetState extends State<MyWidget> {
         stats = jsonDecode(response.body);
       });
       statsUpdate = false;
+    }
+    // Collection does not exist
+    else if (response.statusCode == 404) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const OnBoard()));
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -190,7 +193,19 @@ class MyWidgetState extends State<MyWidget> {
       },
     );
     if (response.statusCode == 200) {
+      await storage.delete(key: 'token');
+      Navigator.pushNamed(context, '/');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Logged out successfully"),
+        ),
+      );
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to log out"),
+        ),
+      );
       throw Exception('Failed to retrieve statistics');
     }
   }
@@ -263,7 +278,7 @@ class MyWidgetState extends State<MyWidget> {
                         body: Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.width * 0.2,
+                              height: MediaQuery.of(context).size.width * 0.25,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(12.0),
@@ -302,7 +317,6 @@ class MyWidgetState extends State<MyWidget> {
                                   ),
                                   onPressed: () {
                                     logout();
-                                    Navigator.pushNamed(context, '/');
                                   },
                                   child: Text(
                                     "Logout",
