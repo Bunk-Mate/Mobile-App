@@ -164,8 +164,6 @@ class MyWidgetState extends State<MyWidget> {
   late dynamic stats = [];
 
   Future<dynamic> getStats() async {
-    print(
-        "= = = === === = ==  STATISTICS HAVE BEEN UPDATED! =  ===== = == == == ");
     final response = await http.get(
       Uri.parse(apiUrl + '/statquery'),
       headers: {
@@ -177,6 +175,11 @@ class MyWidgetState extends State<MyWidget> {
         stats = jsonDecode(response.body);
       });
       statsUpdate = false;
+    }
+    // Collection does not exist
+    else if (response.statusCode == 404) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const OnBoard()));
     } else {
       throw Exception('Failed to retrieve statistics');
     }
@@ -190,7 +193,19 @@ class MyWidgetState extends State<MyWidget> {
       },
     );
     if (response.statusCode == 200) {
+      await storage.delete(key: 'token');
+      Navigator.pushNamed(context, '/');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Logged out successfully"),
+        ),
+      );
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to log out"),
+        ),
+      );
       throw Exception('Failed to retrieve statistics');
     }
   }
@@ -258,50 +273,67 @@ class MyWidgetState extends State<MyWidget> {
               child: GestureDetector(
                   onTap: () async {
                     final data = await SideSheet.left(
-                        width: MediaQuery.of(context).size.width * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         sheetColor: Color.fromARGB(255, 7, 9, 15),
                         body: Column(
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              height: MediaQuery.of(context).size.width * 0.3,
+                              height: MediaQuery.of(context).size.width * 0.25,
                             ),
-                            IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () => Navigator.pop(
-                                    context, 'Data Returns Left')),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 211, 255, 153),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      Color.fromARGB(255, 211, 255, 153),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => OnBoard()));
+                                  },
+                                  child: Text(
+                                    "Timetable",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => OnBoard()));
-                              },
-                              child: Text(
-                                "Timetable",
-                                style: TextStyle(color: Colors.black),
-                              ),
                             ),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                  Color.fromARGB(255, 211, 255, 153),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      Color.fromARGB(255, 211, 255, 153),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    logout();
+                                  },
+                                  child: Text(
+                                    "Logout",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ),
-                              onPressed: () {
-                                logout();
-                                Navigator.pushNamed(context, '/');
-                              },
-                              child: Text(
-                                "Logout",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            )
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: IconButton(
+                                  icon: Icon(Icons.close,
+                                      color:
+                                          Color.fromARGB(255, 211, 255, 153)),
+                                  onPressed: () => Navigator.pop(
+                                      context, 'Data Returns Left')),
+                            ),
                           ],
                         ),
                         context: context);
