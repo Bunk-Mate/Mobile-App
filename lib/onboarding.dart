@@ -1,16 +1,8 @@
-import 'package:attendence1/homepage.dart';
-import 'package:attendence1/login.dart';
-import 'package:attendence1/subject.dart';
-import 'package:attendence1/timetable.dart';
-import 'package:attendence1/timetablefinal.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:date_field/date_field.dart';
-import 'login.dart';
-import 'package:attendence1/global.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,7 +21,7 @@ class _OnBoardState extends State<OnBoard> {
   String _startDate = "";
   String _endDate = "";
 
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
     print(token);
@@ -38,7 +30,7 @@ class _OnBoardState extends State<OnBoard> {
 
   void submitTimetable() async {
     final response = await http.post(
-      Uri.parse(apiUrl + "/collection"),
+      Uri.parse("$apiUrl/collection"),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
         HttpHeaders.contentTypeHeader: "application/json"
@@ -60,8 +52,6 @@ class _OnBoardState extends State<OnBoard> {
         ),
       );
     } else {
-      print(response.body);
-      print(response.statusCode);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Could not update timetable details"),

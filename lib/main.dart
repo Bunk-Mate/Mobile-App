@@ -1,11 +1,5 @@
-import 'package:attendence1/TimeTableEntry.dart';
-import 'package:attendence1/homepage.dart';
 import 'package:attendence1/login.dart';
 import 'package:attendence1/navigator.dart';
-import 'package:attendence1/onboarding.dart';
-import 'package:attendence1/signup.dart';
-import 'package:attendence1/subject.dart';
-import 'package:attendence1/timetable.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

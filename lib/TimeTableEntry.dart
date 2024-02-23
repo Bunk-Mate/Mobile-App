@@ -105,10 +105,8 @@ class TimeTableEntryState extends State<TimeTableEntry> {
   }
 
   Future<dynamic> getSchedule() async {
-    print(
-        "= = = === === = ==  SCHEDULE HAVE BEEN UPDATED! =  ===== = == == == ");
     final response = await http.get(
-      Uri.parse(apiUrl + '/schedules'),
+      Uri.parse('$apiUrl/schedules'),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
       },
@@ -125,7 +123,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
 
   void getCourses() async {
     final response = await http.get(
-      Uri.parse(apiUrl + '/courses'),
+      Uri.parse('$apiUrl/courses'),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
       },
@@ -134,8 +132,6 @@ class TimeTableEntryState extends State<TimeTableEntry> {
       setState(() {
         courses = jsonDecode(response.body);
       });
-      print(
-          "= = = === === = ==  COURSES HAVE BEEN UPDATED! =  ===== = == == == ");
     } else {
       throw Exception('Failed to retrieve courses');
     }
@@ -143,7 +139,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
 
   Future<dynamic> logout() async {
     final response = await http.post(
-      Uri.parse(apiUrl + '/logout'),
+      Uri.parse('$apiUrl/logout'),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
       },
@@ -231,7 +227,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
 
       void addCourse() async {
         final response = await http.post(
-          Uri.parse(apiUrl + "/courses"),
+          Uri.parse("$apiUrl/courses"),
           headers: {
             HttpHeaders.authorizationHeader: "Token ${await getToken()}",
             HttpHeaders.contentTypeHeader: "application/json"
@@ -254,8 +250,6 @@ class TimeTableEntryState extends State<TimeTableEntry> {
             ),
           );
         } else {
-          print(response.body);
-          print(response.statusCode);
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

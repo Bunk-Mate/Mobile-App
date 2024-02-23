@@ -1,15 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:attendence1/TimeTableEntry.dart';
 import 'package:attendence1/global.dart';
 import 'package:attendence1/subject.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'dart:math';
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:attendence1/homepage.dart';
 import 'package:simple_drawer/simple_drawer.dart';
@@ -22,8 +16,8 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  GlobalKey<MyWidgetState> _statsGlobalKey = GlobalKey();
-  GlobalKey<TimeTableState> _statusGlobalKey = GlobalKey();
+  final GlobalKey<MyWidgetState> _statsGlobalKey = GlobalKey();
+  final GlobalKey<TimeTableState> _statusGlobalKey = GlobalKey();
   int currentIndex = 0;
 
   static const TextStyle optionStyle =
@@ -41,21 +35,6 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
-    Widget bottomSimpleDrawer = SimpleDrawer(
-      child: Container(
-        // round the corners & set color
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: Colors.green,
-        ),
-        width: MediaQuery.of(context).size.width,
-        height: 300,
-      ),
-      childHeight: 300,
-      direction: Direction.bottom,
-      id: "bottom",
-    );
     List<Widget> _children = <Widget>[
       MyWidget(key: _statsGlobalKey),
       TimeTable(key: _statusGlobalKey),
@@ -64,8 +43,8 @@ class _NavigationState extends State<Navigation> {
 
     return Scaffold(
       body: IndexedStack(
-        children: _children,
         index: currentIndex,
+        children: _children,
       ),
       bottomNavigationBar: Stack(
         children: [
@@ -93,8 +72,8 @@ class _NavigationState extends State<Navigation> {
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   duration: Duration(milliseconds: 400),
                   tabBackgroundColor: Color.fromARGB(255, 211, 255, 153),
-                  color: Color.fromARGB(255, 211, 255, 153),
-                  tabs: [
+                  color: const Color.fromARGB(255, 211, 255, 153),
+                  tabs: const [
                     GButton(
                       icon: LineIcons.home,
                       text: 'Home',
