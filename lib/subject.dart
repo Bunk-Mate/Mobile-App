@@ -99,27 +99,54 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     return token;
   }
 
-  Future<dynamic> getStatus() async {
-    DateTime now = new DateTime.now();
-    String today = DateFormat('yyyy-MM-dd').format(now);
-
-    final response = await http.get(
-      Uri.parse(apiUrl + '/datequery?date=$today'),
-      headers: {
-        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
-        HttpHeaders.contentTypeHeader: "application/json"
-      },
-    );
-    if (response.statusCode == 200) {
-      setState(() {
-        courses = jsonDecode(response.body);
-        print(courses);
-      });
-      statusUpdate = false;
+  Future<dynamic> getStatus({DateTime? date}) async {
+    if (date == null) {
+      DateTime now = new DateTime.now();
+      String today = DateFormat('yyyy-MM-dd').format(now);
+      final response = await http.get(
+        Uri.parse(apiUrl + '/datequery?date=$today'),
+        headers: {
+          HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+          HttpHeaders.contentTypeHeader: "application/json"
+        },
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          courses = jsonDecode(response.body);
+          print(courses);
+          print(response.body);
+        });
+        statusUpdate = false;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        throw Exception('Failed to retrieve status');
+      }
+      return today;
     } else {
-      print(response.statusCode);
-      print(response.body);
-      throw Exception('Failed to retrieve status');
+      String today = DateFormat('yyyy-MM-dd').format(date);
+      print(today);
+      final response = await http.get(
+        Uri.parse(apiUrl + '/datequery?date=$today'),
+        headers: {
+          HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+          HttpHeaders.contentTypeHeader: "application/json"
+        },
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          courses = jsonDecode(response.body);
+          print(courses);
+          print(response.body);
+          print(response.statusCode);
+        });
+        statusUpdate = false;
+      } else {
+        print(response.statusCode);
+        print(response.body);
+        throw Exception('Failed to retrieve status');
+      }
+      return today;
     }
   }
 
@@ -172,6 +199,25 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print(picked);
+        getStatus(date: picked);
+        print(picked);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     IconData getRandomSubjectIcon() {
@@ -179,11 +225,22 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       return subjectIcons[randomIndex];
     }
 
-
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                  Color.fromARGB(255, 211, 255, 153),
+                )),
+                onPressed: () {
+                  _selectDate(context);
+                },
+                child:
+                    Text("REWIND TIME", style: TextStyle(color: Colors.black))),
+          ],
           automaticallyImplyLeading: false,
           title: Text(
             currentDay,
@@ -212,7 +269,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                             color: Colors.white,
                             width: 20000,
                             height: 20000,
-                          )
+                          ),
                         ],
                         GestureDetector(
                             onTap: () {
@@ -256,7 +313,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         SizedBox(
                           width: 10,
                           height: 10,
-                        )
+                        ),
                       ],
                     );
                   }
@@ -281,39 +338,36 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                             width: 30,
                             height: 30,
                           ),
-                          
 
-                             DropdownMenu(
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  fillColor:
-                                      const Color.fromARGB(255, 211, 255, 153),
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              dropdownMenuEntries: days.entries.map(
-                                (days) {
-                                  return DropdownMenuEntry<int>(
-                                      value: days.key, label: days.value
-                                      );
-                                },
-                              ).toList(),
-                              onSelected: (days) {
-                                _day = days!;
-                                addHoliday();
-                                getStatus();
+                          DropdownMenu(
+                            inputDecorationTheme: InputDecorationTheme(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                fillColor:
+                                    const Color.fromARGB(255, 211, 255, 153),
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            dropdownMenuEntries: days.entries.map(
+                              (days) {
+                                return DropdownMenuEntry<int>(
+                                    value: days.key, label: days.value);
                               },
-                            ),
+                            ).toList(),
+                            onSelected: (days) {
+                              _day = days!;
+                              addHoliday();
+                              getStatus();
+                            },
+                          ),
 
-                            //items.entries.map((String items) {
-                            //   return DropdownMenuItem(
-                            //     value: items,
-                            //     child: Text(items),
-                            //   );
-                            // }).toList(),
-                          
+                          //items.entries.map((String items) {
+                          //   return DropdownMenuItem(
+                          //     value: items,
+                          //     child: Text(items),
+                          //   );
+                          // }).toList(),
                         ]),
                   ),
                 ),

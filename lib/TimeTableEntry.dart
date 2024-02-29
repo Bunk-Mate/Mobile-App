@@ -77,23 +77,6 @@ List<IconData> subjectIcons = [
 ];
 
 class TimeTableEntryState extends State<TimeTableEntry> {
-  Future<void> showAlert() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Add Period"),
-            content: const Text("This is a test dialog"),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("Ok"))
-            ],
-          );
-        });
-  }
 
   List<dynamic> courses = [];
   Map<String, dynamic> schedule = {};
@@ -271,205 +254,208 @@ class TimeTableEntryState extends State<TimeTableEntry> {
       }
 
       showModalBottomSheet(
-        
-        backgroundColor: Color.fromARGB(255, 13, 15, 21),
-        context: context,
-        builder: (context) => 
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(top: 20,  right: 20,  left: 20,
-                          bottom: MediaQuery.of(context).viewInsets.bottom + 20 ),
-              child:  Column(
-                
-                          
-                
-              
-                
-                  mainAxisSize: MainAxisSize.min,
-                  
-                children: <Widget>[
-                  TextField(
-                    controller: _courseTextFieldController,
-                    onChanged: (courseName) {
-                      if (courseName.isEmpty) {
-                        _course = "Course";
-                        activateDropDown();
-                      } else {
-                        _course = courseName;
-                        clearDropDown();
-                      }
-                    },
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 211, 255, 153),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Enter your Subject Name',
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        DropdownMenu<int>(
-                                          inputDecorationTheme: InputDecorationTheme(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    fillColor: Color.fromARGB(255, 211, 255, 153),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                                          hintText: "Day",
-                                          onSelected: (day) {
-                  _day = day!;
-                                          },
-                                          dropdownMenuEntries: days.entries.map(
-                  (day) {
-                    return DropdownMenuEntry<int>(
-                      value: day.key,
-                      label: day.value,
-                    );
-                  },
-                                          ).toList(),
-                                        ),
-                                        DropdownMenu<String>(
-                                          width: MediaQuery.of(context).size.width * 0.44,
-                                          inputDecorationTheme: InputDecorationTheme(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    fillColor: Color.fromARGB(255, 211, 255, 153),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                                          initialSelection:
-                    _useCourseDropDown ? null : "New Course",
-                                          hintText: "Course",
-                                          onSelected: (scheduleUrl) {
-                  _courseTextFieldController.clear();
-                  activateDropDown();
-                  _scheduleUrl = scheduleUrl!;
-                                          },
-                                          dropdownMenuEntries: _useCourseDropDown
-                    ? courses.map(
-                        (course) {
-                          String courseName = course["name"]!;
-                          return DropdownMenuEntry<String>(
-                            value: course["schedules_url"]!,
-                            label: courseName,
-                            labelWidget: Text(
-                              courseName,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          );
-                        },
-                      ).toList()
-                    : courses.map(
-                          (course) {
-                            String courseName = course["name"]!;
-                            return DropdownMenuEntry<String>(
-                              value: course["schedules_url"]!,
-                              label: courseName,
-                              labelWidget: Text(
-                                courseName,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
+          backgroundColor: Color.fromARGB(255, 13, 15, 21),
+          context: context,
+          builder: (context) => SingleChildScrollView(
+                child: Padding(
+                    padding: EdgeInsets.only(
+                        top: 20,
+                        right: 20,
+                        left: 20,
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+                    child: Column(
+
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        
+                        TextField(
+                          controller: _courseTextFieldController,
+                          onChanged: (courseName) {
+                            if (courseName.isEmpty) {
+                              _course = "Course";
+                              activateDropDown();
+                            } else {
+                              _course = courseName;
+                              clearDropDown();
+                            }
                           },
-                        ).toList() +
-                        [
-                          const DropdownMenuEntry(
-                            value: "New Course",
-                            label: "New Course",
-                          )
-                        ],
-                                        ),
-                                      ],
-                                    ),
-                  
-                  
-                Center(
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 211, 255, 153),
-                            foregroundColor: Colors.black,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color.fromARGB(255, 211, 255, 153),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            hintText: 'Enter your Subject Name',
                           ),
-                          onPressed: submit,
-                          child: Text("Submit")))],
-              )),
-          ));
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DropdownMenu<int>(
+                              inputDecorationTheme: InputDecorationTheme(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  fillColor: Color.fromARGB(255, 211, 255, 153),
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                              hintText: "Day",
+                              onSelected: (day) {
+                                _day = day!;
+                              },
+                              dropdownMenuEntries: days.entries.map(
+                                (day) {
+                                  return DropdownMenuEntry<int>(
+                                    value: day.key,
+                                    label: day.value,
+                                  );
+                                },
+                              ).toList(),
+                            ),
+                            DropdownMenu<String>(
+                              width: MediaQuery.of(context).size.width * 0.44,
+                              inputDecorationTheme: InputDecorationTheme(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  fillColor: Color.fromARGB(255, 211, 255, 153),
+                                  filled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                              initialSelection:
+                                  _useCourseDropDown ? null : "New Course",
+                              hintText: "Course",
+                              onSelected: (scheduleUrl) {
+                                _courseTextFieldController.clear();
+                                activateDropDown();
+                                _scheduleUrl = scheduleUrl!;
+                              },
+                              dropdownMenuEntries: _useCourseDropDown
+                                  ? courses.map(
+                                      (course) {
+                                        String courseName = course["name"]!;
+                                        return DropdownMenuEntry<String>(
+                                          value: course["schedules_url"]!,
+                                          label: courseName,
+                                          labelWidget: Text(
+                                            courseName,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      },
+                                    ).toList()
+                                  : courses.map(
+                                        (course) {
+                                          String courseName = course["name"]!;
+                                          return DropdownMenuEntry<String>(
+                                            value: course["schedules_url"]!,
+                                            label: courseName,
+                                            labelWidget: Text(
+                                              courseName,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          );
+                                        },
+                                      ).toList() +
+                                      [
+                                        const DropdownMenuEntry(
+                                          value: "New Course",
+                                          label: "New Course",
+                                        )
+                                      ],
+                            ),
+                          ],
+                        ),
+                        Center(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 211, 255, 153),
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: submit,
+                                child: Text("Submit")))
+                      ],
+                    )),
+              ));
     }
 
-    return Padding( padding: MediaQuery.of(context).viewInsets, child:Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _settingModalBottomSheet(context);
-          },
-          backgroundColor: Color.fromARGB(255, 211, 255, 153),
-          child: Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        backgroundColor: Color.fromARGB(255, 7, 9, 15),
-        body: Center(
-          child: SafeArea(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                  child: ListView.builder(
-                itemCount: schedule_list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final dayData = schedule_list[index];
-                  final dayName = dayData.keys.first;
-                  final itemList = (dayData[dayName] as List<dynamic>?) ?? [];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Center(
-                              child: Text(dayName.toString().toTitleCase(),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold)))),
-                      SizedBox(height: 8),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: itemList.length,
-                        itemBuilder: (BuildContext context, int itemIndex) {
-                          final item = itemList[itemIndex];
-                          final itemName = item['name'];
-                          return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Color.fromARGB(255, 13, 15, 21)),
-                                child: ListTile(
-                                  leading: Icon(
-                                    getRandomSubjectIcon(),
-                                    size: 62,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text(
-                                    itemName.toString().toTitleCase(),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ));
-                        },
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  );
-                },
+    return Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: Scaffold(
+          
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _settingModalBottomSheet(context);
+              },
+              backgroundColor: Color.fromARGB(255, 211, 255, 153),
+              child: Icon(Icons.add),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            backgroundColor: Color.fromARGB(255, 7, 9, 15),
+            body: Center(
+              
+              child: SafeArea(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                 
+                  Expanded(
+                      child: ListView.builder(
+                    itemCount: schedule_list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final dayData = schedule_list[index];
+                      final dayName = dayData.keys.first;
+                      final itemList =
+                          (dayData[dayName] as List<dynamic>?) ?? [];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Center(
+                                  child: Text(dayName.toString().toTitleCase(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold)))),
+                          SizedBox(height: 8),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: itemList.length,
+                            itemBuilder: (BuildContext context, int itemIndex) {
+                              final item = itemList[itemIndex];
+                              final itemName = item['name'];
+                              return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Color.fromARGB(255, 13, 15, 21)),
+                                    child: ListTile(
+                                      leading: Icon(
+                                        getRandomSubjectIcon(),
+                                        size: 62,
+                                        color: Colors.white,
+                                      ),
+                                      title: Text(
+                                        itemName.toString().toTitleCase(),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ));
+                            },
+                          ),
+                          SizedBox(height: 16),
+                        ],
+                      );
+                    },
+                  )),
+                ],
               )),
-            ],
-          )),
-        )));
+            )));
   }
 }

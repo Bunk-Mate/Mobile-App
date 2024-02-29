@@ -64,6 +64,7 @@ class _OnBoardState extends State<OnBoard> {
     }
   }
 
+
   void timeTablePresets() async {
     final response = await http.post(
       Uri.parse("$apiUrl/collection_selector"),
@@ -91,7 +92,6 @@ class _OnBoardState extends State<OnBoard> {
       throw Exception('Failed to add schedule for pre-existing course');
     }
   }
-
   List<dynamic> hello = [];
   // ignore: non_constant_identifier_names
   Future<dynamic> getTimeTable() async {
@@ -233,7 +233,7 @@ class _OnBoardState extends State<OnBoard> {
                     SizedBox(
                       width: 500,
                       height: 25,
-                    ),
+),
                     DropdownMenuItem(
                       child: Center(
                         child: FutureBuilder(
@@ -267,6 +267,7 @@ class _OnBoardState extends State<OnBoard> {
                         ),
                       ),
                     ),
+                   
                     GestureDetector(
                         onTap: () {
                           if (_endDate.isNotEmpty &&
