@@ -228,206 +228,158 @@ class MyWidgetState extends State<MyWidget> {
       return Hello[randomIndex];
     }
 
-    return Container(
-      child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 7, 9, 15),
-        appBar: AppBar(
-          toolbarHeight: 100,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Text(
-                  //   "Good Morning,",
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontFamily: 'alpha',
-                  //     fontWeight: FontWeight.w200,
-                  //   ),
-                  // ),
-                  Container(
-                    child: Text(
-                      getRandomHello(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        fontFamily: 'alpha',
-                      ),
-                    ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 7, 9, 15),
+      appBar: AppBar(
+        toolbarHeight: 100,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  getRandomHello(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    fontFamily: 'alpha',
                   ),
-                ],
-              ),
-            ),
-          ],
-          backgroundColor: const Color.fromARGB(255, 7, 9, 15),
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: CircleAvatar(
-              radius: 30.0,
-              backgroundImage: const NetworkImage(''),
-              backgroundColor: Colors.transparent,
-              child: GestureDetector(
-                  onTap: () async {
-                    final data = await SideSheet.left(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        sheetColor: Color.fromARGB(255, 7, 9, 15),
-                        body: Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.width * 0.25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                      Color.fromARGB(255, 211, 255, 153),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => OnBoard()));
-                                  },
-                                  child: Text(
-                                    "Timetable",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                      Color.fromARGB(255, 211, 255, 153),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    logout();
-                                  },
-                                  child: Text(
-                                    "Logout",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: IconButton(
-                                  icon: Icon(Icons.close,
-                                      color:
-                                          Color.fromARGB(255, 211, 255, 153)),
-                                  onPressed: () => Navigator.pop(
-                                      context, 'Data Returns Left')),
-                            ),
-                          ],
-                        ),
-                        context: context);
-
-                    print(data);
-                  },
-                  child: ClipOval(
-                    child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
-                    ),
-                  )),
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Row(
-              //   children: [
-
-              //     // Padding(
-              //     //   padding: const EdgeInsets.all(15),
-              //     //   child: SizedBox (width: 350,height: 250, child:SfCartesianChart(
-              //     //     primaryXAxis: CategoryAxis(),
-              //     //     series: <BarSeries<AttendenceData, String>>[
-              //     //       BarSeries<AttendenceData, String>(
-              //     //         dataSource: attendanceData,
-              //     //         xValueMapper: (AttendenceData attendenceData, _) => attendenceData.subject,
-              //     //         yValueMapper: (AttendenceData attendenceData, _) => attendenceData.percentage,
-              //     //          width: 0.6,
-              //     //                       // Spacing between the bars
-              //     //                       spacing: 0.3 ,
-              //     //                       color: Color.fromARGB(255, 211, 255, 153),
-              //     //       )
-              //     //     ],
-              //     //   ),
-              //     // )),
-              //   ],
-              // ),
-              // SizedBox(height:  MediaQuery.of(context).size.width *  0.3),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: stats.length,
-                  itemBuilder: (context, index) {
-                    final subject = stats[index];
-
-                    return Column(
-                      children: [
-                        
-                        ListTile(
-                            leading: Icon(
-                              getRandomSubjectIcon(),
-                              size: 62,
-                              color: Colors.white,
-                            ),
-                            title: Text(
-                              subject["name"].toString().toTitleCase(),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              "Attendance: ${subject["percentage"]}%",
-                              style: TextStyle(
-                                  color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
-                            trailing: Expanded(
-                              child: 
-                                
-                                  CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor:
-                                        Color.fromARGB(255, 211, 255, 153),
-                                    child: Text(
-                                      "${subject["bunks_available"]}",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                
-                              
-                            )),
-//                       Divider(color: Color.fromARGB(255, 211, 255, 153),thickness: 0.5, // Set the thickness to half of the default value
-//  indent: .0,) 
-],
-                    );
-                  },
                 ),
-              ),
-            ]
+              ],
+            ),
+          ),
+        ],
+        backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: CircleAvatar(
+            radius: 30.0,
+            backgroundImage: const NetworkImage(''),
+            backgroundColor: Colors.transparent,
+            child: GestureDetector(
+                onTap: () async {
+                  final data = await SideSheet.left(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      sheetColor: Color.fromARGB(255, 7, 9, 15),
+                      body: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.25,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    Color.fromARGB(255, 211, 255, 153),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => OnBoard()));
+                                },
+                                child: Text(
+                                  "Timetable",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    Color.fromARGB(255, 211, 255, 153),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  logout();
+                                },
+                                child: Text(
+                                  "Logout",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: IconButton(
+                                icon: Icon(Icons.close,
+                                    color: Color.fromARGB(255, 211, 255, 153)),
+                                onPressed: () => Navigator.pop(
+                                    context, 'Data Returns Left')),
+                          ),
+                        ],
+                      ),
+                      context: context);
+
+                  print(data);
+                },
+                child: ClipOval(
+                  child: Image.network(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
+                  ),
+                )),
           ),
         ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: stats.length,
+              itemBuilder: (context, index) {
+                final subject = stats[index];
+                return Column(
+                  children: [
+                    ListTile(
+                        leading: Icon(
+                          getRandomSubjectIcon(),
+                          size: 62,
+                          color: Colors.white,
+                        ),
+                        title: Text(
+                          subject["name"].toString().toTitleCase(),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          "Attendance: ${subject["percentage"]}%",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Expanded(
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Color.fromARGB(255, 211, 255, 153),
+                            child: Text(
+                              "${subject["bunks_available"]}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )),
+                  ],
+                );
+              },
+            ),
+          ),
+        ]),
       ),
     );
   }

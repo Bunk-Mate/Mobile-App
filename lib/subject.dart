@@ -229,24 +229,28 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
-          actions: [
-            ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                  Color.fromARGB(255, 211, 255, 153),
-                )),
-                onPressed: () {
-                  _selectDate(context);
-                },
-                child:
-                    Text("REWIND TIME", style: TextStyle(color: Colors.black))),
+          actions: [Row(
+            children: [
+              Text(
+                currentDay,
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+              ),SizedBox(width: 75,),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                      Color.fromARGB(255, 211, 255, 153),
+                    )),
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                    child:
+                        Text("REWIND TIME", style: TextStyle(color: Colors.black))),
+            ],
+          ),
           ],
           automaticallyImplyLeading: false,
-          title: Text(
-            currentDay,
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
-          ),
+        
           backgroundColor: Color.fromARGB(255, 7, 9, 15),
         ),
         body: courses.isNotEmpty
