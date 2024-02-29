@@ -22,6 +22,7 @@ class _OnBoardState extends State<OnBoard> {
   int _minAttendence = 0;
   String _startDate = "";
   String _endDate = "";
+  int _copyid = 0;
 
   final storage = const FlutterSecureStorage();
   Future<String> getToken() async {
@@ -63,6 +64,34 @@ class _OnBoardState extends State<OnBoard> {
     }
   }
 
+
+  void timeTablePresets() async {
+    final response = await http.post(
+      Uri.parse("$apiUrl/collection_selector"),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+        HttpHeaders.contentTypeHeader: "application/json"
+      },
+      body: jsonEncode({"copy_id": 20}),
+    );
+    if (response.statusCode == 201) {
+      Navigator.pop(context);
+      // Signal updates on navigation
+      statsUpdate = true;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Timetable details have been updated"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Could not update timetable details"),
+        ),
+      );
+      throw Exception('Failed to add schedule for pre-existing course');
+    }
+  }
   List<dynamic> hello = [];
   // ignore: non_constant_identifier_names
   Future<dynamic> getTimeTable() async {
@@ -204,37 +233,41 @@ class _OnBoardState extends State<OnBoard> {
                     SizedBox(
                       width: 500,
                       height: 25,
-                    ),
-                    DropdownMenuItem(
-  child: Center(
-    child: FutureBuilder(
-      future: getTimeTable(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return DropdownMenu(
-            expandedInsets: EdgeInsets.all(7),
-            inputDecorationTheme: InputDecorationTheme(
-              fillColor: Color.fromARGB(255, 7, 9, 15),
-            ),
-            dropdownMenuEntries: hello.map(
-              (days) {
-                return DropdownMenuEntry<String>(
-                  value: hello[0]["name"], label: hello[0]["name"]
-                );
-              },
-            ).toList(),
-            onSelected: (days) {},
-          );
-        }
-      },
-    ),
-  ),
 ),
-
+                    DropdownMenuItem(
+                      child: Center(
+                        child: FutureBuilder(
+                          future: getTimeTable(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return DropdownMenu(
+                                expandedInsets: EdgeInsets.all(7),
+                                inputDecorationTheme: InputDecorationTheme(
+                                  fillColor: Color.fromARGB(255, 7, 9, 15),
+                                ),
+                                dropdownMenuEntries: hello.map(
+                                  (days) {
+                                    return DropdownMenuEntry<String>(
+                                        value: days["name"], label: days["name"]);
+                                  },
+                                ).toList(),
+                                onSelected: (days) {
+                                  var selectedEntry = hello.firstWhere((element) => element["name"] == days);
+    int selectedId = selectedEntry["id"];
+    _copyid = selectedId;
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                   
                     GestureDetector(
                         onTap: () {
                           if (_endDate.isNotEmpty &&
@@ -242,6 +275,8 @@ class _OnBoardState extends State<OnBoard> {
                               _timeTableName.isNotEmpty &&
                               _minAttendence != 0) {
                             submitTimetable();
+                          } else if (_endDate != 0) {
+                            timeTablePresets();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

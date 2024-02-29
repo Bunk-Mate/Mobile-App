@@ -382,25 +382,50 @@ class MyWidgetState extends State<MyWidget> {
                   itemBuilder: (context, index) {
                     final subject = stats[index];
 
-                    return ListTile(
-                      leading: Icon(
-                        getRandomSubjectIcon(),
-                        size: 62,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        subject["name"].toString().toTitleCase(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        "Attendance: ${subject["percentage"]}%   Bunks: ${subject["bunks_available"]}",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    return Column(
+                      children: [
+                        
+                        ListTile(
+                            leading: Icon(
+                              getRandomSubjectIcon(),
+                              size: 62,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              subject["name"].toString().toTitleCase(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              "Attendance: ${subject["percentage"]}%",
+                              style: TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            trailing: Expanded(
+                              child: 
+                                
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor:
+                                        Color.fromARGB(255, 211, 255, 153),
+                                    child: Text(
+                                      "${subject["bunks_available"]}",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                
+                              
+                            )),
+//                       Divider(color: Color.fromARGB(255, 211, 255, 153),thickness: 0.5, // Set the thickness to half of the default value
+//  indent: .0,) 
+],
                     );
                   },
                 ),
               ),
-            ],
+            ]
           ),
         ),
       ),
