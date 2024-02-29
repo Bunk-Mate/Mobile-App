@@ -15,11 +15,14 @@ class OnBoard extends StatefulWidget {
   State<OnBoard> createState() => _OnBoardState();
 }
 
+dynamic days = [];
+
 class _OnBoardState extends State<OnBoard> {
   String _timeTableName = "";
   int _minAttendence = 0;
   String _startDate = "";
   String _endDate = "";
+  int _copyid = 0;
 
   final storage = const FlutterSecureStorage();
   Future<String> getToken() async {
@@ -61,6 +64,54 @@ class _OnBoardState extends State<OnBoard> {
     }
   }
 
+  void timeTablePresets() async {
+    final response = await http.post(
+      Uri.parse("$apiUrl/collection_selector"),
+      headers: {
+        HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+        HttpHeaders.contentTypeHeader: "application/json"
+      },
+      body: jsonEncode({"copy_id": 20}),
+    );
+    if (response.statusCode == 201) {
+      Navigator.pop(context);
+      // Signal updates on navigation
+      statsUpdate = true;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Timetable details have been updated"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Could not update timetable details"),
+        ),
+      );
+      throw Exception('Failed to add schedule for pre-existing course');
+    }
+  }
+
+  List<dynamic> hello = [];
+  // ignore: non_constant_identifier_names
+  Future<dynamic> getTimeTable() async {
+    final response = await http.get(Uri.parse("$apiUrl/collections"), headers: {
+      HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+    });
+    if (response.statusCode == 200) {
+      hello = jsonDecode(response.body);
+      print(hello);
+    } else {
+      print(response.body);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTimeTable();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,9 +139,6 @@ class _OnBoardState extends State<OnBoard> {
                     ],
                   ),
                 )),
-            SizedBox(
-              height: 100,
-            ),
             Padding(
                 padding: EdgeInsets.all(24),
                 child: Column(
@@ -183,8 +231,41 @@ class _OnBoardState extends State<OnBoard> {
                           _endDate = DateFormat('yyyy-MM-dd').format(endDate!),
                     ),
                     SizedBox(
-                      width: 50,
-                      height: 50,
+                      width: 500,
+                      height: 25,
+                    ),
+                    DropdownMenuItem(
+                      child: Center(
+                        child: FutureBuilder(
+                          future: getTimeTable(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return DropdownMenu(
+                                expandedInsets: EdgeInsets.all(7),
+                                inputDecorationTheme: InputDecorationTheme(
+                                  fillColor: Color.fromARGB(255, 7, 9, 15),
+                                ),
+                                dropdownMenuEntries: hello.map(
+                                  (days) {
+                                    return DropdownMenuEntry<String>(
+                                        value: days["name"], label: days["name"]);
+                                  },
+                                ).toList(),
+                                onSelected: (days) {
+                                  var selectedEntry = hello.firstWhere((element) => element["name"] == days);
+    int selectedId = selectedEntry["id"];
+    _copyid = selectedId;
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
                     GestureDetector(
                         onTap: () {
@@ -193,6 +274,8 @@ class _OnBoardState extends State<OnBoard> {
                               _timeTableName.isNotEmpty &&
                               _minAttendence != 0) {
                             submitTimetable();
+                          } else if (_endDate != 0) {
+                            timeTablePresets();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
