@@ -1,9 +1,4 @@
-# Attendance Tracker
-
-## Introduction
-
-Many of us have desired to take a day off from college for various activities or simply to relax, but often refrain due to concerns about meeting the attendance requirement of 75%. The Attendance Tracker app aims to address this dilemma by providing a convenient solution for tracking classes attended and offering live updates on the remaining classes needed to meet the attendance target.
-
+# Bunk-Mate
 ## Installation
 
 To install the Attendance Tracker app, follow these simple steps:
