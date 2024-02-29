@@ -15,6 +15,8 @@ class OnBoard extends StatefulWidget {
   State<OnBoard> createState() => _OnBoardState();
 }
 
+dynamic days = [];
+
 class _OnBoardState extends State<OnBoard> {
   String _timeTableName = "";
   int _minAttendence = 0;
@@ -61,6 +63,26 @@ class _OnBoardState extends State<OnBoard> {
     }
   }
 
+  List<dynamic> hello = [];
+  // ignore: non_constant_identifier_names
+  Future<dynamic> getTimeTable() async {
+    final response = await http.get(Uri.parse("$apiUrl/collections"), headers: {
+      HttpHeaders.authorizationHeader: "Token ${await getToken()}",
+    });
+    if (response.statusCode == 200) {
+      hello = jsonDecode(response.body);
+      print(hello);
+    } else {
+      print(response.body);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getTimeTable();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,9 +110,6 @@ class _OnBoardState extends State<OnBoard> {
                     ],
                   ),
                 )),
-            SizedBox(
-              height: 100,
-            ),
             Padding(
                 padding: EdgeInsets.all(24),
                 child: Column(
@@ -183,9 +202,39 @@ class _OnBoardState extends State<OnBoard> {
                           _endDate = DateFormat('yyyy-MM-dd').format(endDate!),
                     ),
                     SizedBox(
-                      width: 50,
-                      height: 50,
+                      width: 500,
+                      height: 25,
                     ),
+                    DropdownMenuItem(
+  child: Center(
+    child: FutureBuilder(
+      future: getTimeTable(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return DropdownMenu(
+            expandedInsets: EdgeInsets.all(7),
+            inputDecorationTheme: InputDecorationTheme(
+              fillColor: Color.fromARGB(255, 7, 9, 15),
+            ),
+            dropdownMenuEntries: hello.map(
+              (days) {
+                return DropdownMenuEntry<String>(
+                  value: hello[0]["name"], label: hello[0]["name"]
+                );
+              },
+            ).toList(),
+            onSelected: (days) {},
+          );
+        }
+      },
+    ),
+  ),
+),
+
                     GestureDetector(
                         onTap: () {
                           if (_endDate.isNotEmpty &&
