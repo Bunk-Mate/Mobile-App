@@ -153,7 +153,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
   Future<dynamic> updateStatus(String url, String status) async {
     final response = await http.patch(
       Uri.parse(url),
-      //http://8204-2401-4900-32f5-8fbf-3bb0-90ee-d369-d2bb.ngrok-free.app/session/32498
       body: jsonEncode({"status": status}),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",

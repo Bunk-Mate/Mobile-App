@@ -23,6 +23,7 @@ class TimeTableEntry extends StatefulWidget {
   State<TimeTableEntry> createState() => TimeTableEntryState();
 }
 
+
 List<IconData> subjectIcons = [
   Icons.school,
   Icons.book,
@@ -77,7 +78,6 @@ List<IconData> subjectIcons = [
 ];
 
 class TimeTableEntryState extends State<TimeTableEntry> {
-
   List<dynamic> courses = [];
   Map<String, dynamic> schedule = {};
   final storage = FlutterSecureStorage();
@@ -104,7 +104,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
     }
   }
 
-  void getCourses() async {
+  getCourses() async {
     final response = await http.get(
       Uri.parse('$apiUrl/courses'),
       headers: {
@@ -264,19 +264,19 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                         left: 20,
                         bottom: MediaQuery.of(context).viewInsets.bottom + 20),
                     child: Column(
-
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        
                         TextField(
                           controller: _courseTextFieldController,
                           onChanged: (courseName) {
                             if (courseName.isEmpty) {
                               _course = "Course";
                               activateDropDown();
+                              addSchedule();
                             } else {
                               _course = courseName;
                               clearDropDown();
+                              addSchedule();
                             }
                           },
                           decoration: InputDecoration(
@@ -314,58 +314,82 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                                 },
                               ).toList(),
                             ),
-                            DropdownMenu<String>(
-                              width: MediaQuery.of(context).size.width * 0.44,
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  fillColor: Color.fromARGB(255, 211, 255, 153),
-                                  filled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20))),
-                              initialSelection:
-                                  _useCourseDropDown ? null : "New Course",
-                              hintText: "Course",
-                              onSelected: (scheduleUrl) {
-                                _courseTextFieldController.clear();
-                                activateDropDown();
-                                _scheduleUrl = scheduleUrl!;
+                            FutureBuilder(
+                              future: getCourses(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  return DropdownMenu<String>(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.44,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        fillColor:
+                                            Color.fromARGB(255, 211, 255, 153),
+                                        filled: true,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20))),
+                                    initialSelection: _useCourseDropDown
+                                        ? null
+                                        : "New Course",
+                                    hintText: "Course",
+                                    onSelected: (scheduleUrl) {
+                                      _courseTextFieldController.clear();
+                                      activateDropDown();
+                                      _scheduleUrl = scheduleUrl!;
+                                    },
+                                    dropdownMenuEntries: _useCourseDropDown
+                                        ? courses.map(
+                                            (course) {
+                                              String courseName =
+                                                  course["name"]!;
+                                              return DropdownMenuEntry<String>(
+                                                value: course["schedules_url"]!,
+                                                label: courseName,
+                                                labelWidget: Text(
+                                                  courseName,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              );
+                                            },
+                                          ).toList()
+                                        : courses.map(
+                                              (course) {
+                                                String courseName =
+                                                    course["name"]!;
+                                                return DropdownMenuEntry<
+                                                    String>(
+                                                  value:
+                                                      course["schedules_url"]!,
+                                                  label: courseName,
+                                                  labelWidget: Text(
+                                                    courseName,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                );
+                                              },
+                                            ).toList() +
+                                            [
+                                              const DropdownMenuEntry(
+                                                value: "New Course",
+                                                label: "New Course",
+                                              )
+                                            ],
+                                  );
+                                }
                               },
-                              dropdownMenuEntries: _useCourseDropDown
-                                  ? courses.map(
-                                      (course) {
-                                        String courseName = course["name"]!;
-                                        return DropdownMenuEntry<String>(
-                                          value: course["schedules_url"]!,
-                                          label: courseName,
-                                          labelWidget: Text(
-                                            courseName,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        );
-                                      },
-                                    ).toList()
-                                  : courses.map(
-                                        (course) {
-                                          String courseName = course["name"]!;
-                                          return DropdownMenuEntry<String>(
-                                            value: course["schedules_url"]!,
-                                            label: courseName,
-                                            labelWidget: Text(
-                                              courseName,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          );
-                                        },
-                                      ).toList() +
-                                      [
-                                        const DropdownMenuEntry(
-                                          value: "New Course",
-                                          label: "New Course",
-                                        )
-                                      ],
                             ),
+                            
                           ],
                         ),
                         Center(
@@ -385,7 +409,6 @@ class TimeTableEntryState extends State<TimeTableEntry> {
     return Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Scaffold(
-          
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 _settingModalBottomSheet(context);
@@ -396,12 +419,10 @@ class TimeTableEntryState extends State<TimeTableEntry> {
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             backgroundColor: Color.fromARGB(255, 7, 9, 15),
             body: Center(
-              
               child: SafeArea(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                 
                   Expanded(
                       child: ListView.builder(
                     itemCount: schedule_list.length,

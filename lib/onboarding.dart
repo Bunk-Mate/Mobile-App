@@ -16,6 +16,7 @@ class OnBoard extends StatefulWidget {
 }
 
 dynamic days = [];
+bool checkBox = false;
 
 class _OnBoardState extends State<OnBoard> {
   String _timeTableName = "";
@@ -31,6 +32,8 @@ class _OnBoardState extends State<OnBoard> {
     return token;
   }
 
+ 
+
   void submitTimetable() async {
     final response = await http.post(
       Uri.parse("$apiUrl/collection"),
@@ -42,7 +45,8 @@ class _OnBoardState extends State<OnBoard> {
         "name": _timeTableName,
         "start_date": _startDate,
         "end_date": _endDate,
-        "courses_data": []
+        "courses_data": [],
+        "shared" : checkBox
       }),
     );
     if (response.statusCode == 201) {
@@ -63,7 +67,6 @@ class _OnBoardState extends State<OnBoard> {
       throw Exception('Failed to add schedule for pre-existing course');
     }
   }
-
 
   void timeTablePresets() async {
     final response = await http.post(
@@ -92,6 +95,7 @@ class _OnBoardState extends State<OnBoard> {
       throw Exception('Failed to add schedule for pre-existing course');
     }
   }
+
   List<dynamic> hello = [];
   // ignore: non_constant_identifier_names
   Future<dynamic> getTimeTable() async {
@@ -233,7 +237,7 @@ class _OnBoardState extends State<OnBoard> {
                     SizedBox(
                       width: 500,
                       height: 25,
-),
+                    ),
                     DropdownMenuItem(
                       child: Center(
                         child: FutureBuilder(
@@ -253,13 +257,15 @@ class _OnBoardState extends State<OnBoard> {
                                 dropdownMenuEntries: hello.map(
                                   (days) {
                                     return DropdownMenuEntry<String>(
-                                        value: days["name"], label: days["name"]);
+                                        value: days["name"],
+                                        label: days["name"]);
                                   },
                                 ).toList(),
                                 onSelected: (days) {
-                                  var selectedEntry = hello.firstWhere((element) => element["name"] == days);
-    int selectedId = selectedEntry["id"];
-    _copyid = selectedId;
+                                  var selectedEntry = hello.firstWhere(
+                                      (element) => element["name"] == days);
+                                  int selectedId = selectedEntry["id"];
+                                  _copyid = selectedId;
                                 },
                               );
                             }
@@ -267,13 +273,13 @@ class _OnBoardState extends State<OnBoard> {
                         ),
                       ),
                     ),
-                   
                     GestureDetector(
                         onTap: () {
                           if (_endDate.isNotEmpty &&
                               _startDate.isNotEmpty &&
                               _timeTableName.isNotEmpty &&
-                              _minAttendence != 0) {
+                              _minAttendence != 0
+                            ) {
                             submitTimetable();
                           } else if (_endDate != 0) {
                             timeTablePresets();
@@ -305,6 +311,22 @@ class _OnBoardState extends State<OnBoard> {
                             ),
                           ),
                         )),
+                    CheckboxListTile(
+                      title: Text(
+                        "Share TimeTable",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w100),
+                      ),
+                      value: checkBox,
+                      onChanged: (newValue) {
+                        setState(() {
+                          checkBox = newValue!;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    )
                   ],
                 ))
           ],
