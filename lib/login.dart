@@ -131,8 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Navigation()));
+              
                           },
                           child: const  Align(
                               alignment: Alignment.topRight,
@@ -155,7 +154,10 @@ class _LoginPageState extends State<LoginPage> {
                                 (response) => {
                                   if (response.statusCode == 202)
                                     {
-                                      Navigator.pushNamed(context, '/4')
+                                      Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => Navigation()),
+)
                                     }
                                 },
                               );
@@ -192,8 +194,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SignupPage()));
+                               Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => SignupPage()),
+);
                               },
                               child: const Text("Signup ? ",
                                   style: TextStyle(
