@@ -32,8 +32,6 @@ class _OnBoardState extends State<OnBoard> {
     return token;
   }
 
- 
-
   void submitTimetable() async {
     final response = await http.post(
       Uri.parse("$apiUrl/collection"),
@@ -46,7 +44,7 @@ class _OnBoardState extends State<OnBoard> {
         "start_date": _startDate,
         "end_date": _endDate,
         "courses_data": [],
-        "shared" : checkBox
+        "shared": checkBox
       }),
     );
     if (response.statusCode == 201) {
@@ -118,6 +116,32 @@ class _OnBoardState extends State<OnBoard> {
 
   @override
   Widget build(BuildContext context) {
+    showAlertDialog(BuildContext context) {
+      // set up the button
+      Widget yesButton = TextButton(
+        child: Text("Yes"),
+        onPressed: () {
+          submitTimetable();
+        },
+      );
+      
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text("Are you sure ? "),
+        content: Text("You would lose all your current data if you did this."),
+        actions: [yesButton],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
       body: SingleChildScrollView(
@@ -273,14 +297,29 @@ class _OnBoardState extends State<OnBoard> {
                         ),
                       ),
                     ),
+                    CheckboxListTile(
+                      title: Text(
+                        "Share TimeTable",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w100),
+                      ),
+                      value: checkBox,
+                      onChanged: (newValue) {
+                        setState(() {
+                          checkBox = newValue!;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
                     GestureDetector(
                         onTap: () {
                           if (_endDate.isNotEmpty &&
                               _startDate.isNotEmpty &&
                               _timeTableName.isNotEmpty &&
-                              _minAttendence != 0
-                            ) {
-                            submitTimetable();
+                              _minAttendence != 0) {
+                            showAlertDialog(context);
                           } else if (_endDate != 0) {
                             timeTablePresets();
                           } else {
@@ -291,6 +330,7 @@ class _OnBoardState extends State<OnBoard> {
                             );
                           }
                         },
+                        
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -311,22 +351,7 @@ class _OnBoardState extends State<OnBoard> {
                             ),
                           ),
                         )),
-                    CheckboxListTile(
-                      title: Text(
-                        "Share TimeTable",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w100),
-                      ),
-                      value: checkBox,
-                      onChanged: (newValue) {
-                        setState(() {
-                          checkBox = newValue!;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    )
+                    
                   ],
                 ))
           ],
