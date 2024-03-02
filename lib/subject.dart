@@ -189,6 +189,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
         ),
       );
     } else {
+      print(response.statusCode);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("TimeTable not Selected"),
@@ -228,13 +229,19 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
-          actions: [Row(
-            children: [
-              Text(
-                currentDay,
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
-              ),SizedBox(width: 75,),
+          actions: [
+            Row(
+              children: [
+                Text(
+                  currentDay,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32),
+                ),
+                SizedBox(
+                  width: 75,
+                ),
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
@@ -243,13 +250,12 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                     onPressed: () {
                       _selectDate(context);
                     },
-                    child:
-                        Text("REWIND TIME", style: TextStyle(color: Colors.black))),
-            ],
-          ),
+                    child: Text("REWIND TIME",
+                        style: TextStyle(color: Colors.black))),
+              ],
+            ),
           ],
           automaticallyImplyLeading: false,
-        
           backgroundColor: Color.fromARGB(255, 7, 9, 15),
         ),
         body: courses.isNotEmpty
