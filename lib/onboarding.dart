@@ -116,21 +116,28 @@ class _OnBoardState extends State<OnBoard> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     showAlertDialog(BuildContext context) {
       // set up the button
       Widget yesButton = TextButton(
         child: Text("Yes"),
         onPressed: () {
           submitTimetable();
+          statusUpdate = true;
+          statsUpdate = true;
+      Navigator.pushNamed(context, '/mainPage');
         },
       );
-      
+      Widget noButton = TextButton(onPressed: () {
+        Navigator.pushNamed(context,'/TimeTable');
+      }, child: Text("No"));
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
         title: Text("Are you sure ? "),
         content: Text("You would lose all your current data if you did this."),
-        actions: [yesButton],
+        actions: [yesButton,noButton],
       );
 
       // show the dialog
@@ -165,6 +172,46 @@ class _OnBoardState extends State<OnBoard> {
                                 fontFamily: 'alpha')),
                       )),
                     ],
+                  ),
+                )),
+            Padding(
+                padding:
+                    EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 24),
+                child: DropdownMenuItem(
+                  child: Center(
+                    child: FutureBuilder(
+                      future: getTimeTable(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return DropdownMenu(
+                            hintText: 'TimeTable Presets',
+                            expandedInsets: EdgeInsets.all(7),
+                            inputDecorationTheme: InputDecorationTheme(
+                              fillColor: Color.fromARGB(255, 7, 9, 15),
+                              hintStyle: TextStyle(color: Colors.white24),
+                            ),
+                            dropdownMenuEntries: hello.map(
+                              (days) {
+                                return DropdownMenuEntry<String>(
+                                    value: days["name"], label: days["name"]);
+                              },
+                            ).toList(),
+                            onSelected: (days) {
+                              var selectedEntry = hello.firstWhere(
+                                  (element) => element["name"] == days);
+                              int selectedId = selectedEntry["id"];
+                              _copyid = selectedId;
+                              showAlertDialog(context);
+                            },
+                          );
+                        }
+                      },
+                    ),
                   ),
                 )),
             Padding(
@@ -217,92 +264,62 @@ class _OnBoardState extends State<OnBoard> {
                       width: 25,
                       height: 25,
                     ),
-                    DateTimeFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Start Date',
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 211, 255, 153),
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19,
-                          fontFamily: "alpha"),
-                      mode: DateTimeFieldPickerMode.date,
-                      onChanged: (DateTime? startDate) => _startDate =
-                          DateFormat("yyyy-MM-dd").format(startDate!),
-                    ),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                    ),
-                    DateTimeFormField(
-                      decoration: const InputDecoration(
-                        fillColor: Colors.white,
-                        focusColor: Colors.white,
-                        labelText: 'End Date',
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 211, 255, 153),
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19,
-                          fontFamily: "alpha"),
-                      mode: DateTimeFieldPickerMode.date,
-                      initialPickerDateTime: DateTime.now(),
-                      onChanged: (DateTime? endDate) =>
-                          _endDate = DateFormat('yyyy-MM-dd').format(endDate!),
+                    Row(
+                      children: [
+                        SizedBox(
+                            width: width / 2.6,
+                            child: DateTimeFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Start Date',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 211, 255, 153),
+                                  ),
+                                ),
+                              ),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontFamily: "alpha"),
+                              mode: DateTimeFieldPickerMode.date,
+                              onChanged: (DateTime? startDate) => _startDate =
+                                  DateFormat("yyyy-MM-dd").format(startDate!),
+                            )),
+                        Spacer(),
+                        SizedBox(
+                            width: width / 2.6,
+                            child: DateTimeFormField(
+                              decoration: const InputDecoration(
+                                fillColor: Colors.white,
+                                focusColor: Colors.white,
+                                labelText: 'End Date',
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 211, 255, 153),
+                                  ),
+                                ),
+                              ),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontFamily: "alpha"),
+                              mode: DateTimeFieldPickerMode.date,
+                              initialPickerDateTime: DateTime.now(),
+                              onChanged: (DateTime? endDate) => _endDate =
+                                  DateFormat('yyyy-MM-dd').format(endDate!),
+                            )),
+                      ],
                     ),
                     SizedBox(
                       width: 500,
                       height: 25,
-                    ),
-                    DropdownMenuItem(
-                      child: Center(
-                        child: FutureBuilder(
-                          future: getTimeTable(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              return DropdownMenu(
-                                expandedInsets: EdgeInsets.all(7),
-                                inputDecorationTheme: InputDecorationTheme(
-                                  fillColor: Color.fromARGB(255, 7, 9, 15),
-                                ),
-                                dropdownMenuEntries: hello.map(
-                                  (days) {
-                                    return DropdownMenuEntry<String>(
-                                        value: days["name"],
-                                        label: days["name"]);
-                                  },
-                                ).toList(),
-                                onSelected: (days) {
-                                  var selectedEntry = hello.firstWhere(
-                                      (element) => element["name"] == days);
-                                  int selectedId = selectedEntry["id"];
-                                  _copyid = selectedId;
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
                     ),
                     CheckboxListTile(
                       title: Text(
                         "Share TimeTable",
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 14,
+                            fontSize: 18,
                             fontWeight: FontWeight.w100),
                       ),
                       value: checkBox,
@@ -311,7 +328,6 @@ class _OnBoardState extends State<OnBoard> {
                           checkBox = newValue!;
                         });
                       },
-                      controlAffinity: ListTileControlAffinity.leading,
                     ),
                     GestureDetector(
                         onTap: () {
@@ -330,7 +346,6 @@ class _OnBoardState extends State<OnBoard> {
                             );
                           }
                         },
-                        
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -351,7 +366,6 @@ class _OnBoardState extends State<OnBoard> {
                             ),
                           ),
                         )),
-                    
                   ],
                 ))
           ],

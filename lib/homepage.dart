@@ -1,18 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:attendence1/global.dart';
 import 'package:attendence1/onboarding.dart';
-import 'package:attendence1/subject.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:side_sheet/side_sheet.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 extension StringCasingExtension on String {
   String toCapitalized() =>
@@ -79,55 +73,55 @@ List<String> Hello = [
 
 List<IconData> subjectIcons = [
   Icons.school,
-  Icons.book,
-  Icons.star,
-  Icons.people,
-  Icons.abc,
-  Icons.laptop_chromebook_outlined,
-  Icons.macro_off,
-  Icons.work,
-  Icons.home,
-  Icons.music_note,
-  Icons.sports_soccer,
-  Icons.local_movies,
-  Icons.restaurant,
-  Icons.directions_run,
-  Icons.build,
-  Icons.airplanemode_active,
-  Icons.beach_access,
-  Icons.shopping_cart,
-  Icons.local_hospital,
-  Icons.local_florist,
-  Icons.brush,
-  Icons.business_center,
-  Icons.cake,
-  Icons.camera,
-  Icons.train,
-  Icons.phone,
-  Icons.pets,
-  Icons.local_pizza,
-  Icons.wifi,
-  Icons.palette,
-  Icons.play_circle_filled,
-  Icons.favorite,
-  Icons.radio,
-  Icons.beenhere,
-  Icons.casino,
-  Icons.child_friendly,
-  Icons.create,
-  Icons.desktop_windows,
-  Icons.directions_bike,
-  Icons.emoji_food_beverage,
-  Icons.flash_on,
-  Icons.golf_course,
-  Icons.pool,
-  Icons.shopping_basket,
-  Icons.star_border,
-  Icons.videogame_asset,
-  Icons.local_laundry_service,
-  Icons.toys,
-  Icons.watch,
-  Icons.local_dining,
+  // Icons.book,
+  // Icons.star,
+  // Icons.people,
+  // Icons.abc,
+  // Icons.laptop_chromebook_outlined,
+  // Icons.macro_off,
+  // Icons.work,
+  // Icons.home,
+  // Icons.music_note,
+  // Icons.sports_soccer,
+  // Icons.local_movies,
+  // Icons.restaurant,
+  // Icons.directions_run,
+  // Icons.build,
+  // Icons.airplanemode_active,
+  // Icons.beach_access,
+  // Icons.shopping_cart,
+  // Icons.local_hospital,
+  // Icons.local_florist,
+  // Icons.brush,
+  // Icons.business_center,
+  // Icons.cake,
+  // Icons.camera,
+  // Icons.train,
+  // Icons.phone,
+  // Icons.pets,
+  // Icons.local_pizza,
+  // Icons.wifi,
+  // Icons.palette,
+  // Icons.play_circle_filled,
+  // Icons.favorite,
+  // Icons.radio,
+  // Icons.beenhere,
+  // Icons.casino,
+  // Icons.child_friendly,
+  // Icons.create,
+  // Icons.desktop_windows,
+  // Icons.directions_bike,
+  // Icons.emoji_food_beverage,
+  // Icons.flash_on,
+  // Icons.golf_course,
+  // Icons.pool,
+  // Icons.shopping_basket,
+  // Icons.star_border,
+  // Icons.videogame_asset,
+  // Icons.local_laundry_service,
+  // Icons.toys,
+  // Icons.watch,
+  // Icons.local_dining,
 ];
 
 class Subject {
@@ -291,7 +285,7 @@ class MyWidgetState extends State<MyWidget> {
                               ),
                             ),
                           ),
-                          Spacer(),
+              
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: SizedBox(

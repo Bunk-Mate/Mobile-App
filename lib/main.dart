@@ -1,4 +1,5 @@
-import 'package:attendence1/login.dart';
+import 'package:attendence1/onboarding.dart';
+import 'package:attendence1/signin.dart';
 import 'package:attendence1/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
@@ -33,6 +34,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginPage(),
         '/mainPage': (context) => Navigation()
+        ,
+        '/TimeTable': (context) => OnBoard()
       },
     );
   }
