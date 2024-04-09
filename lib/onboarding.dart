@@ -1,3 +1,5 @@
+import 'package:attendence1/homepage.dart';
+import 'package:attendence1/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +59,9 @@ class _OnBoardState extends State<OnBoard> {
         ),
       );
     } else {
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
+        
         const SnackBar(
           content: Text("Could not update timetable details"),
         ),
@@ -85,12 +89,13 @@ class _OnBoardState extends State<OnBoard> {
         ),
       );
     } else {
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Could not update timetable details"),
         ),
       );
-      throw Exception('Failed to add schedule for pre-existing course');
+      throw Exception('Failed to add new timetable');
     }
   }
 
@@ -123,21 +128,18 @@ class _OnBoardState extends State<OnBoard> {
       Widget yesButton = TextButton(
         child: Text("Yes"),
         onPressed: () {
-          submitTimetable();
+         timeTablePresets();
           statusUpdate = true;
           statsUpdate = true;
-      Navigator.pushNamed(context, '/mainPage');
+          Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
         },
       );
-      Widget noButton = TextButton(onPressed: () {
-        Navigator.pushNamed(context,'/TimeTable');
-      }, child: Text("No"));
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
         title: Text("Are you sure ? "),
         content: Text("You would lose all your current data if you did this."),
-        actions: [yesButton,noButton],
+        actions: [yesButton],
       );
 
       // show the dialog
