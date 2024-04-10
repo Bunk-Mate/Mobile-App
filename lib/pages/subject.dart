@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:attendence1/global.dart';
+import 'package:attendence1/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:attendence1/utls/HomePage.dart' ;
 import 'package:attendence1/utls/imp.dart';
+
 bool coursePresent = false;
 late int _day;
+late int hello;
 List<IconData> subjectIcons = [
   Icons.school,
   Icons.book,
@@ -77,14 +80,14 @@ Map<int, String> days = {
 };
 
 class TimeTable extends StatefulWidget {
-  const TimeTable({required Key key}) : super(key: key);
+  TimeTable({required Key key}) : super(key: key);
   @override
   State<TimeTable> createState() => TimeTableState();
 }
 
 class TimeTableState extends State<TimeTable> with RouteAware {
   dynamic courses = [];
-  final storage = const FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -99,10 +102,10 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   Future<dynamic> getStatus({DateTime? date}) async {
     if (date == null) {
-      DateTime now = DateTime.now();
+      DateTime now = new DateTime.now();
       String today = DateFormat('yyyy-MM-dd').format(now);
       final response = await http.get(
-        Uri.parse('$apiUrl/datequery?date=$today'),
+        Uri.parse(apiUrl + '/datequery?date=$today'),
         headers: {
           HttpHeaders.authorizationHeader: "Token ${await getToken()}",
           HttpHeaders.contentTypeHeader: "application/json"
@@ -125,7 +128,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       String today = DateFormat('yyyy-MM-dd').format(date);
       print(today);
       final response = await http.get(
-        Uri.parse('$apiUrl/datequery?date=$today'),
+        Uri.parse(apiUrl + '/datequery?date=$today'),
         headers: {
           HttpHeaders.authorizationHeader: "Token ${await getToken()}",
           HttpHeaders.contentTypeHeader: "application/json"
@@ -167,7 +170,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       throw Exception('Failed to update status');
     }
   }
-  DateTime selectedDate = DateTime.now();
+
   void addHoliday() async {
     final response = await http.post(
       Uri.parse("$apiUrl/schedule_selector"),
@@ -180,6 +183,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       ),
     );
     if (response.statusCode == 201) {
+      getStatus();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("TimeTable Selected"),
@@ -198,7 +202,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
-  
+  DateTime selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -219,40 +223,42 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
- 
-
+    IconData getRandomSubjectIcon() {
+      var randomIndex = Random().nextInt(subjectIcons.length);
+      return subjectIcons[randomIndex];
+    }
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+        backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
           actions: [
             Row(
               children: [
                 Text(
                   currentDay,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 32),
                 ),
-                const SizedBox(
-                  width: 75,
+                SizedBox(
+                  width: 55,
                 ),
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                      const Color.fromARGB(255, 211, 255, 153),
+                      Color.fromARGB(255, 211, 255, 153),
                     )),
                     onPressed: () {
                       _selectDate(context);
                     },
-                    child: const Text("REWIND TIME",
+                    child: Text("REWIND TIME",
                         style: TextStyle(color: Colors.black))),
               ],
             ),
           ],
           automaticallyImplyLeading: false,
-          backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+          backgroundColor: Color.fromARGB(255, 7, 9, 15),
         ),
         body: courses.isNotEmpty
             ? ListView.builder(
@@ -264,7 +270,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                   if (courses.isEmpty) {
                     return Container(
                       child: ElevatedButton(
-                          onPressed: () {}, child: const Text("Hello World")),
+                          onPressed: () {}, child: Text("Hello World")),
                     );
                   } else {
                     return Column(
@@ -296,7 +302,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: const Color.fromARGB(255, 13, 15, 21)),
+                                      color: Color.fromARGB(255, 13, 15, 21)),
                                   child: ListTile(
                                     leading: Icon(
                                       getRandomSubjectIcon(),
@@ -304,18 +310,18 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                                     ),
                                     iconColor: Colors.white,
                                     title: Text(
-                                      name,
-                                      style: const TextStyle(
+                                      "$name",
+                                      style: TextStyle(
                                           color: Colors.white, fontSize: 32),
                                     ),
                                     trailing: Text(
-                                      status,
-                                      style: const TextStyle(
+                                      "$status",
+                                      style: TextStyle(
                                           color: Colors.white, fontSize: 15),
                                     ),
                                   ),
                                 ))),
-                        const SizedBox(
+                        SizedBox(
                           width: 10,
                           height: 10,
                         ),
@@ -330,7 +336,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Center(
+                          Center(
                               child: Text(
                             "Select Schedule for the day : ",
                             style: TextStyle(
@@ -339,7 +345,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                                 fontSize: 25,
                                 fontWeight: FontWeight.w100),
                           )),
-                          const SizedBox(
+                          SizedBox(
                             width: 30,
                             height: 30,
                           ),
@@ -364,6 +370,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                               _day = days!;
                               addHoliday();
                               getStatus();
+                          
+
                             },
                           ),
 

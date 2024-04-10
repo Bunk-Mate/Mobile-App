@@ -126,7 +126,7 @@ class _OnBoardState extends State<OnBoard> {
       Widget yesButton = TextButton(
         child: const Text("Yes"),
         onPressed: () {
-         submitTimetable();
+         timeTablePresets();
           statusUpdate = true;
           statsUpdate = true;
           Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
