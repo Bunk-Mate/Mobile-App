@@ -1,0 +1,12 @@
+name: Flutter
+on:
+    push:
+        branches: ['main']
+    pull_request:
+        branches: ['main']
+jobs:
+    flutter_job:
+        run-on: macos-latest
+        
+            steps:
+                - uses: actions/checkout@v4
