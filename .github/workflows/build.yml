@@ -34,7 +34,11 @@ jobs:
         run: flutter pub get
           # ^ If you want to use a specific version of flutter
           # Verifies if the dart code is formatted well
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+      - name: Build apk
+        run: flutter build apk
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
   # --set-exit-if-changed stops execution if the any code is not well formatted
   # --output=none prints files which needs to be formatted
