@@ -1,5 +1,5 @@
-import 'package:attendence1/navigator.dart';
-import 'package:attendence1/signup.dart';
+import 'package:attendence1/pages/navigator.dart';
+import 'package:attendence1/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
@@ -33,12 +33,12 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 202) {
       String token = jsonDecode(response.body)["token"];
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Sign in Succesfull"),
       ));
       await storage.write(key: 'token', value: token);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Login failed, please try again"),
       ));
     }
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0),
                               child: SafeArea(
                                   child: Text("Sign in to your account",
                                       style: TextStyle(
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )),
                   Padding(
-                      padding: EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
                           const SizedBox(
@@ -149,15 +149,21 @@ class _LoginPageState extends State<LoginPage> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Navigation()),
+                                                    const Navigation()),
                                           )
                                         }
                                     },
                                   );
                                 },
                                 child: Container(
-                                  child: Center(
-                                      child: const Text(
+                                  width: 405,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Center(
+                                      child: Text(
                                     "Login",
                                     style: TextStyle(
                                         color: Colors.black,
@@ -165,23 +171,17 @@ class _LoginPageState extends State<LoginPage> {
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'alpha'),
                                   )),
-                                  width: 405,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white,
-                                  ),
                                 )),
                           ),
                           Column(
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have an account",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w300),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 25,
                                 height: 2,
                               ),
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => SignupPage()),
+                                          builder: (context) => const SignupPage()),
                                     );
                                   },
                                   child: const Text("Signup ? ",

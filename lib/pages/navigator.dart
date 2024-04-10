@@ -1,11 +1,11 @@
 
-import 'package:attendence1/TimeTableEntry.dart';
+import 'package:attendence1/pages/TimeTableEntry.dart';
 import 'package:attendence1/global.dart';
-import 'package:attendence1/subject.dart';
+import 'package:attendence1/pages/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:attendence1/homepage.dart';
+import 'package:attendence1/pages/homepage.dart';
 import 'package:simple_drawer/simple_drawer.dart';
 
 class Navigation extends StatefulWidget {
@@ -16,7 +16,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  final GlobalKey<MyWidgetState> _statsGlobalKey = GlobalKey();
+  final GlobalKey<HomePageState> _statsGlobalKey = GlobalKey();
   final GlobalKey<TimeTableState> _statusGlobalKey = GlobalKey();
   int currentIndex = 0;
 
@@ -36,7 +36,7 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _children = <Widget>[
-      MyWidget(key: _statsGlobalKey),
+      HomePage(key: _statsGlobalKey),
       TimeTable(key: _statusGlobalKey),
       TimeTableEntry(),
     ];

@@ -3,8 +3,7 @@
 import 'dart:convert';
 
 import 'package:attendence1/global.dart';
-import 'package:attendence1/signin.dart';
-import 'package:attendence1/onboarding.dart';
+import 'package:attendence1/pages/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +15,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final signUpUrl = apiUrl + '/register';
+  final signUpUrl = '$apiUrl/register';
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   Future<void> sendPostRequest() async {
@@ -29,11 +28,11 @@ class _SignupPageState extends State<SignupPage> {
 
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("SignUp Succesfull"))
+          .showSnackBar(const SnackBar(content: Text("SignUp Succesfull"))
           );
           Navigator.pushNamed(context, '/');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Your Password is weak/User already exists"),
       ));
     }
@@ -42,15 +41,15 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 7, 9, 15),
+        backgroundColor: const Color.fromARGB(255, 7, 9, 15),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                  color: Color.fromARGB(255, 13, 15, 21),
+                  color: const Color.fromARGB(255, 13, 15, 21),
                   width: 500,
                   height: 175,
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       children: [
@@ -65,16 +64,16 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                   )),
               Padding(
-                  padding: EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 55,
                         height: 55,
                       ),
                       TextField(
                         controller: UserNameController,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                             hintText: 'Username',
                             hintStyle: TextStyle(color: Colors.white),
@@ -82,13 +81,13 @@ class _SignupPageState extends State<SignupPage> {
                             filled: true,
                             fillColor: Color.fromARGB(255, 17, 20, 27)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 25,
                         height: 25,
                       ),
                       TextField(
                         controller: PasswordController,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                             hintText: 'Password',
                             border: OutlineInputBorder(),
@@ -97,13 +96,13 @@ class _SignupPageState extends State<SignupPage> {
                             fillColor: Color.fromARGB(255, 17, 20, 27)),
                         obscureText: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 25,
                         height: 25,
                       ),
-                      TextField(
+                      const TextField(
                         style: TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             hintText: 'Confirm Password',
                             border: OutlineInputBorder(),
                             hintStyle: TextStyle(color: Colors.white),
@@ -111,7 +110,7 @@ class _SignupPageState extends State<SignupPage> {
                             fillColor: Color.fromARGB(255, 17, 20, 27)),
                         obscureText: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 50,
                         height: 50,
                       ),
@@ -122,7 +121,13 @@ class _SignupPageState extends State<SignupPage> {
                               sendPostRequest();
                             },
                             child: Container(
-                              child: Center(
+                              width: 405,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                              ),
+                              child: const Center(
                                   child: Text(
                                 "Signup",
                                 style: TextStyle(
@@ -130,18 +135,12 @@ class _SignupPageState extends State<SignupPage> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               )),
-                              width: 405,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                              ),
                             ),
                           )),
                       Column(
                         children: [
                           Container(
-                            child: Text(
+                            child: const Text(
                               "Have an account",
                               style: TextStyle(
                                   color: Colors.white,
@@ -151,10 +150,10 @@ class _SignupPageState extends State<SignupPage> {
                           GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                    builder: (context) => const LoginPage()));
                               },
                               child: Container(
-                                child: Text("Sign in",
+                                child: const Text("Sign in",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
