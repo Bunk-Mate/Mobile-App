@@ -1,15 +1,18 @@
-import 'package:attendence1/onboarding.dart';
-import 'package:attendence1/signin.dart';
-import 'package:attendence1/navigator.dart';
+import 'package:attendence1/pages/onboarding.dart';
+import 'package:attendence1/pages/signin.dart';
+import 'package:attendence1/pages/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterSecureStorage storage = const FlutterSecureStorage();
   bool isLogged = await storage.containsKey(key: 'token');
-  runApp(MyApp(initialRoute: isLogged ? "/mainPage" : "/"));
+  runApp(
+    ProviderScope(child: MyApp(initialRoute: isLogged ? "/mainPage" : "/"))
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,17 +28,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'alpha',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(255, 211, 255, 153),
+          seedColor: const Color.fromARGB(255, 211, 255, 153),
         ),
         useMaterial3: true,
       ),
       navigatorObservers: [ObserverUtils.routeObserver],
       initialRoute: initialRoute,
       routes: {
-        '/': (context) => LoginPage(),
-        '/mainPage': (context) => Navigation()
+        '/': (context) => const LoginPage(),
+        '/mainPage': (context) => const Navigation()
         ,
-        '/TimeTable': (context) => OnBoard()
+        '/TimeTable': (context) => const OnBoard()
       },
     );
   }

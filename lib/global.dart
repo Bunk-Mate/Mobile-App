@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String apiUrl = "https://api.bunkmate.college";
+String apiUrl = "https://attendencebackend.azurewebsites.net";
 bool statsUpdate = true;
 bool statusUpdate = true;
 

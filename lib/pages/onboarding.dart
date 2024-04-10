@@ -57,7 +57,9 @@ class _OnBoardState extends State<OnBoard> {
         ),
       );
     } else {
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
+        
         const SnackBar(
           content: Text("Could not update timetable details"),
         ),
@@ -73,7 +75,7 @@ class _OnBoardState extends State<OnBoard> {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
         HttpHeaders.contentTypeHeader: "application/json"
       },
-      body: jsonEncode({"copy_id": 20}),
+      body: jsonEncode({"copy_id": _copyid}),
     );
     if (response.statusCode == 201) {
       Navigator.pop(context);
@@ -85,16 +87,17 @@ class _OnBoardState extends State<OnBoard> {
         ),
       );
     } else {
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Could not update timetable details"),
         ),
       );
-      throw Exception('Failed to add schedule for pre-existing course');
+      throw Exception('Failed to add new timetable');
     }
   }
 
-  List<dynamic> hello = [];
+  late List<dynamic> hello = [];
   // ignore: non_constant_identifier_names
   Future<dynamic> getTimeTable() async {
     final response = await http.get(Uri.parse("$apiUrl/collections"), headers: {
@@ -121,23 +124,20 @@ class _OnBoardState extends State<OnBoard> {
     showAlertDialog(BuildContext context) {
       // set up the button
       Widget yesButton = TextButton(
-        child: Text("Yes"),
+        child: const Text("Yes"),
         onPressed: () {
-          submitTimetable();
+         submitTimetable();
           statusUpdate = true;
           statsUpdate = true;
-      Navigator.pushNamed(context, '/mainPage');
+          Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
         },
       );
-      Widget noButton = TextButton(onPressed: () {
-        Navigator.pushNamed(context,'/TimeTable');
-      }, child: Text("No"));
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
-        title: Text("Are you sure ? "),
-        content: Text("You would lose all your current data if you did this."),
-        actions: [yesButton,noButton],
+        title: const Text("Are you sure ? "),
+        content: const Text("You would lose all your current data if you did this."),
+        actions: [yesButton],
       );
 
       // show the dialog
@@ -150,14 +150,14 @@ class _OnBoardState extends State<OnBoard> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 7, 9, 15),
+      backgroundColor: const Color.fromARGB(255, 7, 9, 15),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-                color: Color.fromARGB(255, 13, 15, 21),
+                color: const Color.fromARGB(255, 13, 15, 21),
                 height: 200,
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +176,7 @@ class _OnBoardState extends State<OnBoard> {
                 )),
             Padding(
                 padding:
-                    EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 24),
+                    const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 24),
                 child: DropdownMenuItem(
                   child: Center(
                     child: FutureBuilder(
@@ -184,14 +184,14 @@ class _OnBoardState extends State<OnBoard> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return DropdownMenu(
                             hintText: 'TimeTable Presets',
-                            expandedInsets: EdgeInsets.all(7),
-                            inputDecorationTheme: InputDecorationTheme(
+                            expandedInsets: const EdgeInsets.all(7),
+                            inputDecorationTheme: const InputDecorationTheme(
                               fillColor: Color.fromARGB(255, 7, 9, 15),
                               hintStyle: TextStyle(color: Colors.white24),
                             ),
@@ -215,11 +215,11 @@ class _OnBoardState extends State<OnBoard> {
                   ),
                 )),
             Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
                     TextField(
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       onChanged: (timeTableName) =>
                           _timeTableName = timeTableName,
                       decoration: const InputDecoration(
@@ -235,7 +235,7 @@ class _OnBoardState extends State<OnBoard> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 25,
                       height: 25,
                     ),
@@ -247,7 +247,7 @@ class _OnBoardState extends State<OnBoard> {
                           FilteringTextInputFormatter.digitsOnly
                         ], // Only numbers can be entered
 
-                        style: TextStyle(color: Colors.white24),
+                        style: const TextStyle(color: Colors.white24),
                         decoration: const InputDecoration(
                           hintText: 'Minimum Attendence %',
                           border: OutlineInputBorder(),
@@ -260,7 +260,7 @@ class _OnBoardState extends State<OnBoard> {
                             ),
                           ),
                         )),
-                    SizedBox(
+                    const SizedBox(
                       width: 25,
                       height: 25,
                     ),
@@ -277,7 +277,7 @@ class _OnBoardState extends State<OnBoard> {
                                   ),
                                 ),
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 19,
                                   fontFamily: "alpha"),
@@ -285,7 +285,7 @@ class _OnBoardState extends State<OnBoard> {
                               onChanged: (DateTime? startDate) => _startDate =
                                   DateFormat("yyyy-MM-dd").format(startDate!),
                             )),
-                        Spacer(),
+                        const Spacer(),
                         SizedBox(
                             width: width / 2.6,
                             child: DateTimeFormField(
@@ -299,7 +299,7 @@ class _OnBoardState extends State<OnBoard> {
                                   ),
                                 ),
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 19,
                                   fontFamily: "alpha"),
@@ -310,12 +310,12 @@ class _OnBoardState extends State<OnBoard> {
                             )),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 500,
                       height: 25,
                     ),
                     CheckboxListTile(
-                      title: Text(
+                      title: const Text(
                         "Share TimeTable",
                         style: TextStyle(
                             color: Colors.white,
@@ -349,7 +349,13 @@ class _OnBoardState extends State<OnBoard> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Center(
+                            width: 405,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                            ),
+                            child: const Center(
                               child: Text(
                                 "NEXT",
                                 style: TextStyle(
@@ -357,12 +363,6 @@ class _OnBoardState extends State<OnBoard> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            width: 405,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
                             ),
                           ),
                         )),
