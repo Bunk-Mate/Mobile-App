@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:attendence1/global.dart';
 import 'package:attendence1/pages/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -15,55 +16,7 @@ late int _day;
 late int hello;
 List<IconData> subjectIcons = [
   Icons.school,
-  Icons.book,
-  Icons.star,
-  Icons.people,
-  Icons.abc,
-  Icons.laptop_chromebook_outlined,
-  Icons.macro_off,
-  Icons.work,
-  Icons.home,
-  Icons.music_note,
-  Icons.sports_soccer,
-  Icons.local_movies,
-  Icons.restaurant,
-  Icons.directions_run,
-  Icons.build,
-  Icons.airplanemode_active,
-  Icons.beach_access,
-  Icons.shopping_cart,
-  Icons.local_hospital,
-  Icons.local_florist,
-  Icons.brush,
-  Icons.business_center,
-  Icons.cake,
-  Icons.camera,
-  Icons.train,
-  Icons.phone,
-  Icons.pets,
-  Icons.local_pizza,
-  Icons.wifi,
-  Icons.palette,
-  Icons.play_circle_filled,
-  Icons.favorite,
-  Icons.radio,
-  Icons.beenhere,
-  Icons.casino,
-  Icons.child_friendly,
-  Icons.create,
-  Icons.desktop_windows,
-  Icons.directions_bike,
-  Icons.emoji_food_beverage,
-  Icons.flash_on,
-  Icons.golf_course,
-  Icons.pool,
-  Icons.shopping_basket,
-  Icons.star_border,
-  Icons.videogame_asset,
-  Icons.local_laundry_service,
-  Icons.toys,
-  Icons.watch,
-  Icons.local_dining,
+
 ];
 
 Future<void> getStatus() async {
@@ -77,6 +30,8 @@ Map<int, String> days = {
   3: "Wednesday",
   4: "Thursday",
   5: "Friday",
+  6: "Saturday",
+  7: "Sunday"
 };
 
 class TimeTable extends StatefulWidget {
@@ -94,7 +49,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     super.initState();
     getStatus();
   }
-
+  String color = '' ;
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
     return token;
@@ -162,7 +117,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     );
     if (response.statusCode == 200) {
       getStatus();
-      // Signal the statistics page to update on navigation
+      // Signal the stati
+      //stics page to update on navigation
       statsUpdate = true;
     } else {
       print(response.body);
@@ -171,6 +127,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
+  late Color c1 ; 
   void addHoliday() async {
     final response = await http.post(
       Uri.parse("$apiUrl/schedule_selector"),
@@ -183,7 +140,10 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       ),
     );
     if (response.statusCode == 201) {
-      getStatus();
+      getStatus(date: selectedDate);
+      //_selectDate(context)
+      
+      print(_day);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("TimeTable Selected"),
@@ -204,7 +164,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   DateTime selectedDate = DateTime.now();
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void>  _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -231,30 +191,46 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
+          toolbarHeight: MediaQuery.of(context).size.height/12,
           actions: [
-            Row(
+            Column(
               children: [
-                Text(
-                  currentDay,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32),
+                Row(
+                  children: [
+                    Align(alignment: Alignment.topCenter,child: 
+                     Padding(padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/25),
+                       child: 
+                         Text(
+                         days[selectedDate.weekday].toString(),
+                         
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 32),
+                                             ),
+                       
+                     )),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right:8),
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 211, 255, 153),
+                          )),
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                          child: Text("REWIND TIME",
+                              style: TextStyle(color: Colors.black))),
+
+                    ),
+                   
+                  ],
                 ),
-                SizedBox(
-                  width: 55,
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                      Color.fromARGB(255, 211, 255, 153),
-                    )),
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                    child: Text("REWIND TIME",
-                        style: TextStyle(color: Colors.black))),
-              ],
+               Divider(color: Colors.white)],
             ),
           ],
           automaticallyImplyLeading: false,
@@ -267,6 +243,15 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                   String name =
                       courses[index]["name"].toString().toCapitalized();
                   String status = courses[index]["status"];
+                  if (status == 'bunked') {
+                    c1 = Colors.red ;
+                  }
+                  else if (status == 'cancelled') {
+                    c1 = Colors.blue.shade700;
+                  }
+                  else {
+                    c1 = Colors.green ;
+                  }
                   if (courses.isEmpty) {
                     return Container(
                       child: ElevatedButton(
@@ -314,11 +299,20 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 32),
                                     ),
-                                    trailing: Text(
+                                    trailing:Container(
+                                      width: 100,
+                                      height: 40,
+      decoration: BoxDecoration(
+        color: c1,
+        borderRadius: BorderRadius.circular(20),
+        shape: BoxShape.rectangle
+      ),
+  child: Center(child:Text(
                                       "$status",
                                       style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    ),
+                                          color: Colors.white, fontSize: 15)),
+                                    
+)),
                                   ),
                                 ))),
                         SizedBox(
@@ -338,11 +332,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         children: [
                           Center(
                               child: Text(
-                            "Select Schedule for the day : ",
+                            "No Courses Scheduled Today!",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'alpha',
-                                fontSize: 25,
+                                fontSize: MediaQuery.of(context).size.width/17,
                                 fontWeight: FontWeight.w100),
                           )),
                           SizedBox(
@@ -351,18 +345,23 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                           ),
 
                           DropdownMenu(
+                            width: MediaQuery.of(context).size.width/2,
+                            hintText: "Copy Schedule",
                             inputDecorationTheme: InputDecorationTheme(
                                 border: OutlineInputBorder(
+                                 
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 fillColor:
                                     const Color.fromARGB(255, 211, 255, 153),
                                 filled: true,
+                              
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20))),
                             dropdownMenuEntries: days.entries.map(
                               (days) {
                                 return DropdownMenuEntry<int>(
+                                  
                                     value: days.key, label: days.value);
                               },
                             ).toList(),

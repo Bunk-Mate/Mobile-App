@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:attendence1/global.dart';
 import 'package:attendence1/pages/onboarding.dart';
-import 'package:attendence1/widgets/HomePage/SideSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:attendence1/utls/HomePage.dart' ;
 import 'package:attendence1/utls/imp.dart';
+import 'package:side_sheet/side_sheet.dart';
 class HomePage extends StatefulWidget {
   const HomePage({required Key key}) : super(key: key);
   @override
@@ -30,6 +30,7 @@ class HomePageState extends State<HomePage> {
       },
     );
     if (response.statusCode == 200) {
+      print("Bye");
       setState(() {
         stats = jsonDecode(response.body);
         print(response.body);
@@ -44,9 +45,9 @@ class HomePageState extends State<HomePage> {
       throw Exception('Failed to retrieve statistics');
     }
   }
-  Future<dynamic> logout() async {
+ Future<dynamic> logout() async {
     final response = await http.post(
-      Uri.parse('$apiUrl/logout'),
+      Uri.parse(apiUrl + '/logout'),
       headers: {
         HttpHeaders.authorizationHeader: "Token ${await getToken()}",
       },
@@ -68,6 +69,7 @@ class HomePageState extends State<HomePage> {
       throw Exception('Failed to retrieve statistics');
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -108,12 +110,74 @@ class HomePageState extends State<HomePage> {
             backgroundColor: Colors.transparent,
             child: GestureDetector(
                 onTap: () async {
-                  final data = await MySideSheet.showSideSheet(context, logout);     
+                  final data = await SideSheet.left(
+      width: MediaQuery.of(context).size.width * 0.4,
+      sheetColor: const Color.fromARGB(255, 7, 9, 15),
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.width * 0.25,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color.fromARGB(255, 211, 255, 153),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const OnBoard(),
+                  ));
+                },
+                child: const Text(
+                  "Timetable",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color.fromARGB(255, 211, 255, 153),
+                  ),
+                ),
+                onPressed: () {
+                logout();
+                },
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          ),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.close,
+                color: Color.fromARGB(255, 211, 255, 153),
+              ),
+              onPressed: () => Navigator.pop(context, 'Data Returns Left'),
+            ),
+          ),
+        ],
+      ),
+      context: context,
+    );    
                 },
                 child: ClipOval(
-                  child: Image.network(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt4ReEt7nQu7E_T_oQYM9YqImOK4Fkbc8Tfw&usqp=CAU',
-                  ),
+                  child: Icon(Icons.menu,size: 30,color: Colors.white,)
                 )),
           ),
         ),

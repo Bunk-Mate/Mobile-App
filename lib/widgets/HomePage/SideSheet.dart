@@ -46,6 +46,7 @@ class MySideSheet {
                 ),
                 onPressed: () {
                   logoutCallBack;
+                  //  Navigator.pushNamed(context, '/');
                 },
                 child: const Text(
                   "Logout",

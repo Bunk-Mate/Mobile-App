@@ -1,3 +1,4 @@
+import 'package:attendence1/pages/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:attendence1/global.dart';
 import 'package:intl/intl.dart';
@@ -7,9 +8,11 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-
+import 'package:attendence1/pages/homepage.dart';
 class OnBoard extends StatefulWidget {
+  
   const OnBoard({super.key});
+  
 
   @override
   State<OnBoard> createState() => _OnBoardState();
@@ -19,6 +22,7 @@ dynamic days = [];
 bool checkBox = false;
 
 class _OnBoardState extends State<OnBoard> {
+  final GlobalKey<HomePageState> _statsGlobalKey = GlobalKey();
   String _timeTableName = "";
   int _minAttendence = 0;
   String _startDate = "";
@@ -48,14 +52,19 @@ class _OnBoardState extends State<OnBoard> {
       }),
     );
     if (response.statusCode == 201) {
-      Navigator.pop(context);
+    
+     Navigator.pop(context);
       // Signal updates on navigation
-      statsUpdate = true;
+      statusUpdate = true ;
+      Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
+      _statsGlobalKey.currentState?.getStats();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Timetable details have been updated"),
         ),
       );
+
+      
     } else {
       print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -81,6 +90,7 @@ class _OnBoardState extends State<OnBoard> {
       Navigator.pop(context);
       // Signal updates on navigation
       statsUpdate = true;
+      // getTimeTable();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Timetable details have been updated"),
@@ -128,7 +138,6 @@ class _OnBoardState extends State<OnBoard> {
         onPressed: () {
          timeTablePresets();
           statusUpdate = true;
-          statsUpdate = true;
           Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
         },
       );
@@ -148,6 +157,33 @@ class _OnBoardState extends State<OnBoard> {
         },
       );
     }
+    // showAlertDialog1(BuildContext context) {
+    //   // set up the button
+    //   Widget yesButton = TextButton(
+    //     child: const Text("Yes"),
+    //     onPressed: () {
+    //      submitTimetable();
+    //       statusUpdate = true;
+    //       statsUpdate = true;
+    //       Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
+    //     },
+    //   );
+
+    //   // set up the AlertDialog
+    //   AlertDialog alert = AlertDialog(
+    //     title: const Text("Are you sure ? "),
+    //     content: const Text("You would lose all your current data if you did this."),
+    //     actions: [yesButton],
+    //   );
+
+    //   // show the dialog
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return alert;
+    //     },
+    //   );
+    // }
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 7, 9, 15),
@@ -335,9 +371,8 @@ class _OnBoardState extends State<OnBoard> {
                               _startDate.isNotEmpty &&
                               _timeTableName.isNotEmpty &&
                               _minAttendence != 0) {
-                            showAlertDialog(context);
-                          } else if (_endDate != 0) {
-                            timeTablePresets();
+                            submitTimetable();
+
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

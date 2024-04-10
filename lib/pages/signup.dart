@@ -18,6 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   final signUpUrl = '$apiUrl/register';
   TextEditingController UserNameController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
+  TextEditingController ConfirmPasswordController = TextEditingController();
   Future<void> sendPostRequest() async {
     var response = await http.post(Uri.parse(signUpUrl),
         headers: {"Content-Type": "application/json"},
@@ -100,7 +101,8 @@ class _SignupPageState extends State<SignupPage> {
                         width: 25,
                         height: 25,
                       ),
-                      const TextField(
+                      TextField(
+                        controller: ConfirmPasswordController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                             hintText: 'Confirm Password',
@@ -118,7 +120,15 @@ class _SignupPageState extends State<SignupPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              sendPostRequest();
+                              if (PasswordController.text == ConfirmPasswordController.text) {
+                                sendPostRequest();
+                              }
+                              else {
+                                ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Passwords donot match"))
+          );
+                              }
+                              
                             },
                             child: Container(
                               width: 405,
