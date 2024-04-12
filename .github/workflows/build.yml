@@ -5,6 +5,8 @@ on:
   # Runs this action when you push on master
   push:
     branches: [ "main" ]
+    tags: 
+      - "v*.*.*"
   # Runs this when a PR against master is created
   pull_request:
     branches: [ "main" ]
@@ -40,6 +42,10 @@ jobs:
           java-version: '11'
       - name: Build apk
         run: flutter build apk
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/apk/release/app-release.apk
  
   # --set-exit-if-changed stops execution if the any code is not well formatted
   # --output=none prints files which needs to be formatted
