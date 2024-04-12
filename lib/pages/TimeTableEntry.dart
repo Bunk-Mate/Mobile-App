@@ -24,7 +24,6 @@ class TimeTableEntry extends StatefulWidget {
   State<TimeTableEntry> createState() => TimeTableEntryState();
 }
 
-
 List<IconData> subjectIcons = [
   Icons.school,
   // Icons.book,
@@ -193,7 +192,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
           statsUpdate = true;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Schedule has been added for pre-existing course!"),
+              content: Text("Schedule has been added for existing course!"),
             ),
           );
         } else {
@@ -205,7 +204,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
               content: Text("Failed to add Schedule"),
             ),
           );
-          throw Exception('Failed to add schedule for pre-existing course');
+          throw Exception('Failed to add schedule');
         }
       }
 
@@ -230,7 +229,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
           statsUpdate = true;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Course had been added!"),
+              content: Text("Course has been added!"),
             ),
           );
         } else {
@@ -390,7 +389,6 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                                 }
                               },
                             ),
-                            
                           ],
                         ),
                         Center(

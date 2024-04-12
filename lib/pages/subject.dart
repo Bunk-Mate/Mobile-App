@@ -16,7 +16,6 @@ late int _day;
 late int hello;
 List<IconData> subjectIcons = [
   Icons.school,
-
 ];
 
 Future<void> getStatus() async {
@@ -49,7 +48,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     super.initState();
     getStatus();
   }
-  String color = '' ;
+
+  String color = '';
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
     return token;
@@ -127,7 +127,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
-  late Color c1 ; 
+  late Color c1;
   void addHoliday() async {
     final response = await http.post(
       Uri.parse("$apiUrl/schedule_selector"),
@@ -136,17 +136,19 @@ class TimeTableState extends State<TimeTable> with RouteAware {
         HttpHeaders.contentTypeHeader: "application/json"
       },
       body: jsonEncode(
-        {"day_of_week": _day, "date": DateFormat('yyyy-MM-dd').format(selectedDate)},
+        {
+          "day_of_week": _day,
+          "date": DateFormat('yyyy-MM-dd').format(selectedDate)
+        },
       ),
     );
     if (response.statusCode == 201) {
       getStatus(date: selectedDate);
       //_selectDate(context)
-      
-      print(_day);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("TimeTable Selected"),
+          content: Text("Copied Schedule"),
         ),
       );
     } else {
@@ -155,7 +157,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       print(DateFormat('EEEE').format(selectedDate));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("TimeTable not Selected"),
+          content: Text("Could not copy schedule"),
         ),
       );
       throw Exception('Failed to add TimeTable');
@@ -164,7 +166,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   DateTime selectedDate = DateTime.now();
 
-  Future<void>  _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -187,34 +189,35 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       var randomIndex = Random().nextInt(subjectIcons.length);
       return subjectIcons[randomIndex];
     }
+
     final currentDay = DateFormat('EEEE').format(DateTime.now());
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 7, 9, 15),
         appBar: AppBar(
-          toolbarHeight: MediaQuery.of(context).size.height/12,
+          toolbarHeight: MediaQuery.of(context).size.height / 12,
           actions: [
             Column(
               children: [
                 Row(
                   children: [
-                    Align(alignment: Alignment.topCenter,child: 
-                     Padding(padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/25),
-                       child: 
-                         Text(
-                         days[selectedDate.weekday].toString(),
-                         
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32),
-                                             ),
-                       
-                     )),
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 25),
+                          child: Text(
+                            days[selectedDate.weekday].toString(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 32),
+                          ),
+                        )),
                     SizedBox(
                       width: 50,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right:8),
+                      padding: const EdgeInsets.only(right: 8),
                       child: ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -225,12 +228,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                           },
                           child: Text("REWIND TIME",
                               style: TextStyle(color: Colors.black))),
-
                     ),
-                   
                   ],
                 ),
-               Divider(color: Colors.white)],
+                Divider(color: Colors.white)
+              ],
             ),
           ],
           automaticallyImplyLeading: false,
@@ -244,13 +246,11 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                       courses[index]["name"].toString().toCapitalized();
                   String status = courses[index]["status"];
                   if (status == 'bunked') {
-                    c1 = Colors.red ;
-                  }
-                  else if (status == 'cancelled') {
+                    c1 = Colors.red;
+                  } else if (status == 'cancelled') {
                     c1 = Colors.blue.shade700;
-                  }
-                  else {
-                    c1 = Colors.green ;
+                  } else {
+                    c1 = Colors.green;
                   }
                   if (courses.isEmpty) {
                     return Container(
@@ -299,20 +299,20 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 32),
                                     ),
-                                    trailing:Container(
-                                      width: 100,
-                                      height: 40,
-      decoration: BoxDecoration(
-        color: c1,
-        borderRadius: BorderRadius.circular(20),
-        shape: BoxShape.rectangle
-      ),
-  child: Center(child:Text(
-                                      "$status",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15)),
-                                    
-)),
+                                    trailing: Container(
+                                        width: 100,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: c1,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            shape: BoxShape.rectangle),
+                                        child: Center(
+                                          child: Text("$status",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 15)),
+                                        )),
                                   ),
                                 ))),
                         SizedBox(
@@ -336,7 +336,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'alpha',
-                                fontSize: MediaQuery.of(context).size.width/17,
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 17,
                                 fontWeight: FontWeight.w100),
                           )),
                           SizedBox(
@@ -345,23 +346,20 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                           ),
 
                           DropdownMenu(
-                            width: MediaQuery.of(context).size.width/2,
+                            width: MediaQuery.of(context).size.width / 2,
                             hintText: "Copy Schedule",
                             inputDecorationTheme: InputDecorationTheme(
                                 border: OutlineInputBorder(
-                                 
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 fillColor:
                                     const Color.fromARGB(255, 211, 255, 153),
                                 filled: true,
-                              
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20))),
                             dropdownMenuEntries: days.entries.map(
                               (days) {
                                 return DropdownMenuEntry<int>(
-                                  
                                     value: days.key, label: days.value);
                               },
                             ).toList(),
@@ -369,8 +367,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                               _day = days!;
                               addHoliday();
                               getStatus();
-                          
-
                             },
                           ),
 
@@ -386,3 +382,4 @@ class TimeTableState extends State<TimeTable> with RouteAware {
               ));
   }
 }
+

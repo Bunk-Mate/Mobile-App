@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       await storage.write(key: 'token', value: token);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Login failed, please try again"),
+        content: Text("Sign in, please try again"),
       ));
     }
     return response;
@@ -190,7 +190,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const SignupPage()),
+                                          builder: (context) =>
+                                              const SignupPage()),
                                     );
                                   },
                                   child: const Text("Signup ? ",

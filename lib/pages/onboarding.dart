@@ -9,10 +9,9 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:attendence1/pages/homepage.dart';
+
 class OnBoard extends StatefulWidget {
-  
   const OnBoard({super.key});
-  
 
   @override
   State<OnBoard> createState() => _OnBoardState();
@@ -52,28 +51,25 @@ class _OnBoardState extends State<OnBoard> {
       }),
     );
     if (response.statusCode == 201) {
-    
-     Navigator.pop(context);
+      Navigator.pop(context);
       // Signal updates on navigation
-      statusUpdate = true ;
-      Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
+      statusUpdate = true;
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/mainPage', (route) => false);
       _statsGlobalKey.currentState?.getStats();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Timetable details have been updated"),
+          content: Text("Timetable has been created"),
         ),
       );
-
-      
     } else {
       print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
-        
         const SnackBar(
-          content: Text("Could not update timetable details"),
+          content: Text("Could not create timetable"),
         ),
       );
-      throw Exception('Failed to add schedule for pre-existing course');
+      throw Exception("Could not create timetable");
     }
   }
 
@@ -93,17 +89,17 @@ class _OnBoardState extends State<OnBoard> {
       // getTimeTable();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Timetable details have been updated"),
+          content: Text("Timetable has been updated"),
         ),
       );
     } else {
       print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Could not update timetable details"),
+          content: Text("Could not update timetable"),
         ),
       );
-      throw Exception('Failed to add new timetable');
+      throw Exception('Failed to update timetable');
     }
   }
 
@@ -136,16 +132,18 @@ class _OnBoardState extends State<OnBoard> {
       Widget yesButton = TextButton(
         child: const Text("Yes"),
         onPressed: () {
-         timeTablePresets();
+          timeTablePresets();
           statusUpdate = true;
-          Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (route) => false);
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/mainPage', (route) => false);
         },
       );
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
         title: const Text("Are you sure ? "),
-        content: const Text("You would lose all your current data if you did this."),
+        content:
+            const Text("You would lose all your current data if you did this."),
         actions: [yesButton],
       );
 
@@ -211,8 +209,8 @@ class _OnBoardState extends State<OnBoard> {
                   ),
                 )),
             Padding(
-                padding:
-                    const EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 24),
+                padding: const EdgeInsets.only(
+                    left: 24, right: 24, bottom: 24, top: 24),
                 child: DropdownMenuItem(
                   child: Center(
                     child: FutureBuilder(
@@ -372,7 +370,6 @@ class _OnBoardState extends State<OnBoard> {
                               _timeTableName.isNotEmpty &&
                               _minAttendence != 0) {
                             submitTimetable();
-
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

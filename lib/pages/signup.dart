@@ -29,12 +29,11 @@ class _SignupPageState extends State<SignupPage> {
 
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("SignUp Succesfull"))
-          );
-          Navigator.pushNamed(context, '/');
+          .showSnackBar(const SnackBar(content: Text("SignUp Succesfull")));
+      Navigator.pushNamed(context, '/');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Your Password is weak/User already exists"),
+        content: Text("Your Password is weak/user already exists"),
       ));
     }
   }
@@ -120,15 +119,15 @@ class _SignupPageState extends State<SignupPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              if (PasswordController.text == ConfirmPasswordController.text) {
+                              if (PasswordController.text ==
+                                  ConfirmPasswordController.text) {
                                 sendPostRequest();
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("Passwords do not match")));
                               }
-                              else {
-                                ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Passwords donot match"))
-          );
-                              }
-                              
                             },
                             child: Container(
                               width: 405,
