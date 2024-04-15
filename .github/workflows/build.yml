@@ -42,7 +42,7 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - name: Build apk
-        run: flutter build apk
+        run: flutter build apk --release --no-shrink
       - uses: actions/upload-artifact@v1
         with:
           name: release-apk-artifact
