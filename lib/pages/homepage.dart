@@ -188,29 +188,14 @@ class HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Flexible(
+          Expanded(
             child: ListView.builder(
               itemCount: stats.length,
               itemBuilder: (context, index) {
                 final subject = stats[index];
                 return Column(
                   children: [
-                    ListTile(
-                        leading: Icon(
-                          getRandomSubjectIcon(),
-                          size: 62,
-                          color: Colors.white,
-                        ),
-                        title: Text(
-                          subject["name"].toString().toTitleCase(),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          "Attendance: ${subject["percentage"]}%",
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Expanded(
+                    Expanded(
                           child: CircleAvatar(
                             radius: 30,
                             backgroundColor: const Color.fromARGB(255, 211, 255, 153),
@@ -222,7 +207,7 @@ class HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.bold),
                         ),
                       ),
-                    )),
+                    ),
                   ],
                 );
               },
