@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:attendence1/global.dart';
 import 'package:attendence1/pages/onboarding.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:attendence1/utls/HomePage.dart' ;
@@ -186,7 +188,7 @@ class HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Expanded(
+          Flexible(
             child: ListView.builder(
               itemCount: stats.length,
               itemBuilder: (context, index) {
