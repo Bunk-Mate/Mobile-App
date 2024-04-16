@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:attendence1/global.dart';
 import 'package:attendence1/pages/onboarding.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:attendence1/utls/HomePage.dart' ;
@@ -185,8 +187,7 @@ class HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Expanded(
+          SafeArea(
             child: ListView.builder(
               itemCount: stats.length,
               itemBuilder: (context, index) {
@@ -208,7 +209,7 @@ class HomePageState extends State<HomePage> {
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        trailing: Expanded(
+                        trailing: SafeArea(
                           child: CircleAvatar(
                             radius: 30,
                             backgroundColor: const Color.fromARGB(255, 211, 255, 153),
@@ -226,7 +227,6 @@ class HomePageState extends State<HomePage> {
               },
             ),
           ),
-        ]),
       ),
     );
   }
