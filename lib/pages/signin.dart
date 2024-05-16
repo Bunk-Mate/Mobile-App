@@ -29,7 +29,8 @@ class _LoginPageState extends State<LoginPage> {
           "username": UserNameController.text,
           "password": PasswordController.text,
         }));
-
+    print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 202) {
       String token = jsonDecode(response.body)["token"];
 

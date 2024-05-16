@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:attendence1/utls/imp.dart';
 
 bool coursePresent = false;
+bool isHoliday = false;
 late int _day;
 late int hello;
 List<IconData> subjectIcons = [
@@ -56,7 +57,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
   }
 
   Future<dynamic> getStatus({DateTime? date}) async {
-    if (date == null) {
+    
+    if (date == null && isHoliday == false) {
       DateTime now = new DateTime.now();
       String today = DateFormat('yyyy-MM-dd').format(now);
       final response = await http.get(
@@ -80,7 +82,8 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       }
       return today;
     } else {
-      String today = DateFormat('yyyy-MM-dd').format(date);
+      print("I am inside the function that should be actually called");
+      String today = DateFormat('yyyy-MM-dd').format(date!);
       print(today);
       final response = await http.get(
         Uri.parse(apiUrl + '/datequery?date=$today'),
@@ -106,7 +109,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     }
   }
 
-  Future<dynamic> updateStatus(String url, String status) async {
+  Future<dynamic> updateStatus(String url, String status,{DateTime? date}) async {
     final response = await http.patch(
       Uri.parse(url),
       body: jsonEncode({"status": status}),
@@ -116,7 +119,13 @@ class TimeTableState extends State<TimeTable> with RouteAware {
       },
     );
     if (response.statusCode == 200) {
-      getStatus();
+      if (date == null) {
+         getStatus();
+      }
+      else {
+        getStatus(date: date);
+      }
+     
       // Signal the stati
       //stics page to update on navigation
       statsUpdate = true;
@@ -129,6 +138,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
 
   late Color c1;
   void addHoliday() async {
+    isHoliday = true ;
     final response = await http.post(
       Uri.parse("$apiUrl/schedule_selector"),
       headers: {
@@ -144,6 +154,7 @@ class TimeTableState extends State<TimeTable> with RouteAware {
     );
     if (response.statusCode == 201) {
       getStatus(date: selectedDate);
+      print("I am inside addHoliday");
       //_selectDate(context)
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -269,17 +280,28 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                         ],
                         GestureDetector(
                             onTap: () {
+                              print("Hello i am index");
+                               courses[index]["status"] = "bunked";
+                               c1 = Colors.red;
+                               getStatus(date: selectedDate);
                               updateStatus(
                                   courses[index]["session_url"], "bunked");
                             },
                             onDoubleTap: () {
+                              courses[index]["status"] = "cancelled";
+                              c1 = Colors.blue.shade700;
+                              getStatus(date: selectedDate);
                               updateStatus(
                                   courses[index]["session_url"], "cancelled");
+                                  getStatus(date: selectedDate);
                             },
                             onLongPress: () {
-                              //courses[index]["status"] = "Present";
+                              courses[index]["status"] = "Present";
+                              c1 = Colors.green;
+                              getStatus(date: selectedDate);
                               updateStatus(
                                   courses[index]["session_url"], "present");
+                                  getStatus(date: selectedDate);
                             },
                             child: Padding(
                                 padding: const EdgeInsets.only(
@@ -366,7 +388,6 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                             onSelected: (days) {
                               _day = days!;
                               addHoliday();
-                              getStatus();
                             },
                           ),
 

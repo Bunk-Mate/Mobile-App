@@ -26,7 +26,8 @@ class _SignupPageState extends State<SignupPage> {
           "username": UserNameController.text,
           "password": PasswordController.text,
         }));
-
+        print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("SignUp Succesfull")));

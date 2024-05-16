@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       navigatorObservers: [ObserverUtils.routeObserver],
-      initialRoute: initialRoute,
+      initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/mainPage': (context) => const Navigation()
