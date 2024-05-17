@@ -283,25 +283,26 @@ class TimeTableState extends State<TimeTable> with RouteAware {
                               print("Hello i am index");
                                courses[index]["status"] = "bunked";
                                c1 = Colors.red;
-                               getStatus(date: selectedDate);
+                             
                               updateStatus(
-                                  courses[index]["session_url"], "bunked");
+                                  courses[index]["session_url"], "bunked",date: selectedDate);
+                                  
                             },
                             onDoubleTap: () {
                               courses[index]["status"] = "cancelled";
                               c1 = Colors.blue.shade700;
-                              getStatus(date: selectedDate);
+                             
                               updateStatus(
-                                  courses[index]["session_url"], "cancelled");
-                                  getStatus(date: selectedDate);
+                                  courses[index]["session_url"], "cancelled",date: selectedDate);
+                                
                             },
                             onLongPress: () {
                               courses[index]["status"] = "Present";
                               c1 = Colors.green;
-                              getStatus(date: selectedDate);
+                             
                               updateStatus(
-                                  courses[index]["session_url"], "present");
-                                  getStatus(date: selectedDate);
+                                  courses[index]["session_url"], "present",date: selectedDate);
+                                  
                             },
                             child: Padding(
                                 padding: const EdgeInsets.only(
