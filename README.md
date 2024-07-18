@@ -1,4 +1,4 @@
-Bunk-Mate
+#Bunk-Mate
 
 Many of us have desired to take a day off from college for various activities or simply to relax, but often refrain due to concerns about meeting the attendance requirement percentage. The Bunk Mate app/website aims to address this dilemma by providing a convenient solution for tracking classes attended and offering live updates on the remaining classes needed to meet the attendance target.
 ## Installation
