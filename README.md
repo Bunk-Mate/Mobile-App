@@ -1,4 +1,4 @@
-#Bunk-Mate
+# Bunk-Mate
 
 Many of us have desired to take a day off from college for various activities or simply to relax, but often refrain due to concerns about meeting the attendance requirement percentage. The Bunk Mate app/website aims to address this dilemma by providing a convenient solution for tracking classes attended and offering live updates on the remaining classes needed to meet the attendance target.
 ## Installation
@@ -21,3 +21,14 @@ Here's how you can utilize the Attendance Tracker app effectively:
 To install the Attendance Tracker app, follow these simple steps:
 1 Clone the repository to your local machine.
 2 Run flutter run to install and launch the app.
+
+
+| Login Screen | Home Screen |
+|-----------|--------------|
+| ![Home Page](https://github.com/user-attachments/assets/4644645c-1f32-493d-a8c3-bc3a5304e70d) | ![Login Screen](https://github.com/user-attachments/assets/ddc269ca-cb80-441d-a5e2-b17d034393b6) |
+
+
+
+
+
+
