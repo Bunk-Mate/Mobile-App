@@ -1,9 +1,12 @@
 import 'package:bunk_mate/controllers/onBoard/time_table_controller.dart';
 import 'package:bunk_mate/models/onboard_time_table.dart';
+import 'package:bunk_mate/utils/Navigation.dart';
 import 'package:bunk_mate/utils/custom_date_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
 
 class TimetableView extends StatefulWidget {
   const TimetableView({super.key});
@@ -47,7 +50,9 @@ class _TimetableViewState extends State<TimetableView> {
       _controller.submitTimetable(timetable).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Timetable has been created")),
+          
         );
+        Get.off(Navigation());
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Could not create timetable")),
@@ -66,42 +71,74 @@ class _TimetableViewState extends State<TimetableView> {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 14),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 192, 252, 96),
+                Color.fromARGB(255, 212, 252, 96),
+                Color.fromARGB(255, 232, 252, 116),
+                Color.fromARGB(255, 252, 252, 136),
+                Color.fromARGB(255, 252, 252, 188),
+              ],
+            ),
+          ),
+          child: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height / 12,
+            actions: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter, 
+                        child: Padding(
+                          padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 25),
+                          child: Text(
+                            "Timetable Details",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 32,
+                              fontFamily: GoogleFonts.lexend().fontFamily),
+                          ),
+                        ),
+                      ),
+                    SizedBox(width: MediaQuery.of(context).size.width / 6 ),],
+                  ),
+                ],
+              ),
+            ],
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: const Color.fromARGB(255, 13, 15, 21),
-              height: 200,
-              child: const Padding(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SafeArea(
-                      child: Center(
-                        child: Text("Timetable Details",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            fontFamily: 'alpha')),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             Padding(
               padding: const EdgeInsets.only(
                 left: 24, right: 24, bottom: 24, top: 24),
               child: DropdownButtonFormField(
                 items: _presets.map((preset) {
+                  hintText: const Text('Timetable Presets', style: TextStyle(color: Colors.white24));
                   return DropdownMenuItem(
                     value: preset['id'],
                     child: Text(preset['name']),
+                    
                   );
                 }).toList(),
-                hint: const Text('Timetable Presets'),
+                hint: const Text('Timetable Presets', style: TextStyle(color: Colors.white24)),
                 onChanged: (value) {
                   showDialog(
                     context: context,
@@ -113,15 +150,23 @@ class _TimetableViewState extends State<TimetableView> {
                           TextButton(
                             child: const Text("Yes"),
                             onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
                               _controller.timeTablePresets(value as int).then((_) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Timetable has been updated")),
                                 );
+                                Get.off(Navigation());
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Could not update timetable")),
                                 );
                               });
+                            },
+                          ),
+                          TextButton(
+                            child: const Text("No"),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
                             },
                           ),
                         ],
@@ -153,10 +198,16 @@ class _TimetableViewState extends State<TimetableView> {
                   ),
                   const SizedBox(width: 25, height: 25),
                   TextFormField(
-                    onChanged: (minAttendance) =>
-                      _minAttendance = int.parse(minAttendance),
+                    onChanged: (minAttendance) {
+                      try {
+                        _minAttendance = int.parse(minAttendance);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please enter a valid number")),
+                        );
+                      }
+                    },
                     keyboardType: TextInputType.number,
-                    
                     style: const TextStyle(color: Colors.white24),
                     decoration: const InputDecoration(
                       hintText: 'Minimum Attendance %',

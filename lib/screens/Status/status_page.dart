@@ -1,13 +1,12 @@
 import 'package:bunk_mate/controllers/status/status_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-
 
 class StatusView extends StatelessWidget {
   final StatusController controller = Get.put(StatusController(apiUrl: 'https://api.bunkmate.college'));
-  
+
   @override
   Widget build(BuildContext context) {
     final currentDay = DateFormat('EEEE').format(DateTime.now());
@@ -15,51 +14,75 @@ class StatusView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 7, 9, 15),
-      appBar: AppBar(
-        toolbarHeight: MediaQuery.of(context).size.height / 12,
-        actions: [
-          Column(
-            children: [
-              Row(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 14),
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 192, 252, 96),
+                Color.fromARGB(255, 212, 252, 96),
+                Color.fromARGB(255, 232, 252, 116),
+                Color.fromARGB(255, 252, 252, 136),
+                Color.fromARGB(255, 252, 252, 188),
+              ],
+            ),
+          ),
+          child: AppBar(
+            toolbarHeight: MediaQuery.of(context).size.height / 12,
+            actions: [
+              Column(
                 children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 25),
-                      child: Obx(() => Text(
-                        controller.days[controller.selectedDate.value.weekday].toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 32),
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 25),
+                          child: Obx(() => Text(
+                            controller.days[controller.selectedDate.value.weekday].toString(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 32,
+                              fontFamily: GoogleFonts.lexend().fontFamily),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 50),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 211, 255, 153),
+                      SizedBox(width: MediaQuery.of(context).size.width / 4),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Color.fromARGB(255, 211, 255, 153),
+                            ),
+                          ),
+                          onPressed: () => controller.selectDate(context),
+                          child: Text(
+                            "REWIND TIME",
+                            style: TextStyle(color: Colors.black),
+                          ),
                         ),
                       ),
-                      onPressed: () => controller.selectDate(context),
-                      child: Text(
-                        "REWIND TIME",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
+                    ],
                   ),
+                  Divider(color: Colors.white)
                 ],
               ),
-              Divider(color: Colors.white)
             ],
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
           ),
-        ],
-        automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 7, 9, 15),
+        ),
       ),
       body: Obx(() => controller.courses.isNotEmpty
           ? ListView.builder(
@@ -68,7 +91,6 @@ class StatusView extends StatelessWidget {
                 String name = controller.courses[index]["name"].toString();
                 String status = controller.courses[index]["status"];
                 Color c1;
-
                 if (status == 'bunked') {
                   c1 = Colors.red;
                 } else if (status == 'cancelled') {
@@ -76,16 +98,8 @@ class StatusView extends StatelessWidget {
                 } else {
                   c1 = Colors.green;
                 }
-
                 return Column(
                   children: [
-                    if (currentDay == "Saturday") ...[
-                      Container(
-                        color: Colors.white,
-                        width: 20000,
-                        height: 20000,
-                      ),
-                    ],
                     GestureDetector(
                       onTap: () {
                         controller.courses[index]["status"] = "bunked";

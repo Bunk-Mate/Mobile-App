@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-     courseSummaryController.fetchCourseSummary();
+    courseSummaryController.fetchCourseSummary();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 7, 9, 15),
       appBar: AppBar(
@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage> {
                         Get.snackbar("Logout Succesfull",
                             "You were logged out succesfully");
                         Get.deleteAll();
-                        
                       } else {
                         Get.snackbar(
                             "Error", "You Weren't Logged Out Try Again");
@@ -82,12 +81,69 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Expanded(child: Container()),
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Get.to(TimetableView());
+                PopupMenuButton<int>(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            color: Color.fromARGB(255, 232, 252, 116),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Update Timetable",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 232, 252, 116)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // PopupMenuItem 2
+                    PopupMenuItem(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Color.fromARGB(255, 232, 252, 116),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Logout",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 232, 252, 116),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  offset: Offset(0, 111),
+                  color: Color.fromARGB(255, 7, 9, 15),
+                  elevation: 2,
+                  onSelected: (value) async {
+                    if (value == 1) {
+                      Get.to(TimetableView());
+                    } else if (value == 2) {
+                      bool success = await loginController.logoutfunction();
+                      if (success == false) {
+                        Get.off(const AuthScreen());
+                        Get.snackbar("Logout Succesfull",
+                            "You were logged out succesfully");
+                        Get.deleteAll();
+                      } else {
+                        Get.snackbar(
+                            "Error", "You Weren't Logged Out Try Again");
+                        Get.to(Navigation());
+                      }
+                    }
                   },
-                  color: Colors.black,
                 ),
               ],
             ),
@@ -98,17 +154,21 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child: SafeArea(
           child: Obx(() {
-             if (courseSummaryController.courseSummary.isEmpty) {
-            Future.delayed(Duration(seconds: 20), () {
-              Get.to(TimetableView());
-            });
-            return const Center(
-              child: Text(
-                "No Course Available",
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
+            if (courseSummaryController.courseSummary.isEmpty) {
+              Future.delayed(Duration(seconds: 20), () {
+                courseSummaryController.fetchCourseSummary();
+              });
+              return const Center(
+                child: Text(
+                  "📚 No Course Available\n📝 Please add a course!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0, 
+                  ),
+                ),
+              );
+            }
             List<_ChartData> data = courseSummaryController.courseSummary
                 .map((subject) =>
                     _ChartData(subject.name, subject.percentage.toDouble()))
@@ -119,20 +179,23 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: SfCartesianChart(
                     primaryXAxis: CategoryAxis(
-                      labelStyle:  TextStyle(
+                      labelStyle: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontFamily: GoogleFonts.lexend().fontFamily,
                       ),
                     ),
-                    primaryYAxis:
-                        NumericAxis(minimum: 0, maximum: 100, interval: 10 , majorGridLines: const MajorGridLines(width: 0),labelStyle: TextStyle(
+                    primaryYAxis: NumericAxis(
+                      minimum: 0,
+                      maximum: 100,
+                      interval: 10,
+                      majorGridLines: const MajorGridLines(width: 0),
+                      labelStyle: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontFamily: GoogleFonts.lexend().fontFamily,
                       ),
                     ),
-                        
                     tooltipBehavior: _tooltip,
                     series: <CartesianSeries<_ChartData, String>>[
                       BarSeries<_ChartData, String>(
