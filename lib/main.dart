@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     final storage = const FlutterSecureStorage();
 
     return FutureBuilder(
-      future: storage.read(key: 'token'), 
+      future: storage.read(key: 'token'),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(
@@ -33,10 +33,11 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
               theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+                colorScheme:
+                    ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: Navigation(), 
+              home: Navigation(),
             );
           } else {
             return GetMaterialApp(
@@ -44,10 +45,11 @@ class MyApp extends StatelessWidget {
               title: 'Flutter Demo',
               theme: ThemeData(
                 fontFamily: GoogleFonts.lexend().fontFamily,
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+                colorScheme:
+                    ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: AuthScreen(), 
+              home: AuthScreen(),
             );
           }
         }

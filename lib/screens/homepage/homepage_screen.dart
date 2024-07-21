@@ -140,7 +140,8 @@ class _HomePageState extends State<HomePage> {
                       } else {
                         Get.snackbar(
                             "Error", "You Weren't Logged Out Try Again");
-                        Get.to(Navigation());
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const TimetableView()));
                       }
                     }
                   },
@@ -160,11 +161,11 @@ class _HomePageState extends State<HomePage> {
               });
               return const Center(
                 child: Text(
-                  "📚 No Course Available\n📝 Please add a course!",
+                  " 📚 No Course Available\n📝 Please add a course or use the menu to update your timetable!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.0, 
+                    fontSize: 18.0,
                   ),
                 ),
               );

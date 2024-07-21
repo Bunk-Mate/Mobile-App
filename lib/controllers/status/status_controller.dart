@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
-class  StatusController extends GetxController {
+class StatusController extends GetxController {
   final storage = FlutterSecureStorage();
   final String apiUrl;
 
@@ -40,10 +40,11 @@ class  StatusController extends GetxController {
   Future<void> getStatus({DateTime? date}) async {
     final now = DateTime.now();
     final today = date ?? now;
-    
+
     try {
       final response = await http.get(
-        Uri.parse(apiUrl + '/datequery?date=${DateFormat('yyyy-MM-dd').format(today)}'),
+        Uri.parse(apiUrl +
+            '/datequery?date=${DateFormat('yyyy-MM-dd').format(today)}'),
         headers: {
           HttpHeaders.authorizationHeader: "Token ${await getToken()}",
           HttpHeaders.contentTypeHeader: "application/json"
@@ -145,7 +146,7 @@ class  StatusController extends GetxController {
 
   IconData getRandomSubjectIcon() {
     var subjectIcons = [
-      Icons.school,
+      Icons.abc,
     ];
     var randomIndex = subjectIcons.length > 0 ? 0 : 0;
     return subjectIcons[randomIndex];

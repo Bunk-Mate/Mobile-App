@@ -152,10 +152,7 @@ class _TimetableViewState extends State<TimetableView> {
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                               _controller.timeTablePresets(value as int).then((_) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Timetable has been updated")),
-                                );
-                                Get.off(Navigation());
+                                Get.to(Navigation());
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Could not update timetable")),
