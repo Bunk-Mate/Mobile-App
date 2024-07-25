@@ -32,7 +32,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    courseSummaryController.fetchCourseSummary();
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 7, 9, 15),
       appBar: AppBar(
@@ -67,14 +69,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onDoubleTap: () async {
                       bool success = await loginController.logoutfunction();
-                      if (success == false) {
+                      if (!success) {
                         Get.off(const AuthScreen());
-                        Get.snackbar("Logout Succesfull",
-                            "You were logged out succesfully");
+                        Get.snackbar("Logout Successful",
+                            "You were logged out successfully");
                         Get.deleteAll();
                       } else {
                         Get.snackbar(
-                            "Error", "You Weren't Logged Out Try Again");
+                            "Error", "You weren't logged out. Try again.");
                         Get.to(Navigation());
                       }
                     },
@@ -102,7 +104,6 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    // PopupMenuItem 2
                     PopupMenuItem(
                       value: 2,
                       child: Row(
@@ -132,14 +133,14 @@ class _HomePageState extends State<HomePage> {
                       Get.to(TimetableView());
                     } else if (value == 2) {
                       bool success = await loginController.logoutfunction();
-                      if (success == false) {
+                      if (!success) {
                         Get.off(const AuthScreen());
-                        Get.snackbar("Logout Succesfull",
-                            "You were logged out succesfully");
+                        Get.snackbar("Logout Successful",
+                            "You were logged out successfully");
                         Get.deleteAll();
                       } else {
                         Get.snackbar(
-                            "Error", "You Weren't Logged Out Try Again");
+                            "Error", "You weren't logged out. Try again.");
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const TimetableView()));
                       }
@@ -161,7 +162,7 @@ class _HomePageState extends State<HomePage> {
               });
               return const Center(
                 child: Text(
-                  " 📚 No Course Available\n📝 Please add a course or use the menu to update your timetable!",
+                  "📚 No Course Available\n📝 Please add a course or use the menu to update your timetable!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -176,99 +177,98 @@ class _HomePageState extends State<HomePage> {
                 .toList();
             return ListView(
               children: [
-                // Chart Widget
                 Center(
-                  child: SfCartesianChart(
-                    primaryXAxis: CategoryAxis(
-                      labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.lexend().fontFamily,
-                      ),
-                    ),
-                    primaryYAxis: NumericAxis(
-                      minimum: 0,
-                      maximum: 100,
-                      interval: 10,
-                      majorGridLines: const MajorGridLines(width: 0),
-                      labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.lexend().fontFamily,
-                      ),
-                    ),
-                    tooltipBehavior: _tooltip,
-                    series: <CartesianSeries<_ChartData, String>>[
-                      BarSeries<_ChartData, String>(
-                        gradient: const LinearGradient(
-                          colors: <Color>[
-                            Color.fromARGB(255, 192, 252, 96),
-                            Color.fromARGB(255, 212, 252, 96),
-                            Color.fromARGB(255, 232, 252, 116),
-                            Color.fromARGB(255, 252, 252, 136),
-                            Color.fromARGB(255, 252, 252, 188),
-                          ],
-                          stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
-                          // Setting alignment for the series gradient
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.topRight,
+                  child: Container(
+                    height: screenHeight * 0.4,
+                    child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.lexend().fontFamily,
                         ),
-                        dataSource: data,
-                        xValueMapper: (_ChartData data, _) => data.x,
-                        yValueMapper: (_ChartData data, _) => data.y,
-                        name: 'Attendance Summary',
-                        dataLabelSettings: const DataLabelSettings(
-                          isVisible: true,
-                          textStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      primaryYAxis: NumericAxis(
+                        minimum: 0,
+                        maximum: 100,
+                        interval: 10,
+                        majorGridLines: const MajorGridLines(width: 0),
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.lexend().fontFamily,
+                        ),
+                      ),
+                      tooltipBehavior: _tooltip,
+                      series: <CartesianSeries<_ChartData, String>>[
+                        BarSeries<_ChartData, String>(
+                          gradient: const LinearGradient(
+                            colors: <Color>[
+                              Color.fromARGB(255, 192, 252, 96),
+                              Color.fromARGB(255, 212, 252, 96),
+                              Color.fromARGB(255, 232, 252, 116),
+                              Color.fromARGB(255, 252, 252, 136),
+                              Color.fromARGB(255, 252, 252, 188),
+                            ],
+                            stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
                           ),
-                          labelAlignment: ChartDataLabelAlignment.middle,
+                          dataSource: data,
+                          xValueMapper: (_ChartData data, _) => data.x,
+                          yValueMapper: (_ChartData data, _) => data.y,
+                          name: 'Attendance Summary',
+                          dataLabelSettings: const DataLabelSettings(
+                            isVisible: true,
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            labelAlignment: ChartDataLabelAlignment.middle,
+                          ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-
-                // Course Summary List
                 ...courseSummaryController.courseSummary.map((subject) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: const Icon(
-                          Icons.abc,
-                          size: 62,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.abc,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        subject.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "Attendance: ${subject.percentage}%",
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
-                        title: Text(
-                          subject.name,
+                      ),
+                      trailing: CircleAvatar(
+                        radius: 25,
+                        backgroundColor:
+                            const Color.fromARGB(255, 211, 255, 153),
+                        child: Text(
+                          subject.bunksAvailable.toString(),
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          "Attendance: ${subject.percentage}%",
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        trailing: SafeArea(
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundColor:
-                                const Color.fromARGB(255, 211, 255, 153),
-                            child: Text(
-                              subject.bunksAvailable.toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   );
-                })
+                }).toList(),
               ],
             );
           }),

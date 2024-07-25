@@ -42,10 +42,9 @@ class CourseSummaryController extends GetxController {
       } else {
         var errorResponse = jsonDecode(response.body);
         print(response.statusCode);
-        throw errorResponse['detail'] ?? 'Unknown error occurred';
       }
     } catch (error) {
-      Get.snackbar('Error', error.toString());
+      print(error);
     }
   }
 }

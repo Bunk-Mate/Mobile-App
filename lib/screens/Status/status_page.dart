@@ -17,7 +17,7 @@ class StatusView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 7, 9, 15),
+      backgroundColor: const Color.fromARGB(255, 7, 9, 15),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(screenHeight / 14),
         child: Container(
@@ -42,6 +42,7 @@ class StatusView extends StatelessWidget {
             toolbarHeight: screenHeight / 16,
             actions: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: [
@@ -68,7 +69,7 @@ class StatusView extends StatelessWidget {
                         child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 211, 255, 153),
+                              const Color.fromARGB(255, 211, 255, 153),
                             ),
                           ),
                           onPressed: () => controller.selectDate(context),
@@ -111,7 +112,8 @@ class StatusView extends StatelessWidget {
                   }
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.02, vertical: 8.0),
                     child: GestureDetector(
                       onTap: () {
                         controller.courses[index]["status"] = "bunked";
@@ -130,7 +132,7 @@ class StatusView extends StatelessWidget {
                         );
                       },
                       onLongPress: () {
-                        controller.courses[index]["status"] = "Present";
+                        controller.courses[index]["status"] = "present";
                         controller.updateStatus(
                           controller.courses[index]["session_url"],
                           "present",
@@ -141,7 +143,7 @@ class StatusView extends StatelessWidget {
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: Color.fromARGB(255, 13, 15, 21),
+                          color: const Color.fromARGB(255, 13, 15, 21),
                         ),
                         child: ListTile(
                           leading: Icon(
@@ -177,7 +179,8 @@ class StatusView extends StatelessWidget {
                       ),
                     ),
                   );
-                })
+                },
+              )
             : Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -200,14 +203,20 @@ class StatusView extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          fillColor: Color.fromARGB(255, 211, 255, 153),
+                          fillColor: const Color.fromARGB(255, 211, 255, 153),
                           filled: true,
                         ),
-                        hint: Text("Copy Schedule"),
+                        hint: Text(
+                          "Copy Schedule",
+                          style: TextStyle(fontSize: screenWidth / 28),
+                        ),
                         items: controller.days.entries.map((days) {
                           return DropdownMenuItem<int>(
                             value: days.key,
-                            child: Text(days.value),
+                            child: Text(
+                              days.value,
+                              style: TextStyle(fontSize: screenWidth / 28),
+                            ),
                           );
                         }).toList(),
                         onChanged: (days) {

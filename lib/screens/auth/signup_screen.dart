@@ -6,109 +6,151 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Registration extends StatelessWidget {
+class Registration extends StatefulWidget {
   const Registration({super.key});
+
+  @override
+  _RegistrationState createState() => _RegistrationState();
+}
+
+class _RegistrationState extends State<Registration> {
+  final SignupController signupController = SignupController();
+
+  @override
+  void initState() {
+    super.initState();
+    signupController.usernameController = TextEditingController();
+    signupController.passwordController = TextEditingController();
+    signupController.confirmPasswordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    signupController.usernameController.dispose();
+    signupController.passwordController.dispose();
+    signupController.confirmPasswordController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    SignupController signupController = SignupController();
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25)),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color.fromARGB(255, 192, 252, 96),
-                        Color.fromARGB(255, 212, 252, 96),
-                        Color.fromARGB(255, 232, 252, 116),
-                        Color.fromARGB(255, 252, 252, 136),
-                        Color.fromARGB(255, 255, 255, 255),
-                      ],
-                    )),
-                child: Column(
-                  children: [
-                    SafeArea(
-                        child: Text("Register",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40,
-                              fontFamily: GoogleFonts.lexend().fontFamily,
-                            ))),
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 192, 252, 96),
+                    Color.fromARGB(255, 212, 252, 96),
+                    Color.fromARGB(255, 232, 252, 116),
+                    Color.fromARGB(255, 252, 252, 136),
+                    Color.fromARGB(255, 255, 255, 255),
                   ],
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
+              child: Column(
+                children: [
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Register",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          fontFamily: GoogleFonts.lexend().fontFamily,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.1,
+                vertical: screenHeight * 0.05,
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: screenHeight * 0.05,
+                  ),
+                  AuthField(
+                    controller: signupController.usernameController,
+                    title: "Username",
+                    isObscure: false,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.03,
+                  ),
+                  AuthField(
+                    controller: signupController.passwordController,
+                    title: "Password",
+                    isObscure: true,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.03,
+                  ),
+                  AuthField(
+                    controller: signupController.confirmPasswordController,
+                    title: "Confirm Password",
+                    isObscure: true,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.05,
+                  ),
+                  AuthButton(
+                    function: signupController.signUpFunction,
+                    screenWidth: screenWidth,
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.02,
+                  ),
+                  Column(
                     children: [
-                      const SizedBox(
-                        width: 55,
-                        height: 55,
+                      Text(
+                        "Have an account?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
-                      AuthField(
-                        controller: signupController.usernameController,
-                        title: "Username",
-                        isObscure: false,
-                      ),
-                      const SizedBox(
-                        width: 25,
-                        height: 25,
-                      ),
-                      AuthField(
-                        controller: signupController.passwordController,
-                        title: "Password",
-                        isObscure: true,
-                      ),
-                      const SizedBox(
-                        width: 25,
-                        height: 25,
-                      ),
-                      AuthField(
-                        controller: signupController.confirmPasswordController,
-                        title: "Confirm Password",
-                        isObscure: true,
-                      ),
-                      const SizedBox(
-                        width: 50,
-                        height: 50,
-                      ),
-                      AuthButton(
-                          function: signupController.signUpFunction,
-                          screenWidth: screenWidth),
-                      Column(
-                        children: [
-                          const SizedBox(width: 10, height: 10),
-                          const Text(
-                            "Have an account",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(AuthScreen());
+                        },
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
-                          GestureDetector(
-                              onTap: () {
-                                Get.to(AuthScreen());
-                              },
-                              child: const Text("Sign in",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold))),
-                        ],
-                      )
+                        ),
+                      ),
                     ],
-                  ))
-            ],
-          ),
-        ));
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
