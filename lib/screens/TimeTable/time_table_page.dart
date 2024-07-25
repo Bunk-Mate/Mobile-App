@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:bunk_mate/controllers/timetable/time_table_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:bunk_mate/utils/string_extension.dart';
 class TimeTableEntry extends StatefulWidget {
   @override
   State<TimeTableEntry> createState() => TimeTableEntryState();
@@ -30,6 +30,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getSchedule();
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Scaffold(
@@ -88,7 +89,7 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                                         color: Colors.white,
                                       ),
                                       title: Text(
-                                        course.name..capitalize,
+                                        course.name..toString().toUpperCase(),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),

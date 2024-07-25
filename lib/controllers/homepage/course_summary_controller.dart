@@ -38,8 +38,10 @@ class CourseSummaryController extends GetxController {
 
         courseSummary.assignAll(fetchedSummary);
         print("Task Done");
+        print(response.body);
       } else {
         var errorResponse = jsonDecode(response.body);
+        print(response.statusCode);
         throw errorResponse['detail'] ?? 'Unknown error occurred';
       }
     } catch (error) {
