@@ -84,9 +84,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(child: Container()),
                 PopupMenuButton<int>(
+
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      value: 1,
+                      value: 0,
                       child: Row(
                         children: [
                           Icon(
@@ -177,60 +178,60 @@ class _HomePageState extends State<HomePage> {
                 .toList();
             return ListView(
               children: [
-                Center(
-                  child: Container(
-                    height: screenHeight * 0.4,
-                    child: SfCartesianChart(
-                      primaryXAxis: CategoryAxis(
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.lexend().fontFamily,
-                        ),
-                      ),
-                      primaryYAxis: NumericAxis(
-                        minimum: 0,
-                        maximum: 100,
-                        interval: 10,
-                        majorGridLines: const MajorGridLines(width: 0),
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.lexend().fontFamily,
-                        ),
-                      ),
-                      tooltipBehavior: _tooltip,
-                      series: <CartesianSeries<_ChartData, String>>[
-                        BarSeries<_ChartData, String>(
-                          gradient: const LinearGradient(
-                            colors: <Color>[
-                              Color.fromARGB(255, 192, 252, 96),
-                              Color.fromARGB(255, 212, 252, 96),
-                              Color.fromARGB(255, 232, 252, 116),
-                              Color.fromARGB(255, 252, 252, 136),
-                              Color.fromARGB(255, 252, 252, 188),
-                            ],
-                            stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                          ),
-                          dataSource: data,
-                          xValueMapper: (_ChartData data, _) => data.x,
-                          yValueMapper: (_ChartData data, _) => data.y,
-                          name: 'Attendance Summary',
-                          dataLabelSettings: const DataLabelSettings(
-                            isVisible: true,
-                            textStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            labelAlignment: ChartDataLabelAlignment.middle,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Container(
+                //     height: screenHeight * 0.4,
+                //     child: SfCartesianChart(
+                //       primaryXAxis: CategoryAxis(
+                //         labelStyle: TextStyle(
+                //           color: Colors.white,
+                //           fontWeight: FontWeight.bold,
+                //           fontFamily: GoogleFonts.lexend().fontFamily,
+                //         ),
+                //       ),
+                //       primaryYAxis: NumericAxis(
+                //         minimum: 0,
+                //         maximum: 100,
+                //         interval: 10,
+                //         majorGridLines: const MajorGridLines(width: 0),
+                //         labelStyle: TextStyle(
+                //           color: Colors.white,
+                //           fontWeight: FontWeight.bold,
+                //           fontFamily: GoogleFonts.lexend().fontFamily,
+                //         ),
+                //       ),
+                //       tooltipBehavior: _tooltip,
+                //       series: <CartesianSeries<_ChartData, String>>[
+                //         BarSeries<_ChartData, String>(
+                          // gradient: const LinearGradient(
+                          //   colors: <Color>[
+                          //     Color.fromARGB(255, 192, 252, 96),
+                          //     Color.fromARGB(255, 212, 252, 96),
+                          //     Color.fromARGB(255, 232, 252, 116),
+                          //     Color.fromARGB(255, 252, 252, 136),
+                          //     Color.fromARGB(255, 252, 252, 188),
+                          //   ],
+                          //   stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
+                          //   begin: Alignment.bottomLeft,
+                          //   end: Alignment.topRight,
+                          // ),
+                        //   dataSource: data,
+                        //   xValueMapper: (_ChartData data, _) => data.x,
+                        //   yValueMapper: (_ChartData data, _) => data.y,
+                        //   name: 'Attendance Summary',
+                        //   dataLabelSettings: const DataLabelSettings(
+                        //     isVisible: true,
+                        //     textStyle: TextStyle(
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //     labelAlignment: ChartDataLabelAlignment.middle,
+                        //   ),
+                        // ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 ...courseSummaryController.courseSummary.map((subject) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),

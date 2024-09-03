@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bunk_mate/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/utils/api_endpoints.dart';
@@ -27,6 +28,7 @@ class SignupController extends GetxController {
       if (response.statusCode == 201) {
         usernameController.clear();
         passwordController.clear();
+        Get.to(AuthScreen());
       }
       else {
         throw jsonDecode(response.body) ?? 'Unknown Error occured' ;
