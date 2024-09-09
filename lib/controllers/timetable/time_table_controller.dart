@@ -68,9 +68,9 @@ Future<void> getSchedule() async {
     print(response.body);
     if (response.statusCode == 201) {
       await getSchedule();
-      Get.snackbar("Success", "Schedule has been added for existing course!");
+      // Get.snackbar("Success", "Schedule has been added for existing course!");
     } else {
-      Get.snackbar("Error", "Failed to add Schedule");
+      // Get.snackbar("Error", "Failed to add Schedule");
       throw Exception('Failed to add schedule');
     }
   }

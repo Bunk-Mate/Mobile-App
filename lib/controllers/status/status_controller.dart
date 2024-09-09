@@ -76,11 +76,11 @@ class StatusController extends GetxController {
 
       if (response.statusCode == 200) {
         await getStatus(date: date);
-        Get.snackbar(
-          'Status Updated',
-          'Status updated successfully!',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        // Get.snackbar(
+        //   'Status Updated',a
+        //   'Status updated successfully!',
+        //   snackPosition: SnackPosition.BOTTOM,
+        // );
       } else {
         throw Exception('Failed to update status');
       }
@@ -108,21 +108,11 @@ class StatusController extends GetxController {
 
       if (response.statusCode == 201) {
         await getStatus(date: selectedDate.value);
-        Get.snackbar(
-          'Holiday Added',
-          'Holiday schedule copied successfully!',
-          snackPosition: SnackPosition.BOTTOM,
-        );
       } else {
         throw Exception('Failed to add Holiday');
       }
     } catch (e) {
       print('Error: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to add Holiday',
-        snackPosition: SnackPosition.BOTTOM,
-      );
     }
   }
 
