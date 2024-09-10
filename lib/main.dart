@@ -1,4 +1,7 @@
+import 'package:bunk_mate/screens/OnBoardView.dart';
+import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/screens/auth/login_screen.dart';
+import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
 import 'package:bunk_mate/utils/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

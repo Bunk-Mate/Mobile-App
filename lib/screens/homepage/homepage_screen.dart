@@ -130,8 +130,8 @@ class _HomePageState extends State<HomePage> {
                   color: Color.fromARGB(255, 7, 9, 15),
                   elevation: 2,
                   onSelected: (value) async {
-                    if (value == 1) {
-                      Get.to(TimetableView());
+                    if (value == 0) {
+                      Get.to(const TimetableView());
                     } else if (value == 2) {
                       bool success = await loginController.logoutfunction();
                       if (!success) {
