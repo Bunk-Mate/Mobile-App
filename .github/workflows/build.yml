@@ -43,7 +43,7 @@ jobs:
           java-version: '11'
       - name: Build apk
         run: flutter build apk --release --no-shrink
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: release-apk-artifact
           path: build/app/outputs/apk/release/app-release.apk
