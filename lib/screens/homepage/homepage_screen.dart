@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ],
-                  offset: Offset(0, 111),
+                  offset: Offset(0, 50),
                   color: Color.fromARGB(255, 7, 9, 15),
                   elevation: 2,
                   onSelected: (value) async {

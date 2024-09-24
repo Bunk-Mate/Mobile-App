@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 
 class TimeTableController extends GetxController {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   var courses = <Course>[].obs;
   var schedule = <Schedule>[].obs;
   static const apiUrl = ApiEndPoints.baseUrl;

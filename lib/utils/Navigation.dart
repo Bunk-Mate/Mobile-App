@@ -27,8 +27,8 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _children = <Widget>[
-      HomePage(),
+    List<Widget> children = <Widget>[
+      const HomePage(),
       StatusView(),
       TimeTableEntry()
      
@@ -37,13 +37,13 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
       body: IndexedStack(
         index: currentIndex,
-        children: _children,
+        children: children,
       ),
       bottomNavigationBar: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 13, 15, 21),
+              color: const Color.fromARGB(255, 13, 15, 21),
               boxShadow: [
                 BoxShadow(
                   blurRadius: 20,
@@ -62,9 +62,9 @@ class _NavigationState extends State<Navigation> {
                   gap: 8,
                   activeColor: Colors.black,
                   iconSize: 32,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  duration: Duration(milliseconds: 400),
-                  tabBackgroundColor: Color.fromARGB(255, 211, 255, 153),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  duration: const Duration(milliseconds: 400),
+                  tabBackgroundColor: const Color.fromARGB(255, 211, 255, 153),
                   color: const Color.fromARGB(255, 211, 255, 153),
                   tabs: const [
                     GButton(

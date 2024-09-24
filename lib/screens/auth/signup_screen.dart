@@ -124,7 +124,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                   Column(
                     children: [
-                      Text(
+                      const Text(
                         "Have an account?",
                         style: TextStyle(
                           color: Colors.white,
@@ -133,9 +133,9 @@ class _RegistrationState extends State<Registration> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(AuthScreen());
+                          Get.off(const AuthScreen());
                         },
-                        child: Text(
+                        child: const Text(
                           "Sign in",
                           style: TextStyle(
                             color: Colors.white,

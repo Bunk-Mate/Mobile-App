@@ -13,17 +13,17 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final storage = const FlutterSecureStorage();
-
+    const storage = FlutterSecureStorage();
+ WidgetsFlutterBinding.ensureInitialized();
     return FutureBuilder(
       future: storage.read(key: 'token'),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                     ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: Navigation(),
+              home: const Navigation(),
             );
           } else {
             return GetMaterialApp(
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
                     ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: AuthScreen(),
+              home: const AuthScreen(),
             );
           }
         }

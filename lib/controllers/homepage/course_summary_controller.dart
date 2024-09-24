@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bunk_mate/models/course_summary_model.dart';
+import 'package:bunk_mate/screens/OnBoardView.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/utils/api_endpoints.dart';
@@ -14,7 +15,7 @@ class CourseSummaryController extends GetxController {
   Future<String?> getToken() async {
     return await storage.read(key: 'token');
   }
-
+var checkIn = false.obs;
   Future<void> fetchCourseSummary() async {
     final token = await getToken();
     if (token == null) {
@@ -31,14 +32,29 @@ class CourseSummaryController extends GetxController {
       http.Response response = await http.get(url, headers: headers);
       response = http.Response(response.body, 200);
       if (response.statusCode == 200) {
+        
         List<dynamic> jsonData = json.decode(response.body);
-
         var fetchedSummary =
             jsonData.map((data) => CourseSummary.fromJson(data)).toList();
 
         courseSummary.assignAll(fetchedSummary);
-        print("Task Done");
-        print(response.body);
+        final Map<String, dynamic> responseMap = json.decode(response.body);
+         if (responseMap['detail'] == "Not found.") {
+        checkIn.value = false ; 
+    }
+    else {
+      checkIn.value = true;
+      
+    }
+if (checkIn.value == false) {
+Future.delayed(const Duration(seconds: 3), () {
+      Get.offAll(TimetableView());
+      checkIn.value == true ;
+    });
+    }      
+       print(response.body);
+        
+        print("Task Done");  
       } else {
         var errorResponse = jsonDecode(response.body);
         print(response.statusCode);

@@ -99,7 +99,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         onTap: () async {
                           bool success = await loginController.loginFunction();
                           if (success) {
-                            Get.to(const Navigation());
+                            Get.off(const Navigation());
                           }
                         },
                         child: Container(

@@ -6,10 +6,10 @@ class CustomDatePicker extends StatelessWidget {
   final Function(DateTime?) onDateSelected;
 
   const CustomDatePicker({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.onDateSelected, 
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

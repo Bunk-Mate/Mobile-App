@@ -52,7 +52,7 @@ class _TimetableViewState extends State<TimetableView> {
           const SnackBar(content: Text("Timetable has been created")),
           
         );
-        Get.off(Navigation());
+        Get.off(const Navigation());
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Could not create timetable")),
@@ -152,7 +152,7 @@ class _TimetableViewState extends State<TimetableView> {
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                               _controller.timeTablePresets(value as int).then((_) {
-                                Get.to(Navigation());
+                                Get.off(const Navigation());
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Could not update timetable")),
