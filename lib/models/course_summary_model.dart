@@ -9,6 +9,7 @@ class CourseSummary {
     required this.bunksAvailable,
   });
 
+
   factory CourseSummary.fromJson(Map<String, dynamic> json) {
     return CourseSummary(
       name: json['name'],

@@ -11,8 +11,7 @@ import 'package:bunk_mate/screens/OnBoardView.dart';
 class CourseSummaryController extends GetxController {
   var courseSummary = <CourseSummary>[].obs;
   final storage = const FlutterSecureStorage();
-
-  var checkIn = false.obs;
+  
   Future<String?> getToken() async {
     return await storage.read(key: 'token');
   }
@@ -31,11 +30,9 @@ class CourseSummaryController extends GetxController {
       var url = Uri.parse(
           ApiEndPoints.baseUrl + ApiEndPoints.homeEndPoints.courseSummary);
       http.Response response = await http.get(url, headers: headers);
+
       print(response.statusCode);
       if (response.statusCode == 200) {
-        final Map<String, String> responseMap = json.decode(response.body);
-        print(responseMap);
-          checkIn.value = true;
           List<dynamic> jsonData = json.decode(response.body);
           var fetchedSummary =
               jsonData.map((data) => CourseSummary.fromJson(data)).toList();
@@ -45,8 +42,8 @@ class CourseSummaryController extends GetxController {
           courseSummary.assignAll(fetchedSummary);
           print("Task Done");
         }
-      else {
-        Get.off(TimetableView());
+      else if (response.statusCode == 404) {
+        Get.offAll(TimetableView());
       }
     } catch (error) {
       print(error);
