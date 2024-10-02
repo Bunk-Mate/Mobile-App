@@ -1,14 +1,17 @@
-import 'package:bunk_mate/controllers/timetable/time_table_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:bunk_mate/controllers/timetable/time_table_controller.dart';
 
 class TimeTableEntry extends StatefulWidget {
+  const TimeTableEntry({Key? key}) : super(key: key);
+
   @override
-  State<TimeTableEntry> createState() => TimeTableEntryState();
+  State<TimeTableEntry> createState() => _TimeTableEntryState();
 }
 
-class TimeTableEntryState extends State<TimeTableEntry> {
+class _TimeTableEntryState extends State<TimeTableEntry> {
   final TimeTableController controller = Get.put(TimeTableController());
   static const Map<int, String> days = {
     1: "Monday",
@@ -20,11 +23,18 @@ class TimeTableEntryState extends State<TimeTableEntry> {
     7: "Sunday",
   };
 
-  late RxString _scheduleUrl = ''.obs;
+  late final RxString _scheduleUrl = ''.obs;
   late int _day;
   late String _course = "Course";
   bool _useCourseDropDown = true;
-  TextEditingController _courseTextFieldController = TextEditingController();
+  final TextEditingController _courseTextFieldController =
+      TextEditingController();
+
+  static const Color bgColor = Color(0xFF121212);
+  static const Color cardColor = Color(0xFF1E1E1E);
+  static const Color accentColor = Color(0xFF4CAF50);
+  static const Color textColor = Colors.white;
+  static const Color secondaryTextColor = Colors.white70;
 
   @override
   void initState() {
@@ -35,108 +45,129 @@ class TimeTableEntryState extends State<TimeTableEntry> {
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = Color(0xFF121212);
-    final Color cardColor = Color(0xFF1E1E1E);
-    final Color accentColor = Color(0xFF4CAF50);
-    final Color textColor = Colors.white;
-    final Color secondaryTextColor = Colors.white70;
-
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: bgColor,
-        elevation: 0,
-        title: Text(
-          'Timetable',
-          style: GoogleFonts.lexend(
-            color: textColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _settingModalBottomSheet(context),
-        backgroundColor: accentColor,
-        child: Icon(Icons.add, color: bgColor),
-      ),
-      body: FutureBuilder(
-        future:
-            Future.wait([controller.getSchedule(), controller.getCourses()]),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: accentColor));
-          }
-          if (snapshot.hasError) {
-            return Center(
-                child: Text('Error: ${snapshot.error}',
-                    style: TextStyle(color: textColor)));
-          }
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
 
-          return Obx(() {
-            return SafeArea(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                itemCount: controller.schedule.length,
-                itemBuilder: (context, index) {
-                  final schedule = controller.schedule[index];
-                  return Card(
-                    margin: EdgeInsets.only(bottom: 20),
-                    color: cardColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    elevation: 5,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Text(
-                              schedule.dayOfWeek.toUpperCase(),
-                              style: GoogleFonts.poppins(
-                                color: accentColor,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          ...schedule.courses.map(
-                              (course) => _buildCourseItem(course, textColor)),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: bgColor,
+      elevation: 0,
+      title: Text(
+        'My Timetable',
+        style: GoogleFonts.lexend(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
+      ),
+      centerTitle: true,
+    );
+  }
+
+  Widget _buildBody() {
+    return FutureBuilder(
+      future: Future.wait([controller.getSchedule(), controller.getCourses()]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator(color: accentColor));
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}',
+                style: const TextStyle(color: textColor)),
+          );
+        }
+
+        return Obx(() {
+          if (controller.schedule.isEmpty) {
+            return Center(
+              child: Text(
+                '📝 To get started with your Timetable, please add a course first.\n\n'
+                '🔄 Once done, exit the app and reopen it to assign the course to a specific day.\n\n'
+                '💡 Feel free to use the text box below for adding any additional courses you may need!',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+                textAlign: TextAlign.center,
               ),
             );
-          });
-        },
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            itemCount: controller.schedule.length,
+            itemBuilder: (context, index) {
+              final schedule = controller.schedule[index];
+              return _buildDayCard(schedule);
+            },
+          );
+        });
+      },
+    );
+  }
+
+  Widget _buildDayCard(dynamic schedule) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 20),
+      color: cardColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  schedule.dayOfWeek.toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    color: accentColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...schedule.courses.map((course) => _buildCourseItem(course)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCourseItem(dynamic course, Color textColor) {
+  Widget _buildCourseItem(dynamic course) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.black12,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
-          Icon(getRandomSubjectIcon(), size: 28, color: textColor),
-          SizedBox(width: 16),
+          Icon(getRandomSubjectIcon(), size: 28, color: accentColor),
+          const SizedBox(width: 16),
           Expanded(
-            child: Text(
-              course.name.toUpperCase(),
-              style: GoogleFonts.poppins(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  course.name.toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    color: textColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+              ],
             ),
           ),
         ],
@@ -150,55 +181,34 @@ class TimeTableEntryState extends State<TimeTableEntry> {
       Icons.science,
       Icons.calculate,
       Icons.language,
-      Icons.history_edu
+      Icons.history_edu,
+      Icons.computer,
+      Icons.music_note,
+      Icons.palette,
+      Icons.sports_basketball
     ];
     return icons[DateTime.now().microsecond % icons.length];
   }
 
-  @override
-  void dispose() {
-    _courseTextFieldController.dispose();
-    super.dispose();
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: () => _showAddCourseBottomSheet(context),
+      backgroundColor: accentColor,
+      icon: const Icon(Icons.add, color: bgColor),
+      label: Text(
+        'Add Course',
+        style: GoogleFonts.poppins(color: bgColor, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
-  void _settingModalBottomSheet(BuildContext context) {
-    final Color bgColor = Color(0xFF121212);
-    final Color cardColor = Color(0xFF1E1E1E);
-    final Color accentColor = Color(0xFF4CAF50);
-    final Color textColor = Colors.white;
-
-    void activateDropDown() {
-      setState(() {
-        _useCourseDropDown = true;
-      });
-    }
-
-    void clearDropDown() {
-      setState(() {
-        _useCourseDropDown = false;
-      });
-    }
-
-    void submit() {
-      if (_useCourseDropDown) {
-        if (_scheduleUrl.value.isEmpty) {
-          Get.snackbar("Error", "Please select a course.",
-              backgroundColor: cardColor, colorText: textColor);
-          return;
-        }
-        controller.addSchedule(_scheduleUrl.value, _day);
-      } else {
-        controller.addCourse(_course, _day);
-      }
-      Navigator.of(context).pop();
-    }
-
+  void _showAddCourseBottomSheet(BuildContext context) {
     showModalBottomSheet(
+      context: context,
       backgroundColor: bgColor,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
-      context: context,
       isScrollControlled: true,
       builder: (context) => Padding(
         padding: EdgeInsets.only(
@@ -219,130 +229,169 @@ class TimeTableEntryState extends State<TimeTableEntry> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
+            const SizedBox(height: 20),
+            _buildTextField(
               controller: _courseTextFieldController,
-              onChanged: (courseName) {
-                if (courseName.isEmpty) {
-                  _course = "Course";
-                  activateDropDown();
-                } else {
-                  _course = courseName;
-                  clearDropDown();
-                }
-              },
-              style: TextStyle(color: textColor),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: cardColor,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'Enter your Subject Name',
-                hintStyle: TextStyle(color: Colors.white54),
-                prefixIcon: Icon(Icons.book, color: accentColor),
-              ),
+              hintText: 'Enter your Subject Name',
+              prefixIcon: Icons.book,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
-                Expanded(
-                  child: DropdownButtonFormField<int>(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: cardColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                      hintText: "Day",
-                      hintStyle: TextStyle(color: Colors.white54),
-                      prefixIcon:
-                          Icon(Icons.calendar_today, color: accentColor),
-                    ),
-                    dropdownColor: cardColor,
-                    style: TextStyle(color: textColor),
-                    onChanged: (day) {
-                      _day = day!;
-                    },
-                    items: days.entries.map(
-                      (day) {
-                        return DropdownMenuItem<int>(
-                          value: day.key,
-                          child: Text(day.value),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Obx(
-                    () => DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: cardColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: "Course",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        prefixIcon: Icon(Icons.school, color: accentColor),
-                      ),
-                      dropdownColor: cardColor,
-                      style: TextStyle(color: textColor),
-                      value: _useCourseDropDown ? null : "New Course",
-                      onChanged: (scheduleUrl) {
-                        _courseTextFieldController.clear();
-                        activateDropDown();
-                        _scheduleUrl.value = scheduleUrl!;
-                      },
-                      items: [
-                        ...controller.courses.map(
-                          (course) => DropdownMenuItem<String>(
-                            value: course.schedulesUrl,
-                            child: Text(
-                              course.name,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                        DropdownMenuItem<String>(
-                          value: "New Course",
-                          child: Text("New Course"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                Expanded(child: _buildDayDropdown()),
+                const SizedBox(width: 10),
+                Expanded(child: _buildCourseDropdown()),
               ],
             ),
-            SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentColor,
-                  foregroundColor: bgColor,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                onPressed: submit,
-                child: Text(
-                  "Add Course",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 30),
+            Center(child: _buildSubmitButton()),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData prefixIcon,
+  }) {
+    return TextField(
+      controller: controller,
+      onChanged: (courseName) {
+        setState(() {
+          _course = courseName.isEmpty ? "Course" : courseName;
+          _useCourseDropDown = courseName.isEmpty;
+        });
+      },
+      style: const TextStyle(color: textColor),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: cardColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
+        hintText: hintText,
+        hintStyle: const TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(prefixIcon, color: accentColor),
+      ),
+    );
+  }
+
+  Widget _buildDayDropdown() {
+    return DropdownButtonFormField<int>(
+      decoration: _getDropdownDecoration(
+          hintText: "Day", prefixIcon: Icons.calendar_today),
+      dropdownColor: cardColor,
+      style: const TextStyle(color: textColor),
+      onChanged: (day) => _day = day!,
+      items: days.entries.map((day) {
+        return DropdownMenuItem<int>(
+          value: day.key,
+          child: Text(day.value),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCourseDropdown() {
+    return Obx(() {
+      if (controller.courses.isEmpty) {
+        return DropdownButtonFormField<String>(
+          decoration: _getDropdownDecoration(
+              hintText: "No courses available", prefixIcon: Icons.school),
+          dropdownColor: cardColor,
+          style: const TextStyle(color: textColor),
+          value: null,
+          items: [],
+          onChanged: null,
+        );
+      }
+
+      return DropdownButtonFormField<String>(
+        decoration: _getDropdownDecoration(
+            hintText: "Course", prefixIcon: Icons.school),
+        dropdownColor: cardColor,
+        style: const TextStyle(color: textColor),
+        value: _useCourseDropDown ? null : "New Course",
+        onChanged: (scheduleUrl) {
+          _courseTextFieldController.clear();
+          setState(() {
+            _useCourseDropDown = true;
+            _scheduleUrl.value = scheduleUrl!;
+          });
+        },
+        items: [
+          ...controller.courses.map((course) => DropdownMenuItem<String>(
+                value: course.schedulesUrl,
+                child: Text(course.name, overflow: TextOverflow.ellipsis),
+              )),
+          const DropdownMenuItem<String>(
+            value: "New Course",
+            child: Text("New Course"),
+          ),
+        ],
+      );
+    });
+  }
+
+  InputDecoration _getDropdownDecoration(
+      {required String hintText, required IconData prefixIcon}) {
+    return InputDecoration(
+      filled: true,
+      fillColor: cardColor,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide.none,
+      ),
+      hintText: hintText,
+      hintStyle: const TextStyle(color: secondaryTextColor),
+      prefixIcon: Icon(prefixIcon, color: accentColor),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: accentColor,
+        foregroundColor: bgColor,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+      onPressed: _submitForm,
+      child: Text(
+        "Add Course",
+        style: GoogleFonts.poppins(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  void _submitForm() {
+    if (_useCourseDropDown) {
+      if (_scheduleUrl.value.isEmpty) {
+        Get.snackbar("Error", "Please select a course.",
+            backgroundColor: cardColor, colorText: textColor);
+        return;
+      }
+      controller.addSchedule(_scheduleUrl.value, _day);
+    } else {
+      controller.addCourse(_course, _day);
+    }
+    Get.snackbar("Success", "Course added! Refresh to see changes.",
+        backgroundColor: cardColor, colorText: textColor);
+
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    _courseTextFieldController.dispose();
+    super.dispose();
   }
 }

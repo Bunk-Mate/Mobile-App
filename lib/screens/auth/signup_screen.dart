@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({Key? key}) : super(key: key);
+  const Registration({super.key});
 
   @override
   _RegistrationState createState() => _RegistrationState();
@@ -16,9 +16,9 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final Color bgColor = Color(0xFF121212);
-  final Color cardColor = Color(0xFF1E1E1E);
-  final Color accentColor = Color(0xFF4CAF50);
+  final Color bgColor = const Color(0xFF121212);
+  final Color cardColor = const Color(0xFF1E1E1E);
+  final Color accentColor = const Color(0xFF4CAF50);
   final Color textColor = Colors.white;
   final Color secondaryTextColor = Colors.white70;
 
@@ -31,7 +31,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _animationController.forward();
@@ -72,7 +72,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
                       fontSize: 32,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "Sign up to get started",
                     style: GoogleFonts.lexend(
@@ -86,14 +86,14 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
                     icon: Icons.person_outline,
                     hintText: "Username",
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildAuthField(
                     controller: signupController.passwordController,
                     icon: Icons.lock_outline,
                     hintText: "Password",
                     isObscure: true,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildAuthField(
                     controller: signupController.confirmPasswordController,
                     icon: Icons.lock_outline,
@@ -121,7 +121,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         color: accentColor,
         shape: BoxShape.circle,
       ),
-      child: Center(
+      child: const Center(
         child: Icon(
           Icons.school,
           color: Colors.black,
@@ -145,7 +145,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -158,7 +158,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
           hintStyle: GoogleFonts.lexend(color: secondaryTextColor),
           prefixIcon: Icon(icon, color: accentColor),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -171,7 +171,7 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         elevation: 5,
       ),
       child: Center(

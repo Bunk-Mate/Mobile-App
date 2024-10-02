@@ -43,7 +43,7 @@ class CourseSummaryController extends GetxController {
           print("Task Done");
         }
       else if (response.statusCode == 404) {
-        Get.offAll(TimetableView());
+        Get.offAll(const TimetableView());
       }
     } catch (error) {
       print(error);

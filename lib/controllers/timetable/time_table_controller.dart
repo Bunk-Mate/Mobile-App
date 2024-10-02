@@ -90,6 +90,7 @@ class TimeTableController extends GetxController {
       return;
     }
 
+    
     try {
       final response = await http.post(
         Uri.parse("${apiUrl}courses"),
@@ -102,7 +103,7 @@ class TimeTableController extends GetxController {
           "schedules": {"day_of_week": day},
         }),
       );
-
+    print(response.body);
       if (response.statusCode == 201) {
         await getSchedule();
         Get.snackbar("Success", "Course has been added!");
