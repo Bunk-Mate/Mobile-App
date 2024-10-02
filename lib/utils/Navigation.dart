@@ -12,8 +12,8 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentIndex = 0;
-  final Color bgColor = Color(0xFF121212);
-  final Color accentColor = Color(0xFF4CAF50);
+  final Color bgColor = const Color(0xFF121212);
+  final Color accentColor = const Color(0xFF4CAF50);
   final Color inactiveColor = Colors.white54;
   final GlobalKey<HomePageState> homePageKey = GlobalKey<HomePageState>();
 
@@ -31,7 +31,7 @@ class _NavigationState extends State<Navigation> {
     List<Widget> children = <Widget>[
       HomePage(key: homePageKey), 
       StatusView(),
-      TimeTableEntry(),
+      const TimeTableEntry(),
     ];
 
     return Scaffold(
@@ -71,7 +71,7 @@ class _NavigationState extends State<Navigation> {
     return InkWell(
       onTap: () => onTabTapped(index),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected ? accentColor.withOpacity(0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
@@ -84,7 +84,7 @@ class _NavigationState extends State<Navigation> {
               color: isSelected ? accentColor : inactiveColor,
               size: 28,
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(

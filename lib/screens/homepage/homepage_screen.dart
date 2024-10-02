@@ -18,9 +18,9 @@ class HomePageState extends State<HomePage> {
       Get.put(CourseSummaryController());
   final LoginController loginController = Get.put(LoginController());
 
-  final Color bgColor = Color(0xFF121212);
-  final Color cardColor = Color(0xFF1E1E1E);
-  final Color accentColor = Color(0xFF4CAF50);
+  final Color bgColor = const Color(0xFF121212);
+  final Color cardColor = const Color(0xFF1E1E1E);
+  final Color accentColor = const Color(0xFF4CAF50);
   final Color textColor = Colors.white;
   final Color secondaryTextColor = Colors.white70;
 
@@ -131,7 +131,7 @@ class HomePageState extends State<HomePage> {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -181,7 +181,7 @@ class HomePageState extends State<HomePage> {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -231,9 +231,9 @@ class HomePageState extends State<HomePage> {
   }
 
   Color _getAttendanceColor(double attendance) {
-    if (attendance >= 75) return Color(0xFF4CAF50);
-    if (attendance >= 65) return Color(0xFFFFA000);
-    return Color(0xFFF44336);
+    if (attendance >= 75) return const Color(0xFF4CAF50);
+    if (attendance >= 65) return const Color(0xFFFFA000);
+    return const Color(0xFFF44336);
   }
 
   Future<void> _handleLogout() async {
@@ -244,7 +244,7 @@ class HomePageState extends State<HomePage> {
       Get.deleteAll();
     } else {
       Get.snackbar("Error", "You weren't logged out. Try again.");
-      Get.to(Navigation());
+      Get.to(const Navigation());
     }
   }
 

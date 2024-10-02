@@ -19,7 +19,7 @@ class _TimetableViewState extends State<TimetableView> {
   int _minAttendance = 0;
   String _startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   String _endDate =
-      DateFormat("yyyy-MM-dd").format(DateTime.now().add(Duration(days: 30)));
+      DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 30)));
   bool _isShared = false;
   late List<dynamic> _presets = [];
 
@@ -65,9 +65,9 @@ class _TimetableViewState extends State<TimetableView> {
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = const Color(0xFF121212);
-    final Color cardColor = const Color(0xFF1E1E1E);
-    final Color textColor = Colors.white;
+    const Color bgColor = Color(0xFF121212);
+    const Color cardColor = Color(0xFF1E1E1E);
+    const Color textColor = Colors.white;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -95,12 +95,12 @@ class _TimetableViewState extends State<TimetableView> {
                     value: preset['id'],
                     child: Text(
                       preset['name'],
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   );
                 }).toList(),
                 hint: const Text('Timetable Presets',
-                    style: TextStyle(color: Colors.black)),
+                    style: TextStyle(color: Colors.white)),
                 onChanged: (value) {
                   showDialog(
                     context: context,
@@ -143,13 +143,13 @@ class _TimetableViewState extends State<TimetableView> {
               TextField(
                 style: const TextStyle(color: Colors.white),
                 onChanged: (timeTableName) => _timeTableName = timeTableName,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Timetable Name',
-                  hintStyle: const TextStyle(color: Colors.white24),
+                  hintStyle: TextStyle(color: Colors.white24),
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: cardColor,
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
@@ -168,13 +168,13 @@ class _TimetableViewState extends State<TimetableView> {
                 },
                 keyboardType: TextInputType.number,
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Minimum Attendance %',
                   border: OutlineInputBorder(),
-                  hintStyle: const TextStyle(color: Colors.white24),
+                  hintStyle: TextStyle(color: Colors.white24),
                   filled: true,
                   fillColor: cardColor,
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
@@ -199,11 +199,11 @@ class _TimetableViewState extends State<TimetableView> {
                         }
                       },
                       child: InputDecorator(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Start Date',
                           filled: true,
                           fillColor: cardColor,
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         child: Text(
                           _startDate,
@@ -230,11 +230,11 @@ class _TimetableViewState extends State<TimetableView> {
                         }
                       },
                       child: InputDecorator(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'End Date',
                           filled: true,
                           fillColor: cardColor,
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         child: Text(
                           _endDate,
