@@ -2,8 +2,6 @@ import 'package:bunk_mate/screens/Status/status_page.dart';
 import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:line_icons/line_icons.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -14,24 +12,26 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int currentIndex = 0;
+  final Color bgColor = Color(0xFF121212);
+  final Color accentColor = Color(0xFF4CAF50);
+  final Color inactiveColor = Colors.white54;
+  final GlobalKey<HomePageState> homePageKey = GlobalKey<HomePageState>();
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
   void onTabTapped(int index) {
-    setState(
-      () {
-        currentIndex = index;
-      },
-    );
+    if (index == 0) {
+      homePageKey.currentState?.refreshData();
+    }
+    setState(() {
+      currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
-      const HomePage(),
+      HomePage(key: homePageKey), 
       StatusView(),
-      TimeTableEntry()
-     
+      TimeTableEntry(),
     ];
 
     return Scaffold(
@@ -39,55 +39,62 @@ class _NavigationState extends State<Navigation> {
         index: currentIndex,
         children: children,
       ),
-      bottomNavigationBar: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 13, 15, 21),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 20,
-                  color: Colors.black.withOpacity(.1),
-                )
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black.withOpacity(.1),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildNavItem(0, Icons.home_rounded, 'Home'),
+                _buildNavItem(1, Icons.check_circle_outline_rounded, 'Status'),
+                _buildNavItem(2, Icons.calendar_today_rounded, 'Timetable'),
               ],
             ),
-            child: SafeArea(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                child: GNav(
-                  // rippleColor: Colors.white,
-                  // hoverColor: Colors.white,
-                  // Color.fromARGB(255, 155, 226, 61)
-                  gap: 8,
-                  activeColor: Colors.black,
-                  iconSize: 32,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  duration: const Duration(milliseconds: 400),
-                  tabBackgroundColor: const Color.fromARGB(255, 211, 255, 153),
-                  color: const Color.fromARGB(255, 211, 255, 153),
-                  tabs: const [
-                    GButton(
-                      icon: LineIcons.home,
-                      text: 'Home',
-                    ),
-                    GButton(
-                      icon: LineIcons.checkCircle,
-                      text: 'Status',
-                    ),
-                    GButton(
-                      icon: LineIcons.calendarTimes,
-                      text: 'TimeTable',
-                    ),
-                  ],
+          ),
+        ),
+      ),
+    );
+  }
 
-                  selectedIndex: currentIndex,
-                  onTabChange: onTabTapped,
-                ),
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    bool isSelected = currentIndex == index;
+    return InkWell(
+      onTap: () => onTabTapped(index),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? accentColor.withOpacity(0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? accentColor : inactiveColor,
+              size: 28,
+            ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? accentColor : inactiveColor,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

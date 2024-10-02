@@ -1,6 +1,6 @@
 class CourseSummary {
   final String name;
-  final int percentage;
+  final dynamic  percentage;
   final int bunksAvailable;
 
   CourseSummary({

@@ -29,6 +29,7 @@ class TimetableController {
         "shared": timetable.isShared
       }),
     );
+    print(response.body);
     if (response.statusCode != 201) {
       throw Exception("Could not create timetable");
     }

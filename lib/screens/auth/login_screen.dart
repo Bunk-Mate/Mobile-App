@@ -1,5 +1,5 @@
 import 'package:bunk_mate/screens/auth/signup_screen.dart';
-import 'package:bunk_mate/screens/auth/widgets/auth_field.dart';
+import 'package:bunk_mate/screens/easter_eggs.dart';
 import 'package:bunk_mate/utils/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:bunk_mate/controllers/auth/login_controller.dart';
@@ -7,161 +7,231 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   LoginController loginController = Get.put(LoginController());
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  final Color bgColor = Color(0xFF121212);
+  final Color cardColor = Color(0xFF1E1E1E);
+  final Color accentColor = Color(0xFF4CAF50);
+  final Color textColor = Colors.white;
+  final Color secondaryTextColor = Colors.white70;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              Container(
-                width: screenSize.width,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: screenSize.height * 0.08),
+                  _buildLogo(),
+                  SizedBox(height: screenSize.height * 0.04),
+                  Text(
+                    "Welcome back",
+                    style: GoogleFonts.lexend(
+                      color: textColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
                   ),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 192, 252, 96),
-                      Color.fromARGB(255, 212, 252, 96),
-                      Color.fromARGB(255, 232, 252, 116),
-                      Color.fromARGB(255, 252, 252, 136),
-                      Color.fromARGB(255, 252, 252, 188),
-                    ],
+                  SizedBox(height: 8),
+                  Text(
+                    "Sign in to your account",
+                    style: GoogleFonts.lexend(
+                      color: secondaryTextColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SafeArea(
-                          child: Text(
-                            "Sign in to your account",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 35,
-                              fontFamily: GoogleFonts.lexend().fontFamily,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: screenSize.height * 0.05),
+                  _buildAuthField(
+                    controller: loginController.usernameController,
+                    icon: Icons.person_outline,
+                    hintText: "Username",
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: screenSize.width * 0.9,
-                      height: screenSize.height * 0.05,
-                    ),
-                    AuthField(
-                      controller: loginController.usernameController,
-                      title: "Username",
-                      isObscure: false,
-                    ),
-                    SizedBox(
-                      width: screenSize.width * 0.9,
-                      height: screenSize.height * 0.03,
-                    ),
-                    AuthField(
-                      controller: loginController.passwordController,
-                      title: "Password",
-                      isObscure: true,
-                    ),
-                    SizedBox(
-                      width: screenSize.width * 0.9,
-                      height: screenSize.height * 0.02,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          bool success = await loginController.loginFunction();
-                          if (success) {
-                            Get.off(const Navigation());
-                          }
-                        },
-                        child: Container(
-                          width: screenSize.width * 0.75,
-                          height: screenSize.height * 0.07,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: const Color.fromARGB(255, 212, 252, 96),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: GoogleFonts.lexend().fontFamily,
-                              ),
-                            ),
-                          ),
+                  SizedBox(height: 20),
+                  _buildAuthField(
+                    controller: loginController.passwordController,
+                    icon: Icons.lock_outline,
+                    hintText: "Password",
+                    isObscure: true,
+                  ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.to(const MyWidget());
+                      },
+                      child: Text(
+                        "Forgot Password?",
+                        style: GoogleFonts.lexend(
+                          color: accentColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          "Don't have an account",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 25,
-                          height: 2,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Registration(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "Signup ? ",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: screenSize.height * 0.04),
+                  _buildLoginButton(),
+                  SizedBox(height: screenSize.height * 0.04),
+                  _buildSignUpRow(),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        color: accentColor,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Icon(
+          Icons.school,
+          color: Colors.black,
+          size: 40,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildParallaxBackground(BuildContext context) {
+    return Positioned.fill(
+      child: Image.network(
+        "",
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+  Widget _buildAuthField({
+    required TextEditingController controller,
+    required IconData icon,
+    required String hintText,
+    bool isObscure = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: isObscure,
+        style: GoogleFonts.lexend(color: textColor),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: GoogleFonts.lexend(color: secondaryTextColor),
+          prefixIcon: Icon(icon, color: accentColor),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        bool success = await loginController.loginFunction();
+        if (success) {
+          Get.off(const Navigation());
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 16),
+        elevation: 5,
+      ),
+      child: Center(
+        child: Text(
+          "Log In",
+          style: GoogleFonts.lexend(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignUpRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Don't have an account? ",
+          style: GoogleFonts.lexend(
+            color: secondaryTextColor,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Registration(),
+              ),
+            );
+          },
+          child: Text(
+            "Sign up",
+            style: GoogleFonts.lexend(
+              color: accentColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

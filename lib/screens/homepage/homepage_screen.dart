@@ -5,283 +5,254 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/controllers/homepage/course_summary_controller.dart';
 import 'package:bunk_mate/controllers/auth/login_controller.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  late List<_ChartData> data;
-  late TooltipBehavior _tooltip;
-
+class HomePageState extends State<HomePage> {
   final CourseSummaryController courseSummaryController =
       Get.put(CourseSummaryController());
-  LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.put(LoginController());
+
+  final Color bgColor = Color(0xFF121212);
+  final Color cardColor = Color(0xFF1E1E1E);
+  final Color accentColor = Color(0xFF4CAF50);
+  final Color textColor = Colors.white;
+  final Color secondaryTextColor = Colors.white70;
 
   @override
   void initState() {
-    _tooltip = TooltipBehavior(enable: true);
     super.initState();
-    courseSummaryController.fetchCourseSummary();
+    refreshData();
+  }
+
+  Future<void> refreshData() async {
+    await courseSummaryController.fetchCourseSummary();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    refreshData();
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 7, 9, 15),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromARGB(255, 192, 252, 96),
-                Color.fromARGB(255, 212, 252, 96),
-                Color.fromARGB(255, 232, 252, 116),
-                Color.fromARGB(255, 252, 252, 136),
-                Color.fromARGB(255, 252, 252, 188),
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    child: const CircleAvatar(
-                      backgroundImage: AssetImage('assets/pp.png'),
-                    ),
-                    onDoubleTap: () async {
-                      bool success = await loginController.logoutfunction();
-                      if (!success) {
-                        Get.off(const AuthScreen());
-                        Get.snackbar("Logout Successful",
-                            "You were logged out successfully");
-                        Get.deleteAll();
-                      } else {
-                        Get.snackbar(
-                            "Error", "You weren't logged out. Try again.");
-                        Get.to(Navigation());
-                      }
-                    },
-                  ),
-                ),
-                Expanded(child: Container()),
-                PopupMenuButton<int>(
-
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            color: Color.fromARGB(255, 232, 252, 116),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Update Timetable",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 232, 252, 116)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.logout,
-                            color: Color.fromARGB(255, 232, 252, 116),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Logout",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 232, 252, 116),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  offset: Offset(0, 50),
-                  color: Color.fromARGB(255, 7, 9, 15),
-                  elevation: 2,
-                  onSelected: (value) async {
-                    if (value == 0) {
-                      Get.to(const TimetableView());
-                    } else if (value == 2) {
-                      bool success = await loginController.logoutfunction();
-                      if (!success) {
-                        Get.off(const AuthScreen());
-                        Get.snackbar("Logout Successful",
-                            "You were logged out successfully");
-                        Get.deleteAll();
-                      } else {
-                        Get.snackbar(
-                            "Error", "You weren't logged out. Try again.");
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const TimetableView()));
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+        title: Text('Bunk-Mate',
+            style: TextStyle(
+                color: textColor, fontSize: 24, fontWeight: FontWeight.bold)),
+        backgroundColor: bgColor,
+        elevation: 0,
+        actions: [_buildPopupMenu()],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SafeArea(
           child: Obx(() {
             if (courseSummaryController.courseSummary.isEmpty) {
-              Future.delayed(Duration(seconds: 20), () {
-                courseSummaryController.fetchCourseSummary();
-              });
-              return const Center(
-                child: Text(
-                  "📚 No Course Available\n📝 Please add a course or use the menu to update your timetable!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                  ),
-                ),
-              );
+              return _buildEmptyState();
             }
-            List<_ChartData> data = courseSummaryController.courseSummary
-                .map((subject) =>
-                    _ChartData(subject.name, subject.percentage.toDouble()))
-                .toList();
-            return ListView(
-              children: [
-                // Center(
-                //   child: Container(
-                //     height: screenHeight * 0.4,
-                //     child: SfCartesianChart(
-                //       primaryXAxis: CategoryAxis(
-                //         labelStyle: TextStyle(
-                //           color: Colors.white,
-                //           fontWeight: FontWeight.bold,
-                //           fontFamily: GoogleFonts.lexend().fontFamily,
-                //         ),
-                //       ),
-                //       primaryYAxis: NumericAxis(
-                //         minimum: 0,
-                //         maximum: 100,
-                //         interval: 10,
-                //         majorGridLines: const MajorGridLines(width: 0),
-                //         labelStyle: TextStyle(
-                //           color: Colors.white,
-                //           fontWeight: FontWeight.bold,
-                //           fontFamily: GoogleFonts.lexend().fontFamily,
-                //         ),
-                //       ),
-                //       tooltipBehavior: _tooltip,
-                //       series: <CartesianSeries<_ChartData, String>>[
-                //         BarSeries<_ChartData, String>(
-                          // gradient: const LinearGradient(
-                          //   colors: <Color>[
-                          //     Color.fromARGB(255, 192, 252, 96),
-                          //     Color.fromARGB(255, 212, 252, 96),
-                          //     Color.fromARGB(255, 232, 252, 116),
-                          //     Color.fromARGB(255, 252, 252, 136),
-                          //     Color.fromARGB(255, 252, 252, 188),
-                          //   ],
-                          //   stops: <double>[0.1, 0.3, 0.5, 0.7, 0.9],
-                          //   begin: Alignment.bottomLeft,
-                          //   end: Alignment.topRight,
-                          // ),
-                        //   dataSource: data,
-                        //   xValueMapper: (_ChartData data, _) => data.x,
-                        //   yValueMapper: (_ChartData data, _) => data.y,
-                        //   name: 'Attendance Summary',
-                        //   dataLabelSettings: const DataLabelSettings(
-                        //     isVisible: true,
-                        //     textStyle: TextStyle(
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //     labelAlignment: ChartDataLabelAlignment.middle,
-                        //   ),
-                        // ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                ...courseSummaryController.courseSummary.map((subject) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.abc,
-                        size: 50,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        subject.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "Attendance: ${subject.percentage}%",
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      trailing: CircleAvatar(
-                        radius: 25,
-                        backgroundColor:
-                            const Color.fromARGB(255, 211, 255, 153),
-                        child: Text(
-                          subject.bunksAvailable.toString(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ],
+            return RefreshIndicator(
+              onRefresh: refreshData,
+              child: ListView(
+                children: [
+                  const SizedBox(height: 30),
+                  _buildOverallAttendance(),
+                  const SizedBox(height: 30),
+                  Text(
+                    'Your Courses',
+                    style: TextStyle(
+                        color: textColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSubjectList(),
+                ],
+              ),
             );
           }),
         ),
       ),
     );
   }
-}
 
-class _ChartData {
-  _ChartData(this.x, this.y);
+  Widget _buildPopupMenu() {
+    return PopupMenuButton<int>(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+            value: 0,
+            child: Text("Update Timetable",
+                style: TextStyle(color: textColor, fontSize: 16))),
+        PopupMenuItem(
+            value: 2,
+            child: Text("Logout",
+                style: TextStyle(color: textColor, fontSize: 16))),
+      ],
+      offset: const Offset(0, 50),
+      color: cardColor,
+      elevation: 2,
+      icon: Icon(Icons.more_vert, color: textColor, size: 28),
+      onSelected: _handleMenuSelection,
+    );
+  }
 
-  final String x;
-  final double y;
+  Widget _buildEmptyState() {
+    return Center(
+      child: Text(
+        "No courses available.\nAdd a course or update your timetable.",
+        textAlign: TextAlign.center,
+        style: TextStyle(color: secondaryTextColor, fontSize: 18.0),
+      ),
+    );
+  }
+
+  Widget _buildOverallAttendance() {
+    double overallAttendance = courseSummaryController.courseSummary
+            .map((subject) => subject.percentage is int
+                ? subject.percentage.toDouble()
+                : subject.percentage)
+            .reduce((a, b) => a + b) /
+        courseSummaryController.courseSummary.length;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Overall Attendance',
+            style: TextStyle(color: secondaryTextColor, fontSize: 18),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '${overallAttendance.toStringAsFixed(1)}%',
+            style: TextStyle(
+              color: _getAttendanceColor(overallAttendance),
+              fontSize: 60,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubjectList() {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: courseSummaryController.courseSummary.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
+      itemBuilder: (context, index) {
+        final subject = courseSummaryController.courseSummary[index];
+        return _buildSubjectTile(subject);
+      },
+    );
+  }
+
+  Widget _buildSubjectTile(subject) {
+    double percentage = subject.percentage is int
+        ? subject.percentage.toDouble()
+        : subject.percentage;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  subject.name,
+                  style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "${percentage.toStringAsFixed(1)}% Attendance",
+                  style: TextStyle(
+                      color: _getAttendanceColor(percentage),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          _buildBunksAvailable(subject.bunksAvailable),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBunksAvailable(int bunksAvailable) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: accentColor.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        "$bunksAvailable bunks",
+        style: TextStyle(
+            color: accentColor, fontWeight: FontWeight.bold, fontSize: 14),
+      ),
+    );
+  }
+
+  Color _getAttendanceColor(double attendance) {
+    if (attendance >= 75) return Color(0xFF4CAF50);
+    if (attendance >= 65) return Color(0xFFFFA000);
+    return Color(0xFFF44336);
+  }
+
+  Future<void> _handleLogout() async {
+    bool success = await loginController.logoutfunction();
+    if (!success) {
+      Get.off(const AuthScreen());
+      Get.snackbar("Logout Successful", "You were logged out successfully");
+      Get.deleteAll();
+    } else {
+      Get.snackbar("Error", "You weren't logged out. Try again.");
+      Get.to(Navigation());
+    }
+  }
+
+  void _handleMenuSelection(int value) async {
+    if (value == 0) {
+      Get.to(const TimetableView());
+    } else if (value == 2) {
+      await _handleLogout();
+    }
+  }
 }

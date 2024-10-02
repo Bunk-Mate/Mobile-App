@@ -23,6 +23,7 @@ dependencies:
   google_fonts: ^6.2.1
   syncfusion_flutter_charts: 21.1.39
   # date_field: ^5.2.1
+  tenor: ^1.0.9
 
 dev_dependencies:
   flutter_test:
