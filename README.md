@@ -30,6 +30,10 @@ To install the Attendance Tracker app, follow these simple steps:
 
 Here's the table with all the screenshots in a single row:
 
-| Home Screen | TimeTable Screen | Signup Page | Login Screen | Status Update Page |
+
+
+
+
+| Home Screen | Status Update Page | TimeTable Page | Add courses | OnBoard View |
 |--------------|----------------|------------------------|-------------|---------------------|
-| ![Login Screen](https://github.com/user-attachments/assets/ddc269ca-cb80-441d-a5e2-b17d034393b6) | ![Simulator Screenshot - iPhone 15 Plus - 2024-07-19 at 18 20 30](https://github.com/user-attachments/assets/257d8be0-44fb-4e5a-8b18-7483073e54df) | ![Simulator Screenshot - iPhone 15 Plus - 2024-07-19 at 18 20 58](https://github.com/user-attachments/assets/16024691-07b2-47ab-b3e6-dd7947619cb5) | ![Home Page](https://github.com/user-attachments/assets/4644645c-1f32-493d-a8c3-bc3a5304e70d) | ![Simulator Screenshot - iPhone 15 Plus - 2024-07-19 at 18 20 42](https://github.com/user-attachments/assets/5573adc9-7384-41d4-871b-3b79751e7998) |
+| ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 56 54](https://github.com/user-attachments/assets/2b14e24e-fb93-4fe4-bffe-3d03aadd1a1d)| ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 56 57](https://github.com/user-attachments/assets/2ab45e8e-4671-4c1f-a2f1-e926969bb143) | ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 57 01](https://github.com/user-attachments/assets/79a53a0b-ace4-4f65-8159-f7fc1be29acb) |![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 57 04](https://github.com/user-attachments/assets/5c8e4cd8-4675-4c31-a060-14518f9b5be5) | To be modfied |
