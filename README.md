@@ -1,40 +1,56 @@
-# Bunk-Mate
+# Bunk-Mate: Mobile App
 
-Many of us have desired to take a day off from college for various activities or simply to relax, but often refrain due to concerns about meeting the attendance requirement percentage. The Bunk Mate app/website aims to address this dilemma by providing a convenient solution for tracking classes attended and offering live updates on the remaining classes needed to meet the attendance target.
+Are you tired of missing out on activities or simply wanting to take a day off from college? The Bunk Mate app is here to help! It allows you to effortlessly track your attendance while keeping you informed about the remaining classes needed to meet your attendance requirements.
+
 ## Installation
 
-Just download the latest ~[release apk](https://github.com/Bunk-Mate/Mobile-App/releases/latest/download/app-release.apk)~ and install!
-## Usage
+To get started, simply download the latest release of the app from [this link](https://github.com/Bunk-Mate/Mobile-App/releases/latest/download/app-release.apk) and install it on your device!
 
-Here's how you can utilize the Attendance Tracker app effectively:
+## How to Use Bunk Mate
 
-**1** **Create an Account**: Sign up for an account within the app.
+Maximize your experience with the Attendance Tracker app by following these steps:
 
-**2** **Login**: Log in to your account that you just created.
+**1. Create an Account**  
+Sign up within the app to create your personal account.
 
-**3** **Add Timetable**: The app will now prompt you to enter your timetable details. Provide details such as timetable name, start and end dates, and the required attendance percentage.
-	* You also have the option of selecting a timetable shared by other users
- 
-**4** **Manage Timetable**: Once your timetable is added, navigate to the courses page from the navigation bar to view and manage your courses and their schedules.
+**2. Log In**  
+Use your newly created credentials to log into your account.
 
+**3. Add Your Timetable**  
+You’ll be prompted to enter your timetable details. Provide:
+- Timetable name
+- Start and end dates
+- Required attendance percentage
 
-**5** **Update Attendance Status**: Update your attendance status on the status page. **Single-click to mark a day as bunked, double-click to mark as skipped, and deep-press to mark as present**. By default, days are marked as present, meaning that you only need to update it if you bunk a class or if it is skipped.
+You can also choose to select a timetable shared by other users!
 
+**4. Manage Your Courses**  
+After adding your timetable, navigate to the courses page via the navigation bar to view and manage your courses and their schedules.
 
-⠀For Developers
+**5. Update Attendance Status**  
+Easily update your attendance on the status page:
+- **Single-click** to mark a day as bunked
+- **Double-click** to mark as skipped
+- **Deep-press** to mark as present
 
-## Setup
+By default, days are marked as present, so you only need to update your status when you bunk or skip a class.
 
-To install the Attendance Tracker app, follow these simple steps:
-1 Clone the repository to your local machine.
-2 Run flutter run to install and launch the app.
+## For Developers
 
-Here's the table with all the screenshots in a single row:
+### Setup Instructions
 
+To install the Attendance Tracker app locally, follow these steps:
+1. Clone the repository to your local machine.
+2. Run `flutter run` to install and launch the app.
 
+## Screenshots
 
+Here's a quick look at the app's interface:
 
-
-| Home Screen | Status Update Page | TimeTable Page | Add courses | Create TimeTable View |
+| Home Screen | Status Update Page | Timetable Page | Add Courses | Create Timetable View |
 |--------------|----------------|------------------------|-------------|---------------------|
-| ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 56 54](https://github.com/user-attachments/assets/2b14e24e-fb93-4fe4-bffe-3d03aadd1a1d)| ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 56 57](https://github.com/user-attachments/assets/2ab45e8e-4671-4c1f-a2f1-e926969bb143) | ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 57 01](https://github.com/user-attachments/assets/79a53a0b-ace4-4f65-8159-f7fc1be29acb) |![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 14 57 04](https://github.com/user-attachments/assets/5c8e4cd8-4675-4c31-a060-14518f9b5be5) | ![Simulator Screenshot - iPhone 15 Pro Max - 2024-10-02 at 15 25 31](https://github.com/user-attachments/assets/645b4355-be10-43b8-9147-f4847722700e) |
+| ![Home Screen](https://github.com/user-attachments/assets/2b14e24e-fb93-4fe4-bffe-3d03aadd1a1d) | ![Status Update Page](https://github.com/user-attachments/assets/2ab45e8e-4671-4c1f-a2f1-e926969bb143) | ![Timetable Page](https://github.com/user-attachments/assets/79a53a0b-ace4-4f65-8159-f7fc1be29acb) | ![Add Courses](https://github.com/user-attachments/assets/5c8e4cd8-4675-4c31-a060-14518f9b5be5) | ![Create Timetable View](https://github.com/user-attachments/assets/645b4355-be10-43b8-9147-f4847722700e) |
+
+---
+
+With Bunk Mate, you can manage your attendance smartly and take those well-deserved breaks without the stress! Enjoy your college life to the fullest!
