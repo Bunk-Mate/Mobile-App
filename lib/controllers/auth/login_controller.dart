@@ -14,6 +14,7 @@ class LoginController extends GetxController {
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
 
   Future<String?> getToken() async {
     return await _storage.read(key: 'token');

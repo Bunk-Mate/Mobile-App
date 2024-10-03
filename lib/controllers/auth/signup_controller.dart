@@ -16,7 +16,9 @@ class SignupController extends GetxController {
   bool status = false;
     Future<void> signUpFunction() async {
     var headers = {"Content-Type": "application/json"};
-    try {
+
+    if (passwordController.value.text == confirmPasswordController.value.text) {
+try {
       var url = Uri.parse(
           ApiEndPoints.baseUrl + ApiEndPoints.authEndPoints.registerEmail);
       String body = jsonEncode({
@@ -43,5 +45,10 @@ class SignupController extends GetxController {
         );
       });
     }
+    }
+    else {
+      Get.snackbar("Error", "The Password doesn't match",backgroundColor: Color(0xFF1E1E1E), colorText: Colors.white);
+    }
+    
   } 
  }

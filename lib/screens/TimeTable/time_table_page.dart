@@ -90,7 +90,6 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
               child: Text(
                 '📝 Set Up Your Timetable!\n\n'
                 'Start by adding a course. Once you’ve done that:\n\n'
-                '🔄 Exit and reopen the app to assign it to a specific day.\n\n'
                 '💡 Feel free to use the text box below for any extra courses you’d like to add!',
                 style: TextStyle(
                   color: Colors.white,
@@ -380,8 +379,7 @@ class _TimeTableEntryState extends State<TimeTableEntry> {
   void _submitForm() {
     if (_useCourseDropDown) {
       if (_scheduleUrl.value.isEmpty) {
-        Get.snackbar("Error", "Please select a course.",
-            backgroundColor: cardColor, colorText: textColor);
+
         return;
       }
       controller.addSchedule(_scheduleUrl.value, _day);

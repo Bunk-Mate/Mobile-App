@@ -114,7 +114,7 @@ class TimeTableController extends GetxController {
         _handleError(response);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to add course: $e");
+  
     }
   }
 
@@ -124,7 +124,6 @@ class TimeTableController extends GetxController {
       final responseBody = jsonDecode(response.body);
       message = responseBody['detail'] ?? 'Unknown error occurred';
     } catch (e) {
-      message = 'Failed to parse error response';
     }
   }
 }
