@@ -1,5 +1,6 @@
 import 'package:bunk_mate/controllers/onBoard/time_table_controller.dart';
 import 'package:bunk_mate/models/onboard_time_table.dart';
+import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
 import 'package:bunk_mate/utils/Navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class TimetableView extends StatefulWidget {
 
 class _TimetableViewState extends State<TimetableView> {
   final TimetableController _controller = TimetableController();
+  final GlobalKey<HomePageState> homePageKey = GlobalKey<HomePageState>();
   String _timeTableName = "";
   int _minAttendance = 0;
   String _startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
@@ -46,6 +48,7 @@ class _TimetableViewState extends State<TimetableView> {
         endDate: _endDate,
         isShared: _isShared,
       );
+       homePageKey.currentState?.refreshData();
       _controller.submitTimetable(timetable).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Timetable has been created")),

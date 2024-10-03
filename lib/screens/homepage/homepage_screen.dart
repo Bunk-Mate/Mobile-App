@@ -31,6 +31,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> refreshData() async {
+       courseSummaryController.courseSummary.clear();
     await courseSummaryController.fetchCourseSummary();
   }
 

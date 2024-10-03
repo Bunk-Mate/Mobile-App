@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:bunk_mate/models/time_table_model.dart';
 import 'package:bunk_mate/utils/api_endpoints.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer';
+
 
 class TimeTableController extends GetxController {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -32,7 +35,7 @@ class TimeTableController extends GetxController {
         _handleError(response);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to retrieve courses: $e");
+     
     }
   }
 
@@ -58,7 +61,6 @@ class TimeTableController extends GetxController {
         _handleError(response);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to retrieve schedule: $e");
     }
   }
 
@@ -80,13 +82,11 @@ class TimeTableController extends GetxController {
         _handleError(response);
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to add schedule: $e");
     }
   }
 
   Future<void> addCourse(String courseName, int day) async {
     if (courseName.isEmpty) {
-      Get.snackbar("Error", "Course name cannot be empty.");
       return;
     }
 
@@ -103,7 +103,10 @@ class TimeTableController extends GetxController {
           "schedules": {"day_of_week": day},
         }),
       );
-    print(response.body);
+      print(getToken());
+      print(day);
+      print(courseName);
+    debugPrint(response.body);
       if (response.statusCode == 201) {
         await getSchedule();
         Get.snackbar("Success", "Course has been added!");
@@ -123,6 +126,5 @@ class TimeTableController extends GetxController {
     } catch (e) {
       message = 'Failed to parse error response';
     }
-    Get.snackbar("Error", message);
   }
 }

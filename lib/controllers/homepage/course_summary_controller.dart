@@ -19,8 +19,9 @@ class CourseSummaryController extends GetxController {
   Future<void> fetchCourseSummary() async {
     final token = await getToken();
     if (token == null) {
-      Get.snackbar('Error', 'No token found.');
+      courseSummary.clear();
       return;
+
     }
     var headers = {
       HttpHeaders.authorizationHeader: "Token $token",
