@@ -54,3 +54,18 @@ Here's a quick look at the app's interface:
 ---
 
 With Bunk Mate, you can manage your attendance smartly and take those well-deserved breaks without the stress! Enjoy your college life to the fullest!
+
+
+
+## Support Us
+
+If you find the Bunk Mate app helpful, please consider starring our repository on GitHub! Your support helps us improve the app and reach more users.
+
+### How to Star the Repository
+
+1. Visit our GitHub repository: [Bunk Mate on GitHub](https://github.com/Bunk-Mate/Mobile-App).
+2. Click the **Star** button at the top right of the page.
+
+Your star not only shows your appreciation but also helps others discover the app. Thank you for your support!
+
+---
