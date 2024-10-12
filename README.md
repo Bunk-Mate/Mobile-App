@@ -11,7 +11,7 @@ To get started, simply download the latest release of the app from [this link](h
 Maximize your experience with the Attendance Tracker app by following these steps:
 
 **1. Create an Account**  
-Sign up within the app to create your personal account.
+Sign up within the app to create your account.
 
 **2. Log In**  
 Use your newly created credentials to log into your account.
@@ -36,6 +36,8 @@ Easily update your attendance on the status page:
 By default, days are marked as present, so you only need to update your status when you bunk or skip a class.
 
 ## For Developers
+
+Please see the [contribution guidelines](https://github.com/Bunk-Mate/Mobile-App/blob/main/CONTRIBUTING.md) if you are interested in contributing to Bunk-Mate. Work that is in progress or could be implemented is tracked in the issues and projects.
 
 ### Setup Instructions
 
