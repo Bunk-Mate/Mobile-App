@@ -31,8 +31,6 @@ Thank you for your interest in contributing to Bunk Mate! We look forward to wel
 - Join our public chat to connect with the community.
 - Read through this contributing guide for all the information you need.
 - Look for issues marked [`good first issue`](https://github.com/bunkmate-app/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) to understand what you can work on.
-- Check out our designs on Figma to grasp the app’s goals.
-- Consider attending our regular developer sync meetings!
 
 > [!NOTE]
 > Those new to Flutter or wanting to improve their skills are welcome to contribute! The team is happy to help you on your development journey.
