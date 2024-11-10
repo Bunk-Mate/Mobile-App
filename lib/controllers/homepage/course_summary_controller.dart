@@ -10,43 +10,62 @@ import 'package:bunk_mate/screens/OnBoardView.dart';
 
 class CourseSummaryController extends GetxController {
   var courseSummary = <CourseSummary>[].obs;
+  var isLoading = true.obs;
   final storage = const FlutterSecureStorage();
   
+  @override
+  void onInit() {
+    super.onInit();
+    fetchCourseSummary();
+  }
+
   Future<String?> getToken() async {
     return await storage.read(key: 'token');
   }
 
   Future<void> fetchCourseSummary() async {
-    final token = await getToken();
-    if (token == null) {
-      Get.snackbar('Error', 'No token found.');
-      return;
-    }
-    var headers = {
-      HttpHeaders.authorizationHeader: "Token $token",
-    };
-
     try {
+      isLoading.value = true;
+      final token = await getToken();
+      
+      if (token == null) {
+        Get.snackbar('Error', 'No token found.');
+        return;
+      }
+      
+      var headers = {
+        HttpHeaders.authorizationHeader: "Token $token",
+      };
+
       var url = Uri.parse(
           ApiEndPoints.baseUrl + ApiEndPoints.homeEndPoints.courseSummary);
+      
       http.Response response = await http.get(url, headers: headers);
 
       print(response.statusCode);
+      
       if (response.statusCode == 200) {
-          List<dynamic> jsonData = json.decode(response.body);
-          var fetchedSummary =
-              jsonData.map((data) => CourseSummary.fromJson(data)).toList();
-          print(response.body);
-          print(jsonData[0]);
+        List<dynamic> jsonData = json.decode(response.body);
+        var fetchedSummary =
+            jsonData.map((data) => CourseSummary.fromJson(data)).toList();
+        print(response.body);
+        print(jsonData[0]);
 
-          courseSummary.assignAll(fetchedSummary);
-          print("Task Done");
-        }
+        courseSummary.assignAll(fetchedSummary);
+        print("Task Done");
+      }
       else if (response.statusCode == 404) {
         Get.offAll(const TimetableView());
       }
     } catch (error) {
-      print(error);
+      print('Error fetching course summary: $error');
+      Get.snackbar(
+        'Error',
+        'Failed to fetch course data. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 }

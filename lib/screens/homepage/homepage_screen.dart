@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/controllers/homepage/course_summary_controller.dart';
 import 'package:bunk_mate/controllers/auth/login_controller.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,6 +57,14 @@ class HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SafeArea(
           child: Obx(() {
+            if (courseSummaryController.isLoading.value) {
+              return Center(
+                child: SpinKitPulse(
+                  color: accentColor,
+                  size: 50.0,
+                ),
+              );
+            }
             if (courseSummaryController.courseSummary.isEmpty) {
               return _buildEmptyState();
             }
