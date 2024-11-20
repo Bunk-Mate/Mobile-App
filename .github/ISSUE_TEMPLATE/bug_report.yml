@@ -21,7 +21,7 @@ body:
   - type: input
     id: device
     attributes:
-      label: Device type
+      label: Device type[iOS or Android]
       placeholder: "Please enter the device type"
     validations:
       required: true
