@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           } else {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
+              title: 'Bunk Mate',
               theme: ThemeData(
                 fontFamily: GoogleFonts.lexend().fontFamily,
                 colorScheme:
