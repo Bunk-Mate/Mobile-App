@@ -1,0 +1,40 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+labels: bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+
+        Please provide a clear and concise description of the bug.
+
+  - type: textarea
+    attributes:
+      label: What is the bug?
+      description: Provide details about what is not working as expected.
+      placeholder: "Describe the issue..."
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: What steps did you follow to reproduce the issue?
+      placeholder: "List the steps"
+      required: true
+
+  - type: checkbox
+    attributes:
+      label: Was the issue present in the latest release?
+      options:
+        - Yes
+        - No
+      required: true
+
+  - type: input
+    attributes:
+      label: Version of the app
+      description: Please specify the version of the application.
+      required: true
+
