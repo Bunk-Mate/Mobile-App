@@ -1,7 +1,7 @@
 name: ✨ Feature request
 description: Have a new idea or feature for Bunk-Mate? Please suggest!
 labels: ["enhancement"]
-==
+
 body:
   - type: checkboxes
     id: terms
