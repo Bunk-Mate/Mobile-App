@@ -1,40 +1,130 @@
 name: Bug Report
-description: Report a bug or unexpected behavior
-labels: bug
+description: Create a detailed bug report to help us improve
+title: "[BUG]: Describe the bug briefly"
+labels: 
+  - bug
+  - needs-triage
 
 body:
   - type: markdown
     attributes:
       value: |
-        ## Bug Report
-
-        Please provide a clear and concise description of the bug.
-
-  - type: textarea
-    attributes:
-      label: What is the bug?
-      description: Provide details about what is not working as expected.
-      placeholder: "Describe the issue..."
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Steps to reproduce
-      description: What steps did you follow to reproduce the issue?
-      placeholder: "List the steps"
-      required: true
-
-  - type: checkbox
-    attributes:
-      label: Was the issue present in the latest release?
-      options:
-        - Yes
-        - No
-      required: true
+        ## Bug Report Guidelines
+        Please provide clear and concise information about the issue.
 
   - type: input
+    id: contact
     attributes:
-      label: Version of the app
-      description: Please specify the version of the application.
+      label: Contact Details
+      description: How can we reach you if we need more information?
+      placeholder: email@example.com
+    validations:
+      required: false
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the project is impacted?
+      options:
+        - Frontend
+        - Backend
+        - Database
+        - API
+        - Other
+    validations:
       required: true
 
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Provide a clear, detailed description of the bug
+      placeholder: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: Detail the exact steps to reproduce the issue
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: A clear and concise description of what you expected to occur.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe the specific behavior you observed.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How critical is this bug?
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Provide context about your environment
+      placeholder: |
+        - OS: [e.g., Windows 10, macOS 11.5]
+        - Browser: [e.g., Chrome 92, Firefox 90]
+        - Version: [e.g., 1.2.3]
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add screenshots to help explain the problem
+      placeholder: Drag and drop or paste screenshots here.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information, logs, or context that might be helpful.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Confirmation
+      description: Ensure your report meets our guidelines
+      options:
+        - label: I have checked for existing similar issues
+          required: true
+        - label: My report contains all relevant information
+          required: true
