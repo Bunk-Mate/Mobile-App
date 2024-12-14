@@ -3,6 +3,7 @@ import 'package:bunk_mate/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -12,7 +13,7 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> with SingleTickerProviderStateMixin {
-  final SignupController signupController = SignupController();
+  final SignupController signupController = Get.put(SignupController());
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -52,60 +53,76 @@ class _RegistrationState extends State<Registration> with SingleTickerProviderSt
 
     return Scaffold(
       backgroundColor: bgColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: screenSize.height * 0.08),
-                  _buildLogo(),
-                  SizedBox(height: screenSize.height * 0.04),
-                  Text(
-                    "Create Account",
-                    style: GoogleFonts.lexend(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                    ),
+      body: Obx(() => signupController.isLoading.value 
+          ? _buildLoadingScreen() 
+          : _buildRegistrationForm(screenSize)
+      ),
+    );
+  }
+
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: SpinKitPulse(
+        color: accentColor,
+        size: 50.0,
+      ),
+    );
+  }
+
+  Widget _buildRegistrationForm(Size screenSize) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenSize.height * 0.08),
+                _buildLogo(),
+                SizedBox(height: screenSize.height * 0.04),
+                Text(
+                  "Create Account",
+                  style: GoogleFonts.lexend(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Sign up to get started",
-                    style: GoogleFonts.lexend(
-                      color: secondaryTextColor,
-                      fontSize: 16,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Sign up to get started",
+                  style: GoogleFonts.lexend(
+                    color: secondaryTextColor,
+                    fontSize: 16,
                   ),
-                  SizedBox(height: screenSize.height * 0.05),
-                  _buildAuthField(
-                    controller: signupController.usernameController,
-                    icon: Icons.person_outline,
-                    hintText: "Username",
-                  ),
-                  const SizedBox(height: 20),
-                  _buildAuthField(
-                    controller: signupController.passwordController,
-                    icon: Icons.lock_outline,
-                    hintText: "Password",
-                    isObscure: true,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildAuthField(
-                    controller: signupController.confirmPasswordController,
-                    icon: Icons.lock_outline,
-                    hintText: "Confirm Password",
-                    isObscure: true,
-                  ),
-                  SizedBox(height: screenSize.height * 0.04),
-                  _buildSignUpButton(),
-                  SizedBox(height: screenSize.height * 0.04),
-                  _buildSignInRow(),
-                ],
-              ),
+                ),
+                SizedBox(height: screenSize.height * 0.05),
+                _buildAuthField(
+                  controller: signupController.usernameController,
+                  icon: Icons.person_outline,
+                  hintText: "Username",
+                ),
+                const SizedBox(height: 20),
+                _buildAuthField(
+                  controller: signupController.passwordController,
+                  icon: Icons.lock_outline,
+                  hintText: "Password",
+                  isObscure: true,
+                ),
+                const SizedBox(height: 20),
+                _buildAuthField(
+                  controller: signupController.confirmPasswordController,
+                  icon: Icons.lock_outline,
+                  hintText: "Confirm Password",
+                  isObscure: true,
+                ),
+                SizedBox(height: screenSize.height * 0.04),
+                _buildSignUpButton(),
+                SizedBox(height: screenSize.height * 0.04),
+                _buildSignInRow(),
+              ],
             ),
           ),
         ),
