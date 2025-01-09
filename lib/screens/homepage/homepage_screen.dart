@@ -1,6 +1,6 @@
-import 'package:bunk_mate/screens/OnBoardView.dart';
+import 'package:bunk_mate/screens/on_board_view.dart';
 import 'package:bunk_mate/screens/auth/login_screen.dart';
-import 'package:bunk_mate/utils/Navigation.dart';
+import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/controllers/homepage/course_summary_controller.dart';
@@ -259,7 +259,7 @@ class HomePageState extends State<HomePage> {
 
   void _handleMenuSelection(int value) async {
     if (value == 0) {
-      Get.to(const TimetableView());
+      Get.to(const OnBoardView());
     } else if (value == 2) {
       await _handleLogout();
     }

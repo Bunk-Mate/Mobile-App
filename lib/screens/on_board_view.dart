@@ -1,67 +1,21 @@
-import 'package:bunk_mate/controllers/onBoard/time_table_controller.dart';
-import 'package:bunk_mate/models/onboard_time_table.dart';
-import 'package:bunk_mate/utils/Navigation.dart';
+import 'package:bunk_mate/controllers/onBoard/on_board_controller.dart';
+import 'package:bunk_mate/services/on_board_service.dart';
+import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class TimetableView extends StatefulWidget {
-  const TimetableView({super.key});
+class OnBoardView extends StatefulWidget {
+  const OnBoardView({super.key});
 
   @override
-  State<TimetableView> createState() => _TimetableViewState();
+  State<OnBoardView> createState() => _OnBoardViewState();
 }
 
-class _TimetableViewState extends State<TimetableView> {
-  final TimetableController _controller = TimetableController();
-  String _timeTableName = "";
-  int _minAttendance = 0;
-  String _startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-  String _endDate =
-      DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 30)));
-  bool _isShared = false;
-  late List<dynamic> _presets = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPresets();
-  }
-
-  Future<void> _loadPresets() async {
-    _presets = await _controller.getTimeTable();
-    setState(() {});
-  }
-
-  void _submit() {
-    if (_endDate.isNotEmpty &&
-        _startDate.isNotEmpty &&
-        _timeTableName.isNotEmpty &&
-        _minAttendance != 0) {
-      TimetableModel timetable = TimetableModel(
-        name: _timeTableName,
-        minAttendance: _minAttendance,
-        startDate: _startDate,
-        endDate: _endDate,
-        isShared: _isShared,
-      );
-      _controller.submitTimetable(timetable).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Timetable has been created")),
-        );
-        Get.off(const Navigation());
-      }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Could not create timetable")),
-        );
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter all details!")),
-      );
-    }
-  }
+class _OnBoardViewState extends State<OnBoardView> {
+  final OnBoardController _controller = Get.put(OnBoardController());
+  final OnBoardService _service = OnBoardService();
 
   @override
   Widget build(BuildContext context) {
@@ -89,60 +43,62 @@ class _TimetableViewState extends State<TimetableView> {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              DropdownButtonFormField(
-                items: _presets.map((preset) {
-                  return DropdownMenuItem(
-                    value: preset['id'],
-                    child: Text(
-                      preset['name'],
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-                hint: const Text('Timetable Presets',
-                    style: TextStyle(color: Colors.white)),
-                onChanged: (value) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Are you sure?"),
-                        content: const Text(
-                            "You would lose all your current data if you did this."),
-                        actions: [
-                          TextButton(
-                            child: const Text("Yes"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              _controller
-                                  .timeTablePresets(value as int)
-                                  .then((_) {
-                                Get.off(const Navigation());
-                              }).catchError((error) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text("Could not update timetable")),
-                                );
-                              });
-                            },
-                          ),
-                          TextButton(
-                            child: const Text("No"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+              Obx(
+                () => DropdownButtonFormField(
+                  items: _controller.presets.map((preset) {
+                    return DropdownMenuItem(
+                      value: preset['id'],
+                      child: Text(
+                        preset['name'],
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }).toList(),
+                  hint: const Text('Timetable Presets',
+                      style: TextStyle(color: Colors.white)),
+                  onChanged: (value) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Are you sure?"),
+                          content: const Text(
+                              "You would lose all your current data if you did this."),
+                          actions: [
+                            TextButton(
+                              child: const Text("Yes"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _service
+                                    .timeTablePresets(value as int)
+                                    .then((_) {
+                                  Get.off(const Navigation());
+                                }).catchError((error) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("Could not update timetable")),
+                                  );
+                                });
+                              },
+                            ),
+                            TextButton(
+                              child: const Text("No"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 20),
               TextField(
                 style: const TextStyle(color: Colors.white),
-                onChanged: (timeTableName) => _timeTableName = timeTableName,
+                onChanged: (timeTableName) => _controller.timeTableName = timeTableName,
                 decoration: const InputDecoration(
                   hintText: 'Timetable Name',
                   hintStyle: TextStyle(color: Colors.white24),
@@ -158,7 +114,7 @@ class _TimetableViewState extends State<TimetableView> {
               TextFormField(
                 onChanged: (minAttendance) {
                   try {
-                    _minAttendance = int.parse(minAttendance);
+                   _controller.minAttendance = int.parse(minAttendance);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -192,10 +148,8 @@ class _TimetableViewState extends State<TimetableView> {
                           lastDate: DateTime(2101),
                         );
                         if (picked != null) {
-                          setState(() {
-                            _startDate =
-                                DateFormat("yyyy-MM-dd").format(picked);
-                          });
+                          _controller.startDate.value =
+                              DateFormat("yyyy-MM-dd").format(picked);
                         }
                       },
                       child: InputDecorator(
@@ -205,9 +159,11 @@ class _TimetableViewState extends State<TimetableView> {
                           fillColor: cardColor,
                           border: OutlineInputBorder(),
                         ),
-                        child: Text(
-                          _startDate,
-                          style: const TextStyle(color: Colors.white),
+                        child: Obx(
+                          () => Text(
+                            _controller.startDate.value,
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -223,10 +179,8 @@ class _TimetableViewState extends State<TimetableView> {
                           lastDate: DateTime(2101),
                         );
                         if (picked != null) {
-                          setState(() {
-                            _endDate =
-                                DateFormat("yyyy-MM-dd").format(picked);
-                          });
+                          _controller.endDate.value =
+                              DateFormat("yyyy-MM-dd").format(picked);
                         }
                       },
                       child: InputDecorator(
@@ -236,9 +190,11 @@ class _TimetableViewState extends State<TimetableView> {
                           fillColor: cardColor,
                           border: OutlineInputBorder(),
                         ),
-                        child: Text(
-                          _endDate,
-                          style: const TextStyle(color: Colors.white),
+                        child: Obx(
+                          () => Text(
+                            _controller.endDate.value,
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -246,22 +202,21 @@ class _TimetableViewState extends State<TimetableView> {
                 ],
               ),
               const SizedBox(height: 20),
-              CheckboxListTile(
-                title: const Text(
-                  "Share Timetable",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: 18),
+              Obx(
+                () => CheckboxListTile(
+                  title: const Text(
+                    "Share Timetable",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  value: _controller.isShared.value,
+                  onChanged: (newValue) {
+                    _controller.isShared.value = newValue!;
+                  },
                 ),
-                value: _isShared,
-                onChanged: (newValue) {
-                  setState(() {
-                    _isShared = newValue!;
-                  });
-                },
               ),
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: _submit,
+                onTap: _controller.submit,
                 child: Container(
                   width: double.infinity,
                   height: 50,
