@@ -13,7 +13,6 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  
   final NavigationController controller = NavigationController();
   final Color bgColor = const Color(0xFF121212);
   final Color accentColor = const Color(0xFF4CAF50);
@@ -32,11 +31,12 @@ class _NavigationState extends State<Navigation> {
     List<Widget> children = <Widget>[
       HomePage(key: homePageKey),
       StatusView(),
-      const TimeTableEntry(),
+      const TimeTablePage(),
     ];
 
     return Scaffold(
-      body: Obx(()=> IndexedStack(
+      body: Obx(
+        () => IndexedStack(
           index: controller.currentIndex.value,
           children: children,
         ),
@@ -68,40 +68,43 @@ class _NavigationState extends State<Navigation> {
     );
   }
 
-Widget _buildNavItem(int index, IconData icon, String label) {
-  return Obx(() => InkWell(
-    onTap: () => onTabTapped(index),
-    child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: controller.currentIndex.value == index ?
-             accentColor.withOpacity(0.2) : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: controller.currentIndex.value == index 
-                ? accentColor : inactiveColor,
-            size: 28,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: controller.currentIndex.value == index 
-                  ? accentColor : inactiveColor,
-              fontSize: 12,
-              fontWeight: controller.currentIndex.value == index 
-                  ? FontWeight.bold 
-                  : FontWeight.normal,
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    return Obx(() => InkWell(
+          onTap: () => onTabTapped(index),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              color: controller.currentIndex.value == index
+                  ? accentColor.withOpacity(0.2)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color: controller.currentIndex.value == index
+                      ? accentColor
+                      : inactiveColor,
+                  size: 28,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: controller.currentIndex.value == index
+                        ? accentColor
+                        : inactiveColor,
+                    fontSize: 12,
+                    fontWeight: controller.currentIndex.value == index
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    ),
-  ));
-}
+        ));
+  }
 }
