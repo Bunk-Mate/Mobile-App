@@ -1,7 +1,9 @@
+import 'package:bunk_mate/controllers/navigation/navigation_controller.dart';
 import 'package:bunk_mate/screens/Status/status_page.dart';
 import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -11,7 +13,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  int currentIndex = 0;
+  final NavigationController controller = NavigationController();
   final Color bgColor = const Color(0xFF121212);
   final Color accentColor = const Color(0xFF4CAF50);
   final Color inactiveColor = Colors.white54;
@@ -21,23 +23,23 @@ class _NavigationState extends State<Navigation> {
     if (index == 0) {
       homePageKey.currentState?.refreshData();
     }
-    setState(() {
-      currentIndex = index;
-    });
+    controller.updateIndex(index);
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
-      HomePage(key: homePageKey), 
+      HomePage(key: homePageKey),
       StatusView(),
-      const TimeTableEntry(),
+      const TimeTablePage(),
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: children,
+      body: Obx(
+        () => IndexedStack(
+          index: controller.currentIndex.value,
+          children: children,
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -67,35 +69,42 @@ class _NavigationState extends State<Navigation> {
   }
 
   Widget _buildNavItem(int index, IconData icon, String label) {
-    bool isSelected = currentIndex == index;
-    return InkWell(
-      onTap: () => onTabTapped(index),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: isSelected ? accentColor.withOpacity(0.2) : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? accentColor : inactiveColor,
-              size: 28,
+    return Obx(() => InkWell(
+          onTap: () => onTabTapped(index),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              color: controller.currentIndex.value == index
+                  ? accentColor.withOpacity(0.2)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
             ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? accentColor : inactiveColor,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color: controller.currentIndex.value == index
+                      ? accentColor
+                      : inactiveColor,
+                  size: 28,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: controller.currentIndex.value == index
+                        ? accentColor
+                        : inactiveColor,
+                    fontSize: 12,
+                    fontWeight: controller.currentIndex.value == index
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

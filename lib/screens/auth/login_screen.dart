@@ -1,6 +1,6 @@
 import 'package:bunk_mate/screens/auth/signup_screen.dart';
 import 'package:bunk_mate/screens/easter_eggs.dart';
-import 'package:bunk_mate/utils/Navigation.dart';
+import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:bunk_mate/controllers/auth/login_controller.dart';
 import 'package:get/get.dart';
@@ -13,7 +13,8 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
+class _AuthScreenState extends State<AuthScreen>
+    with SingleTickerProviderStateMixin {
   LoginController loginController = Get.put(LoginController());
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -31,7 +32,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _fadeAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _animationController.forward();
   }
 
@@ -143,6 +145,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       ),
     );
   }
+
   Widget _buildAuthField({
     required TextEditingController controller,
     required IconData icon,
@@ -170,7 +173,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
           hintStyle: GoogleFonts.lexend(color: secondaryTextColor),
           prefixIcon: Icon(icon, color: accentColor),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -216,12 +220,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Registration(),
-              ),
-            );
+            Get.off(const SignupScreen());
           },
           child: Text(
             "Sign up",

@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:bunk_mate/controllers/timetable/time_table_controller.dart';
 
-class TimeTableEntry extends StatefulWidget {
-  const TimeTableEntry({Key? key}) : super(key: key);
+class TimeTablePage extends StatefulWidget {
+  const TimeTablePage ({super.key});
 
   @override
-  State<TimeTableEntry> createState() => _TimeTableEntryState();
+  State<TimeTablePage> createState() => _TimeTablePageState();
 }
 
-class _TimeTableEntryState extends State<TimeTableEntry> {
+class _TimeTablePageState extends State<TimeTablePage> {
   final TimeTableController controller = Get.put(TimeTableController());
   static const Map<int, String> days = {
     1: "Monday",

@@ -1,12 +1,11 @@
-import 'package:bunk_mate/controllers/onBoard/time_table_controller.dart';
+import 'package:bunk_mate/models/on_board_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-
-class TimetableController {
-  final storage = const FlutterSecureStorage();
+class OnBoardService {
+    final storage = const FlutterSecureStorage();
   final String apiUrl = "https://api.bunkmate.college";
 
   Future<String> getToken() async {
@@ -14,7 +13,7 @@ class TimetableController {
     return token;
   }
 
-  Future<void> submitTimetable(TimetableModel timetable) async {
+  Future<void> submitTimetable(OnBoardModel timetable) async {
     final response = await http.post(
       Uri.parse("$apiUrl/collection"),
       headers: {

@@ -6,7 +6,7 @@ import 'package:bunk_mate/utils/api_endpoints.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
 import 'dart:io';
-import 'package:bunk_mate/screens/OnBoardView.dart';
+import 'package:bunk_mate/screens/on_board_view.dart';
 
 class CourseSummaryController extends GetxController {
   var courseSummary = <CourseSummary>[].obs;
@@ -55,7 +55,7 @@ class CourseSummaryController extends GetxController {
         print("Task Done");
       }
       else if (response.statusCode == 404) {
-        Get.offAll(const TimetableView());
+        Get.offAll(const OnBoardView());
       }
     } catch (error) {
       print('Error fetching course summary: $error');
