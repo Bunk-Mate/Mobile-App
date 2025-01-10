@@ -1,5 +1,5 @@
 import 'package:bunk_mate/screens/auth/login_screen.dart';
-import 'package:bunk_mate/utils/Navigation.dart';
+import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';

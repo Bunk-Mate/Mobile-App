@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Registration extends StatefulWidget {
-  const Registration({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  _RegistrationState createState() => _RegistrationState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _RegistrationState extends State<Registration> with SingleTickerProviderStateMixin {
+class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderStateMixin {
   final SignupController signupController = SignupController();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
