@@ -39,7 +39,7 @@ class OnBoardController extends GetxController {
       );
       _service.submitTimetable(timetable).then((_) {
         Get.snackbar("Success", "TimeTable has been created");
-        Get.off(const Navigation());
+        Get.off( Navigation());
       }).catchError((error) {
         Get.snackbar("Error", "Could not create timetableld");
       });

@@ -4,10 +4,11 @@ import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onboarding_overlay/onboarding_overlay.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
-
+  Navigation({super.key});
+  final GlobalKey<OnboardingState> onboardingKey = GlobalKey<OnboardingState>();
   @override
   State<Navigation> createState() => _NavigationState();
 }
@@ -18,10 +19,25 @@ class _NavigationState extends State<Navigation> {
   final Color accentColor = const Color(0xFF4CAF50);
   final Color inactiveColor = Colors.white54;
   final GlobalKey<HomePageState> homePageKey = GlobalKey<HomePageState>();
+  final GlobalKey<StatusViewState> statusPageKey = GlobalKey<StatusViewState>();
+  late List<FocusNode> focusNodes;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNodes = List<FocusNode>.generate(
+      1,
+      (int i) => FocusNode(debugLabel: 'Onboarding Focus Node $i'),
+      growable: false,
+    );
+  }
 
   void onTabTapped(int index) {
     if (index == 0) {
       homePageKey.currentState?.refreshData();
+    } else if (index == 1) {
+      print("in if");
+      statusPageKey.currentState?.showPageGuide();
     }
     controller.updateIndex(index);
   }
@@ -30,37 +46,117 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     List<Widget> children = <Widget>[
       HomePage(key: homePageKey),
-      StatusView(),
+      StatusView(
+        focusNode: focusNodes[0],
+        key: statusPageKey,
+      ),
       const TimeTablePage(),
     ];
 
-    return Scaffold(
-      body: Obx(
-        () => IndexedStack(
-          index: controller.currentIndex.value,
-          children: children,
+    return Onboarding(
+      key: widget.onboardingKey,
+      autoSizeTexts: true,
+      steps: <OnboardingStep>[
+        OnboardingStep(
+          focusNode: focusNodes[0],
+          titleText: "",
+          bodyText: '',
+          overlayColor: Colors.black.withOpacity(0.7),
+          overlayShape: const RoundedRectangleBorder(),
+          overlayBehavior: HitTestBehavior.deferToChild,
+          stepBuilder: (context, renderInfo) {
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  padding: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF121212),
+                    border: Border.all(color: const Color(0xFF4CAF50)),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Guide to Status Page',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        buildGuideStep(
+                          'Single Tap to mark bunked',
+                          'assets/bunked.png',
+                        ),
+                        buildGuideStep(
+                          'Double Tap to mark cancelled',
+                          'assets/cancelled.png',
+                        ),
+                        buildGuideStep(
+                          'Long Press to mark present again',
+                          'assets/present.png', // Make sure the path is correct.
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: renderInfo.close, // Close the guide
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF4CAF50),
+                            ),
+                            child: const Text(
+                              "close",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: bgColor,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
+      ],
+      child: Scaffold(
+        body: Obx(
+          () => IndexedStack(
+            index: controller.currentIndex.value,
+            children: children,
+          ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildNavItem(0, Icons.home_rounded, 'Home'),
-                _buildNavItem(1, Icons.check_circle_outline_rounded, 'Status'),
-                _buildNavItem(2, Icons.calendar_today_rounded, 'Timetable'),
-              ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: bgColor,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(.1),
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildNavItem(0, Icons.home_rounded, 'Home'),
+                  _buildNavItem(
+                      1, Icons.check_circle_outline_rounded, 'Status'),
+                  _buildNavItem(2, Icons.calendar_today_rounded, 'Timetable'),
+                ],
+              ),
             ),
           ),
         ),
@@ -106,5 +202,32 @@ class _NavigationState extends State<Navigation> {
             ),
           ),
         ));
+  }
+
+  Widget buildGuideStep(String text, String imagePath) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Image.asset(
+          imagePath,
+          width: 300,
+          errorBuilder: (context, error, stackTrace) {
+            return const Text(
+              'Image not found',
+              style: TextStyle(color: Colors.red),
+            );
+          },
+        ),
+        const SizedBox(height: 15),
+      ],
+    );
   }
 }

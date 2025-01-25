@@ -72,7 +72,7 @@ class _OnBoardViewState extends State<OnBoardView> {
                                 _service
                                     .timeTablePresets(value as int)
                                     .then((_) {
-                                  Get.off(const Navigation());
+                                  Get.off( Navigation());
                                 }).catchError((error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

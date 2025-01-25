@@ -14,4 +14,17 @@ class StorageService {
   Future<void> deleteToken() async {
     await _storage.delete(key: 'token');
   }
+
+  Future<void> setOnboardingComplete() async {
+    await _storage.write(key: 'onboarding', value: 'true');
+  }
+
+  Future<void> deleteOnboarding() async {
+    await _storage.delete(key: 'onboarding');
+  }
+
+  Future<bool> getOnboardingComplete() async {
+    final onboarding = await _storage.read(key: 'onboarding');
+    return onboarding == 'true';
+  }
 }
