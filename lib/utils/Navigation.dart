@@ -67,58 +67,60 @@ class _NavigationState extends State<Navigation> {
           stepBuilder: (context, renderInfo) {
             return Scaffold(
               backgroundColor: Colors.transparent,
-              body: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF121212),
-                    border: Border.all(color: const Color(0xFF4CAF50)),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Guide to Status Page',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        buildGuideStep(
-                          'Single Tap to mark bunked',
-                          'assets/bunked.png',
-                        ),
-                        buildGuideStep(
-                          'Double Tap to mark cancelled',
-                          'assets/cancelled.png',
-                        ),
-                        buildGuideStep(
-                          'Long Press to mark present again',
-                          'assets/present.png', // Make sure the path is correct.
-                        ),
-                        const SizedBox(height: 20),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: renderInfo.close, // Close the guide
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF4CAF50),
+              body: SingleChildScrollView(
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    padding: const EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF121212),
+                      border: Border.all(color: const Color(0xFF4CAF50)),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Guide to Status Page',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            child: const Text(
-                              "close",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          ),
+                          const SizedBox(height: 20),
+                          buildGuideStep(
+                            'Single Tap to mark bunked',
+                            'assets/bunked.png',
+                          ),
+                          buildGuideStep(
+                            'Double Tap to mark cancelled',
+                            'assets/cancelled.png',
+                          ),
+                          buildGuideStep(
+                            'Long Press to mark present again',
+                            'assets/present.png', // Make sure the path is correct.
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: renderInfo.close, // Close the guide
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF4CAF50),
+                              ),
+                              child: const Text(
+                                "close",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
