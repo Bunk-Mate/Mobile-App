@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const storage = FlutterSecureStorage();
- WidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
     return FutureBuilder(
       future: storage.read(key: 'token'),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
                     ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: const Navigation(),
+              home:  Navigation(),
             );
           } else {
             return GetMaterialApp(
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                     ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 useMaterial3: true,
               ),
-              home: const AuthScreen(),
+              home: const LoginScreen(),
             );
           }
         }

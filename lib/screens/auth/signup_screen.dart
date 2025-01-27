@@ -199,7 +199,7 @@ class _SignupScreenState extends State<SignupScreen> with SingleTickerProviderSt
         ),
         GestureDetector(
           onTap: () {
-            Get.off(const AuthScreen());
+            Get.off(const LoginScreen());
           },
           child: Text(
             "Sign in",

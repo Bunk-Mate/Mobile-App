@@ -6,14 +6,14 @@ import 'package:bunk_mate/controllers/auth/login_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen>
+class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   LoginController loginController = Get.put(LoginController());
   late AnimationController _animationController;
@@ -185,7 +185,7 @@ class _AuthScreenState extends State<AuthScreen>
       onPressed: () async {
         bool success = await loginController.loginFunction();
         if (success) {
-          Get.off(const Navigation());
+          Get.off( Navigation());
         }
       },
       style: ElevatedButton.styleFrom(

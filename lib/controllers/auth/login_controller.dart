@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class LoginController extends GetxController {
-  final CourseSummaryController courseSummaryController = Get.put(CourseSummaryController());
+  final CourseSummaryController courseSummaryController =
+      Get.put(CourseSummaryController());
   final _storage = const FlutterSecureStorage();
   var isLogged = false.obs;
 
@@ -18,34 +19,37 @@ class LoginController extends GetxController {
   Future<String?> getToken() async {
     return await _storage.read(key: 'token');
   }
-Future<bool> logoutfunction() async {
-      var headers = { HttpHeaders.authorizationHeader: "Token ${await getToken()}"};
-      try {
-        var url = Uri.parse(
-            ApiEndPoints.baseUrl + ApiEndPoints.authEndPoints.logoutEmail);
-        http.Response response =
-            await http.post(url, headers: headers);
-        if (response.statusCode == 200) {
-          await _storage.delete(key: 'token');
-          isLogged.value = false;
 
-        } else {
-          throw jsonDecode(response.body);
-        }
-      } catch (error) {
-        Get.back();
-        showDialog(
-            context: Get.context!,
-            builder: (context) {
-              return SimpleDialog(
-                title: const Text('Error'),
-                contentPadding: const EdgeInsets.all(20),
-                children: [Text(error.toString())],
-              );
-            });
+  Future<bool> logoutfunction() async {
+    var headers = {
+      HttpHeaders.authorizationHeader: "Token ${await getToken()}"
+    };
+    try {
+      var url = Uri.parse(
+          ApiEndPoints.baseUrl + ApiEndPoints.authEndPoints.logoutEmail);
+      http.Response response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        await _storage.delete(key: 'token');
+        await _storage.delete(key: 'onboarding');
+        isLogged.value = false;
+      } else {
+        throw jsonDecode(response.body);
       }
-    return isLogged.value;
+    } catch (error) {
+      Get.back();
+      showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return SimpleDialog(
+              title: const Text('Error'),
+              contentPadding: const EdgeInsets.all(20),
+              children: [Text(error.toString())],
+            );
+          });
     }
+    return isLogged.value;
+  }
+
   Future<bool> loginFunction() async {
     var headers = {"Content-Type": "application/json"};
     try {
@@ -80,6 +84,6 @@ Future<bool> logoutfunction() async {
             );
           });
     }
-  return isLogged.value ;
-}
+    return isLogged.value;
+  }
 }
