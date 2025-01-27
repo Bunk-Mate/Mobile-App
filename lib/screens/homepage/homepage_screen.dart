@@ -248,12 +248,12 @@ class HomePageState extends State<HomePage> {
   Future<void> _handleLogout() async {
     bool success = await loginController.logoutfunction();
     if (!success) {
-      Get.off(const AuthScreen());
+      Get.off(const LoginScreen());
       Get.snackbar("Logout Successful", "You were logged out successfully");
       Get.deleteAll();
     } else {
       Get.snackbar("Error", "You weren't logged out. Try again.");
-      Get.to(const Navigation());
+      Get.to( Navigation());
     }
   }
 

@@ -28,7 +28,7 @@ class SignupController extends GetxController {
       if (response.statusCode == 201) {
         usernameController.clear();
         passwordController.clear();
-        Get.off(const AuthScreen());
+        Get.off(const LoginScreen());
       }
       else {
         throw jsonDecode(response.body) ?? 'Unknown Error occured' ;

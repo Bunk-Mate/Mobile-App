@@ -1,20 +1,33 @@
 import 'package:bunk_mate/controllers/status/status_controller.dart';
+import 'package:bunk_mate/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:onboarding_overlay/onboarding_overlay.dart';
 
-class StatusView extends StatelessWidget {
+class StatusView extends StatefulWidget {
+  final FocusNode focusNode;
+  StatusView({super.key, required this.focusNode});
+
+  @override
+  State<StatusView> createState() => StatusViewState();
+}
+
+class StatusViewState extends State<StatusView> {
   final StatusController controller =
       Get.put(StatusController(apiUrl: 'https://api.bunkmate.college'));
-  final Color bgColor = const Color(0xFF121212);
-  final Color cardColor = const Color(0xFF1E1E1E);
-  final Color accentColor = const Color(0xFF4CAF50);
-  final Color textColor = Colors.white;
-  final Color secondaryTextColor = Colors.white70;
 
-  StatusView({super.key});
+  final Color bgColor = const Color(0xFF121212);
+
+  final Color cardColor = const Color(0xFF1E1E1E);
+
+  final Color accentColor = const Color(0xFF4CAF50);
+
+  final Color textColor = Colors.white;
+
+  final Color secondaryTextColor = Colors.white70;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +59,56 @@ class StatusView extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          _buildRewindTimeButton(context),
+          Row(
+            children: [
+              _buildRewindTimeButton(context),
+              const SizedBox(
+                width: 10,
+              ),
+              _buildHelpButon(context)
+            ],
+          ),
         ],
       ),
       body: Obx(
         () => controller.courses.isNotEmpty
             ? _buildCourseList()
             : _buildEmptyState(context),
+      ),
+    );
+  }
+
+  void showPageGuide() async {
+    bool isOnboardingCompleted = await StorageService().getOnboardingComplete();
+    final OnboardingState? onboarding = Onboarding.of(context);
+    if (onboarding != null && !isOnboardingCompleted) {
+      onboarding.show();
+      await StorageService().setOnboardingComplete();
+    } else {
+      print("Onboarding is null");
+    }
+  }
+
+  Widget _buildHelpButon(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+        onPressed: () {
+          final OnboardingState? onboarding = Onboarding.of(context);
+          if (onboarding != null) {
+            onboarding.show();
+          } else {
+            print("Onboarding is null");
+          }
+        },
+        child: const Icon(Icons.help_outline, size: 40, color: Colors.white),
       ),
     );
   }
@@ -79,6 +135,11 @@ class StatusView extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       itemCount: controller.courses.length,
       itemBuilder: (BuildContext context, int index) {
+        if (index == 0)
+          return Focus(
+            focusNode: widget.focusNode,
+            child: _buildCourseItem(controller.courses[index]),
+          );
         return _buildCourseItem(controller.courses[index]);
       },
     );
