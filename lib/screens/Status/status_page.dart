@@ -36,11 +36,12 @@ class StatusViewState extends State<StatusView> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        centerTitle: false,
         backgroundColor: bgColor,
         elevation: 0,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(left: 25),
+            padding: const EdgeInsets.only(left: 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,9 +63,6 @@ class StatusViewState extends State<StatusView> {
           Row(
             children: [
               _buildRewindTimeButton(context),
-              const SizedBox(
-                width: 10,
-              ),
               _buildHelpButon(context)
             ],
           ),
@@ -114,9 +112,7 @@ class StatusViewState extends State<StatusView> {
   }
 
   Widget _buildRewindTimeButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20),
-      child: ElevatedButton(
+    return  ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: bgColor,
           shape: RoundedRectangleBorder(
@@ -125,8 +121,7 @@ class StatusViewState extends State<StatusView> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
         onPressed: () => controller.selectDate(context),
-        child: const Icon(LineIcons.calendar, size: 50, color: Colors.white),
-      ),
+        child: const Icon(LineIcons.calendar, size: 40, color: Colors.white),
     );
   }
 

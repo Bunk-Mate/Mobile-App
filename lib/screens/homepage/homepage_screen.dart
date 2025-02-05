@@ -47,10 +47,12 @@ class HomePageState extends State<HomePage> {
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text('Bunk-Mate',
+
             style: TextStyle(
                 color: textColor, fontSize: 24, fontWeight: FontWeight.bold)),
         backgroundColor: bgColor,
         elevation: 0,
+        centerTitle: true,
         actions: [_buildPopupMenu()],
       ),
       body: Padding(

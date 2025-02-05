@@ -61,23 +61,18 @@ class _NavigationState extends State<Navigation> {
           focusNode: focusNodes[0],
           titleText: "",
           bodyText: '',
-          overlayColor: Colors.black.withOpacity(0.7),
-          overlayShape: const RoundedRectangleBorder(),
           overlayBehavior: HitTestBehavior.deferToChild,
           stepBuilder: (context, renderInfo) {
             return Scaffold(
               backgroundColor: Colors.transparent,
-              body: SingleChildScrollView(
-                child: Center(
+              body: Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     padding: const EdgeInsets.all(25),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF121212),
-                      border: Border.all(color: const Color(0xFF4CAF50)),
+                      color: const Color(0x80000020)
                     ),
-                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -100,14 +95,14 @@ class _NavigationState extends State<Navigation> {
                           ),
                           buildGuideStep(
                             'Long Press to mark present again',
-                            'assets/present.png', // Make sure the path is correct.
+                            'assets/present.png',
                           ),
                           const SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(
-                              onPressed: renderInfo.close, // Close the guide
+                              onPressed: renderInfo.close,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF4CAF50),
+                                backgroundColor: const Color(0xFF4CAF50),
                               ),
                               child: const Text(
                                 "close",
@@ -122,9 +117,7 @@ class _NavigationState extends State<Navigation> {
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ),
+                  )
             );
           },
         ),

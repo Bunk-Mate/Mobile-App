@@ -29,7 +29,6 @@ class CourseSummaryController extends GetxController {
       final token = await getToken();
       
       if (token == null) {
-        Get.snackbar('Error', 'No token found.');
         return;
       }
       
@@ -59,11 +58,6 @@ class CourseSummaryController extends GetxController {
       }
     } catch (error) {
       print('Error fetching course summary: $error');
-      Get.snackbar(
-        'Error',
-        'Failed to fetch course data. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
     } finally {
       isLoading.value = false;
     }

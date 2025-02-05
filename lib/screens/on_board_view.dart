@@ -34,6 +34,7 @@ class _OnBoardViewState extends State<OnBoardView> {
             fontSize: 24,
           ),
         ),
+        centerTitle: true,
         backgroundColor: bgColor,
         elevation: 0,
       ),

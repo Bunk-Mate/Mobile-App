@@ -123,6 +123,5 @@ class TimeTableController extends GetxController {
     } catch (e) {
       message = 'Failed to parse error response';
     }
-    Get.snackbar("Error", message);
   }
 }
