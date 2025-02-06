@@ -287,8 +287,9 @@ class _TimeTablePageState extends State<TimeTablePage> {
   Widget _buildDayDropdown() {
     return DropdownButtonFormField<int>(
       decoration: _getDropdownDecoration(
-          hintText: "Day", prefixIcon: Icons.calendar_today),
+        prefixIcon: Icons.calendar_today),
       dropdownColor: cardColor,
+      hint: Text('Day' ,style: TextStyle(color: secondaryTextColor)),
       style: const TextStyle(color: textColor),
       onChanged: (day) => _day = day!,
       items: days.entries.map((day) {
@@ -305,7 +306,8 @@ class _TimeTablePageState extends State<TimeTablePage> {
       if (controller.courses.isEmpty) {
         return DropdownButtonFormField<String>(
           decoration: _getDropdownDecoration(
-              hintText: "No courses available", prefixIcon: Icons.school),
+               prefixIcon: Icons.school),
+          hint: Text("No courses available",style: TextStyle(color: secondaryTextColor)),
           dropdownColor: cardColor,
           style: const TextStyle(color: textColor),
           value: null,
@@ -316,8 +318,9 @@ class _TimeTablePageState extends State<TimeTablePage> {
 
       return DropdownButtonFormField<String>(
         decoration: _getDropdownDecoration(
-            hintText: "Course", prefixIcon: Icons.school),
+            prefixIcon: Icons.school),
         dropdownColor: cardColor,
+        hint: Text("Course" , style: TextStyle(color: secondaryTextColor),),
         style: const TextStyle(color: textColor),
         value: _useCourseDropDown ? null : "New Course",
         onChanged: (scheduleUrl) {
@@ -342,7 +345,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
   }
 
   InputDecoration _getDropdownDecoration(
-      {required String hintText, required IconData prefixIcon}) {
+      { required IconData prefixIcon}) {
     return InputDecoration(
       filled: true,
       fillColor: cardColor,
@@ -350,8 +353,6 @@ class _TimeTablePageState extends State<TimeTablePage> {
         borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide.none,
       ),
-      hintText: hintText,
-      hintStyle: const TextStyle(color: secondaryTextColor),
       prefixIcon: Icon(prefixIcon, color: accentColor),
     );
   }

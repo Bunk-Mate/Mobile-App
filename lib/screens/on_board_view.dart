@@ -51,7 +51,7 @@ class _OnBoardViewState extends State<OnBoardView> {
                       value: preset['id'],
                       child: Text(
                         preset['name'],
-                        style: const TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     );
                   }).toList(),
