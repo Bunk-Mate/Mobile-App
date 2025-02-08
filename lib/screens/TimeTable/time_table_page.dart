@@ -156,6 +156,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
+
         children: [
           Icon(getRandomSubjectIcon(), size: 28, color: accentColor),
           const SizedBox(width: 16),

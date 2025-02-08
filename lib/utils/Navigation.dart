@@ -9,6 +9,7 @@ import 'package:onboarding_overlay/onboarding_overlay.dart';
 class Navigation extends StatefulWidget {
   Navigation({super.key});
   final GlobalKey<OnboardingState> onboardingKey = GlobalKey<OnboardingState>();
+
   @override
   State<Navigation> createState() => _NavigationState();
 }
@@ -27,7 +28,7 @@ class _NavigationState extends State<Navigation> {
     super.initState();
     focusNodes = List<FocusNode>.generate(
       1,
-      (int i) => FocusNode(debugLabel: 'Onboarding Focus Node $i'),
+          (int i) => FocusNode(debugLabel: 'Onboarding Focus Node $i'),
       growable: false,
     );
   }
@@ -64,67 +65,67 @@ class _NavigationState extends State<Navigation> {
           overlayBehavior: HitTestBehavior.deferToChild,
           stepBuilder: (context, renderInfo) {
             return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Center(
+                backgroundColor: Colors.transparent,
+                body: Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     padding: const EdgeInsets.all(25),
                     decoration: BoxDecoration(
-                      color: const Color(0x80000020)
+                        color: const Color(0x80000020)
                     ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Guide to Status Page',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Guide to Status Page',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        buildGuideStep(
+                          'Single Tap to mark bunked',
+                          'assets/bunked.png',
+                        ),
+                        buildGuideStep(
+                          'Double Tap to mark cancelled',
+                          'assets/cancelled.png',
+                        ),
+                        buildGuideStep(
+                          'Long Press to mark present again',
+                          'assets/present.png',
+                        ),
+                        const SizedBox(height: 20),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: renderInfo.close,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: accentColor,
+                            ),
+                            child: const Text(
+                              "close",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          buildGuideStep(
-                            'Single Tap to mark bunked',
-                            'assets/bunked.png',
-                          ),
-                          buildGuideStep(
-                            'Double Tap to mark cancelled',
-                            'assets/cancelled.png',
-                          ),
-                          buildGuideStep(
-                            'Long Press to mark present again',
-                            'assets/present.png',
-                          ),
-                          const SizedBox(height: 20),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: renderInfo.close,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4CAF50),
-                              ),
-                              child: const Text(
-                                "close",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
+                  ),
+                )
             );
           },
         ),
       ],
       child: Scaffold(
         body: Obx(
-          () => IndexedStack(
+              () => IndexedStack(
             index: controller.currentIndex.value,
             children: children,
           ),
@@ -142,7 +143,7 @@ class _NavigationState extends State<Navigation> {
           child: SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -161,42 +162,42 @@ class _NavigationState extends State<Navigation> {
 
   Widget _buildNavItem(int index, IconData icon, String label) {
     return Obx(() => InkWell(
-          onTap: () => onTabTapped(index),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            decoration: BoxDecoration(
+      onTap: () => onTabTapped(index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: controller.currentIndex.value == index
+              ? accentColor.withOpacity(0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
               color: controller.currentIndex.value == index
-                  ? accentColor.withOpacity(0.2)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(20),
+                  ? accentColor
+                  : inactiveColor,
+              size: 28,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  color: controller.currentIndex.value == index
-                      ? accentColor
-                      : inactiveColor,
-                  size: 28,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: controller.currentIndex.value == index
-                        ? accentColor
-                        : inactiveColor,
-                    fontSize: 12,
-                    fontWeight: controller.currentIndex.value == index
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-              ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: controller.currentIndex.value == index
+                    ? accentColor
+                    : inactiveColor,
+                fontSize: 12,
+                fontWeight: controller.currentIndex.value == index
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+              ),
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 
   Widget buildGuideStep(String text, String imagePath) {

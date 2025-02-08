@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final CourseSummaryController courseSummaryController =
-      Get.put(CourseSummaryController());
+  Get.put(CourseSummaryController());
   final LoginController loginController = Get.put(LoginController());
 
   final Color bgColor = const Color(0xFF121212);
@@ -46,10 +46,14 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text('Bunk-Mate',
-
-            style: TextStyle(
-                color: textColor, fontSize: 24, fontWeight: FontWeight.bold)),
+        title: Text(
+          'Bunk-Mate',
+          style: TextStyle(
+            color: textColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: bgColor,
         elevation: 0,
         centerTitle: true,
@@ -72,17 +76,32 @@ class HomePageState extends State<HomePage> {
             }
             return RefreshIndicator(
               onRefresh: refreshData,
+              color: accentColor,
               child: ListView(
+                physics: const BouncingScrollPhysics(),
                 children: [
                   const SizedBox(height: 30),
                   _buildOverallAttendance(),
                   const SizedBox(height: 30),
-                  Text(
-                    'Your Courses',
-                    style: TextStyle(
-                        color: textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Your Courses',
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${courseSummaryController.courseSummary.length} Total',
+                        style: TextStyle(
+                          color: secondaryTextColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   _buildSubjectList(),
@@ -99,13 +118,19 @@ class HomePageState extends State<HomePage> {
     return PopupMenuButton<int>(
       itemBuilder: (context) => [
         PopupMenuItem(
-            value: 0,
-            child: Text("Update Timetable",
-                style: TextStyle(color: textColor, fontSize: 16))),
+          value: 0,
+          child: Text(
+            "Update Timetable",
+            style: TextStyle(color: textColor, fontSize: 16),
+          ),
+        ),
         PopupMenuItem(
-            value: 2,
-            child: Text("Logout",
-                style: TextStyle(color: textColor, fontSize: 16))),
+          value: 2,
+          child: Text(
+            "Logout",
+            style: TextStyle(color: textColor, fontSize: 16),
+          ),
+        ),
       ],
       offset: const Offset(0, 50),
       color: cardColor,
@@ -117,21 +142,44 @@ class HomePageState extends State<HomePage> {
 
   Widget _buildEmptyState() {
     return Center(
-      child: Text(
-        "No courses available.\nAdd a course or update your timetable.",
-        textAlign: TextAlign.center,
-        style: TextStyle(color: secondaryTextColor, fontSize: 18.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.school_outlined,
+            size: 64,
+            color: secondaryTextColor.withOpacity(0.5),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            "No courses available.\nAdd a course or update your timetable.",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: secondaryTextColor, fontSize: 18.0),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildOverallAttendance() {
     double overallAttendance = courseSummaryController.courseSummary
-            .map((subject) => subject.percentage is int
-                ? subject.percentage.toDouble()
-                : subject.percentage)
-            .reduce((a, b) => a + b) /
+        .map((subject) => subject.percentage is int
+        ? subject.percentage.toDouble()
+        : subject.percentage)
+        .reduce((a, b) => a + b) /
         courseSummaryController.courseSummary.length;
+
+    IconData getEmojiIconBasedOnAttendance(double attendance) {
+      if (attendance >= 90) {
+        return Icons.sentiment_very_satisfied_outlined;
+      } else if (attendance >= 70) {
+        return Icons.sentiment_satisfied_outlined;
+      } else if (attendance >= 50) {
+        return Icons.sentiment_neutral_outlined;
+      } else {
+        return Icons.sentiment_dissatisfied_outlined;
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -148,9 +196,19 @@ class HomePageState extends State<HomePage> {
       ),
       child: Column(
         children: [
-          Text(
-            'Overall Attendance',
-            style: TextStyle(color: secondaryTextColor, fontSize: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Overall Attendance',
+                style: TextStyle(color: secondaryTextColor, fontSize: 18),
+              ),
+              Icon(
+                getEmojiIconBasedOnAttendance(overallAttendance),
+                size: 30,
+                color: _getAttendanceColor(overallAttendance),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           Text(
@@ -161,10 +219,13 @@ class HomePageState extends State<HomePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 15),
+
         ],
       ),
     );
   }
+
 
   Widget _buildSubjectList() {
     return ListView.separated(
@@ -196,31 +257,50 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
                   subject.name,
                   style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  "${percentage.toStringAsFixed(1)}% Attendance",
-                  style: TextStyle(
-                      color: _getAttendanceColor(percentage),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
+              ),
+              _buildBunksAvailable(subject.bunksAvailable),
+            ],
           ),
-          _buildBunksAvailable(subject.bunksAvailable),
+          const SizedBox(height: 15),
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: percentage / 100,
+                    backgroundColor: _getAttendanceColor(percentage).withOpacity(0.2),
+                    valueColor: AlwaysStoppedAnimation(_getAttendanceColor(percentage)),
+                    minHeight: 8,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "${percentage.toStringAsFixed(1)}%",
+                style: TextStyle(
+                  color: _getAttendanceColor(percentage),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -233,10 +313,20 @@ class HomePageState extends State<HomePage> {
         color: accentColor.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        "$bunksAvailable bunks",
-        style: TextStyle(
-            color: accentColor, fontWeight: FontWeight.bold, fontSize: 14),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.timer, color: accentColor, size: 16),
+          const SizedBox(width: 4),
+          Text(
+            "$bunksAvailable bunks",
+            style: TextStyle(
+              color: accentColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -255,7 +345,7 @@ class HomePageState extends State<HomePage> {
       Get.deleteAll();
     } else {
       Get.snackbar("Error", "You weren't logged out. Try again.");
-      Get.to( Navigation());
+      Get.to(Navigation());
     }
   }
 

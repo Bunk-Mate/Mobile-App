@@ -31,7 +31,7 @@ class _OnBoardViewState extends State<OnBoardView> {
           style: GoogleFonts.lexend(
             color: textColor,
             fontWeight: FontWeight.bold,
-            fontSize: 24,
+            fontSize: 28,
           ),
         ),
         centerTitle: true,
@@ -43,15 +43,16 @@ class _OnBoardViewState extends State<OnBoardView> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(
-                () => DropdownButtonFormField(
+                    () => DropdownButtonFormField(
                   items: _controller.presets.map((preset) {
                     return DropdownMenuItem(
                       value: preset['id'],
                       child: Text(
                         preset['name'],
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     );
                   }).toList(),
@@ -73,12 +74,12 @@ class _OnBoardViewState extends State<OnBoardView> {
                                 _service
                                     .timeTablePresets(value as int)
                                     .then((_) {
-                                  Get.off( Navigation());
+                                  Get.off(Navigation());
                                 }).catchError((error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
-                                            Text("Could not update timetable")),
+                                        Text("Could not update timetable")),
                                   );
                                 });
                               },
@@ -96,115 +97,32 @@ class _OnBoardViewState extends State<OnBoardView> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
-              TextField(
-                style: const TextStyle(color: Colors.white),
+              const SizedBox(height: 16),
+              _buildTextField(
+                hintText: 'Timetable Name',
                 onChanged: (timeTableName) => _controller.timeTableName = timeTableName,
-                decoration: const InputDecoration(
-                  hintText: 'Timetable Name',
-                  hintStyle: TextStyle(color: Colors.white24),
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: cardColor,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green),
-                  ),
-                ),
               ),
-              const SizedBox(height: 20),
-              TextFormField(
+              const SizedBox(height: 16),
+              _buildTextField(
+                hintText: 'Minimum Attendance %',
                 onChanged: (minAttendance) {
                   try {
-                   _controller.minAttendance = int.parse(minAttendance);
+                    _controller.minAttendance = int.parse(minAttendance);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text("Please enter a valid number")),
+                      const SnackBar(content: Text("Please enter a valid number")),
                     );
                   }
                 },
                 keyboardType: TextInputType.number,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  hintText: 'Minimum Attendance %',
-                  border: OutlineInputBorder(),
-                  hintStyle: TextStyle(color: Colors.white24),
-                  filled: true,
-                  fillColor: cardColor,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green),
-                  ),
-                ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          _controller.startDate.value =
-                              DateFormat("yyyy-MM-dd").format(picked);
-                        }
-                      },
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Start Date',
-                          filled: true,
-                          fillColor: cardColor,
-                          border: OutlineInputBorder(),
-                        ),
-                        child: Obx(
-                          () => Text(
-                            _controller.startDate.value,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          _controller.endDate.value =
-                              DateFormat("yyyy-MM-dd").format(picked);
-                        }
-                      },
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'End Date',
-                          filled: true,
-                          fillColor: cardColor,
-                          border: OutlineInputBorder(),
-                        ),
-                        child: Obx(
-                          () => Text(
-                            _controller.endDate.value,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              _buildDateSelector('Start Date', _controller.startDate),
+              const SizedBox(height: 16),
+              _buildDateSelector('End Date', _controller.endDate),
+              const SizedBox(height: 16),
               Obx(
-                () => CheckboxListTile(
+                    () => CheckboxListTile(
                   title: const Text(
                     "Share Timetable",
                     style: TextStyle(color: Colors.white, fontSize: 18),
@@ -215,28 +133,103 @@ class _OnBoardViewState extends State<OnBoardView> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _controller.submit,
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: const Color(0xFF4CAF50),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "NEXT",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
+              const SizedBox(height: 24),
+              _buildNextButton(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String hintText,
+    required Function(String) onChanged,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    const Color cardColor = Color(0xFF1E1E1E);
+    return TextField(
+      style: const TextStyle(color: Colors.white),
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        fillColor: cardColor ,
+        hintText: hintText,
+        hintStyle: const TextStyle(color: Colors.white70),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.transparent),
+        ),
+        filled: true,
+
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.green.shade300),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      ),
+    );
+  }
+
+  Widget _buildDateSelector(String label, RxString dateController) {
+    const Color cardColor = Color(0xFF1E1E1E);
+    return GestureDetector(
+
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (picked != null) {
+          dateController.value = DateFormat("yyyy-MM-dd").format(picked);
+        }
+      },
+      child: InputDecorator(
+
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: cardColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.transparent),
+          ),
+        ),
+        child: Obx(
+              () => Text(
+            dateController.value.isEmpty ? 'Select a date' : dateController.value,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNextButton() {
+    return GestureDetector(
+      onTap: _controller.submit,
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [Colors.green.shade400, Colors.green.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: const Center(
+          child: Text(
+            "NEXT",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

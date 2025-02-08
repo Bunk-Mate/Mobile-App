@@ -25,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen>
   final Color textColor = Colors.white;
   final Color secondaryTextColor = Colors.white70;
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -78,32 +80,51 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.05),
-                  _buildAuthField(
-                    controller: loginController.usernameController,
-                    icon: Icons.person_outline,
-                    hintText: "Username",
-                  ),
-                  const SizedBox(height: 20),
-                  _buildAuthField(
-                    controller: loginController.passwordController,
-                    icon: Icons.lock_outline,
-                    hintText: "Password",
-                    isObscure: true,
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Get.to(const MyWidget());
-                      },
-                      child: Text(
-                        "Forgot Password?",
-                        style: GoogleFonts.lexend(
-                          color: accentColor,
-                          fontWeight: FontWeight.w600,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        _buildAuthField(
+                          controller: loginController.usernameController,
+                          icon: Icons.person_outline,
+                          hintText: "Username",
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Username is required";
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        _buildAuthField(
+                          controller: loginController.passwordController,
+                          icon: Icons.lock_outline,
+                          hintText: "Password",
+                          isObscure: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Password is required";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              Get.to(const MyWidget());
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: GoogleFonts.lexend(
+                                color: accentColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.04),
@@ -137,20 +158,12 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildParallaxBackground(BuildContext context) {
-    return Positioned.fill(
-      child: Image.network(
-        "",
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
   Widget _buildAuthField({
     required TextEditingController controller,
     required IconData icon,
     required String hintText,
     bool isObscure = false,
+    String? Function(String?)? validator,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -164,17 +177,18 @@ class _LoginScreenState extends State<LoginScreen>
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         obscureText: isObscure,
         style: GoogleFonts.lexend(color: textColor),
+        validator: validator,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: GoogleFonts.lexend(color: secondaryTextColor),
           prefixIcon: Icon(icon, color: accentColor),
           border: InputBorder.none,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );
@@ -183,9 +197,13 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () async {
-        bool success = await loginController.loginFunction();
-        if (success) {
-          Get.off( Navigation());
+        if (_formKey.currentState?.validate() ?? false) {
+          bool success = await loginController.loginFunction();
+          if (success) {
+            Get.off(Navigation());
+          } else {
+            _showErrorSnackbar("Login failed. Please try again.");
+          }
         }
       },
       style: ElevatedButton.styleFrom(
@@ -231,6 +249,17 @@ class _LoginScreenState extends State<LoginScreen>
           ),
         ),
       ],
+    );
+  }
+
+  void _showErrorSnackbar(String message) {
+    Get.snackbar(
+      "Error",
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+      icon: const Icon(Icons.error, color: Colors.white),
     );
   }
 }

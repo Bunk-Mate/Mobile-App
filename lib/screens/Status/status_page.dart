@@ -17,17 +17,15 @@ class StatusView extends StatefulWidget {
 
 class StatusViewState extends State<StatusView> {
   final StatusController controller =
-      Get.put(StatusController(apiUrl: 'https://api.bunkmate.college'));
+  Get.put(StatusController(apiUrl: 'https://api.bunkmate.college'));
 
   final Color bgColor = const Color(0xFF121212);
-
   final Color cardColor = const Color(0xFF1E1E1E);
-
   final Color accentColor = const Color(0xFF4CAF50);
-
   final Color textColor = Colors.white;
-
   final Color secondaryTextColor = Colors.white70;
+
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -36,40 +34,39 @@ class StatusViewState extends State<StatusView> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        centerTitle: false,
         backgroundColor: bgColor,
         elevation: 0,
+        centerTitle: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Obx(() {
+            final dayOfWeek = DateFormat('EEEE').format(now);
+            final selectedDay = controller.days[controller.selectedDate.value.weekday] ?? '' ;
+            return Text(
+              dayOfWeek == selectedDay ? "Today" : (selectedDay.isNotEmpty ? selectedDay : 'No Day Selected'),
+              style: TextStyle(
+                color: secondaryTextColor,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: GoogleFonts.lexend().fontFamily,
+              ),
+            );
+          }),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
               children: [
-                Obx(() => Text(
-                      controller.days[controller.selectedDate.value.weekday]
-                          .toString(),
-                      style: TextStyle(
-                        color: secondaryTextColor,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.lexend().fontFamily,
-                      ),
-                    )),
+                _buildRewindTimeButton(context),
+                _buildHelpButton(context),
               ],
             ),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              _buildRewindTimeButton(context),
-              _buildHelpButon(context)
-            ],
           ),
         ],
       ),
       body: Obx(
-        () => controller.courses.isNotEmpty
+            () => controller.courses.isNotEmpty
             ? _buildCourseList()
             : _buildEmptyState(context),
       ),
@@ -87,41 +84,38 @@ class StatusViewState extends State<StatusView> {
     }
   }
 
-  Widget _buildHelpButon(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget _buildHelpButton(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        onPressed: () {
-          final OnboardingState? onboarding = Onboarding.of(context);
-          if (onboarding != null) {
-            onboarding.show();
-          } else {
-            print("Onboarding is null");
-          }
-        },
-        child: const Icon(Icons.help_outline, size: 40, color: Colors.white),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
+      onPressed: () {
+        final OnboardingState? onboarding = Onboarding.of(context);
+        if (onboarding != null) {
+          onboarding.show();
+        } else {
+          print("Onboarding is null");
+        }
+      },
+      child: Icon(Icons.help_outline, size: 40, color: Colors.white),
     );
   }
 
   Widget _buildRewindTimeButton(BuildContext context) {
-    return  ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        onPressed: () => controller.selectDate(context),
-        child: const Icon(LineIcons.calendar, size: 40, color: Colors.white),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+      onPressed: () => controller.selectDate(context),
+      child: Icon(LineIcons.calendar, size: 40, color: Colors.white),
     );
   }
 
@@ -149,22 +143,22 @@ class StatusViewState extends State<StatusView> {
       onTap: () => _updateCourseStatus(course, "bunked"),
       onDoubleTap: () => _updateCourseStatus(course, "cancelled"),
       onLongPress: () => _updateCourseStatus(course, "present"),
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: cardColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           leading: Icon(
             controller.getRandomSubjectIcon(),
             size: 36,
@@ -173,7 +167,10 @@ class StatusViewState extends State<StatusView> {
           title: Text(
             name,
             style: TextStyle(
-                color: textColor, fontSize: 18, fontWeight: FontWeight.w500),
+              color: textColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           trailing: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -184,9 +181,10 @@ class StatusViewState extends State<StatusView> {
             child: Text(
               status,
               style: TextStyle(
-                  color: statusColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold),
+                color: statusColor,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -219,9 +217,11 @@ class StatusViewState extends State<StatusView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(LineIcons.calendar, size: 80, color: accentColor),
+          const SizedBox(height: 20),
           Text(
             "No Courses Scheduled Today!",
-            style: TextStyle(color: textColor, fontSize: 20),
+            style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -235,7 +235,7 @@ class StatusViewState extends State<StatusView> {
                 filled: true,
               ),
               hint: Text(
-                "Copy Schedule",
+                "Copy Schedule From",
                 style: TextStyle(color: secondaryTextColor, fontSize: 16),
               ),
               dropdownColor: cardColor,
