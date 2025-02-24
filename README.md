@@ -4,7 +4,7 @@ Are you tired of missing out on activities or simply wanting to take a day off f
 
 ## Installation
 
-To get started, simply download the latest release of the app from [this link](https://github.com/Bunk-Mate/Mobile-App/releases/latest/download/app-release.apk) and install it on your device!
+To get started, simply download the latest release of the app from [this link](https://play.google.com/store/apps/details?id=college.bunkmate) and install it on your device!
 
 ## How to Use Bunk Mate
 
