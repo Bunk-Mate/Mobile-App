@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  static const String baseUrl = 'https://api.bunkmate.college/';
+  static const String baseUrl = 'https://api.bunkmate.in/';
   static final _AuthEndPoints authEndPoints = _AuthEndPoints();
   static final _HomeEndPoints homeEndPoints = _HomeEndPoints();
   static final _TimeTableEndPoints timetable = _TimeTableEndPoints();
