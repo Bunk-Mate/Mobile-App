@@ -140,11 +140,30 @@ class StatusViewState extends State<StatusView> {
     Color statusColor = _getStatusColor(status);
 
     return GestureDetector(
-      onTap: () => _updateCourseStatus(course, "bunked"),
-      onDoubleTap: () => _updateCourseStatus(course, "cancelled"),
-      onLongPress: () => _updateCourseStatus(course, "present"),
+      onTap: () =>  {
+        setState(() {
+          statusColor = _getStatusColor("bunked");
+          status = "bunked";
+        }),
+        _updateCourseStatus(course, "bunked")
+      },
+      onDoubleTap: () => {
+        setState(() {
+          statusColor = _getStatusColor("cancelled");
+          status = "cancelled";
+        }),
+        _updateCourseStatus(course, "cancelled")
+      },
+      onLongPress: () => {
+        setState(() {
+          statusColor = _getStatusColor("present");
+          status = "present";
+        }),
+
+        _updateCourseStatus(course, "present")
+      },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 0),
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

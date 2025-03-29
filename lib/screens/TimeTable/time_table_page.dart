@@ -156,7 +156,6 @@ class _TimeTablePageState extends State<TimeTablePage> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
-
         children: [
           Icon(getRandomSubjectIcon(), size: 28, color: accentColor),
           const SizedBox(width: 16),
@@ -241,14 +240,17 @@ class _TimeTablePageState extends State<TimeTablePage> {
               hintText: 'Enter your Subject Name',
               prefixIcon: Icons.book,
             ),
-            const SizedBox(height: 20),
-            Row(
+            const SizedBox(width: 10),
+            const Padding(padding: EdgeInsets.all(10) , child: Stack(
+              alignment: Alignment.center,
               children: [
-                Expanded(child: _buildDayDropdown()),
-                const SizedBox(width: 10),
-                Expanded(child: _buildCourseDropdown()),
+                Text("OR" , style: TextStyle(fontSize: 20 , color: Colors.white , fontWeight: FontWeight.bold),),
+                Divider(),
               ],
-            ),
+            ),),
+            _buildCourseDropdown(),
+            const SizedBox(height: 20),
+            _buildDayDropdown(),
             const SizedBox(height: 30),
             Center(child: _buildSubmitButton()),
           ],
@@ -266,7 +268,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
       controller: controller,
       onChanged: (courseName) {
         setState(() {
-          _course = courseName.isEmpty ? "Course" : courseName;
+          _course = courseName.isEmpty ? "Add Existing Course" : courseName;
           _useCourseDropDown = courseName.isEmpty;
         });
       },
@@ -321,7 +323,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
         decoration: _getDropdownDecoration(
             prefixIcon: Icons.school),
         dropdownColor: cardColor,
-        hint: Text("Course" , style: TextStyle(color: secondaryTextColor),),
+        hint: Text("Select Existing Course" , style: TextStyle(color: secondaryTextColor),),
         style: const TextStyle(color: textColor),
         value: _useCourseDropDown ? null : "New Course",
         onChanged: (scheduleUrl) {
