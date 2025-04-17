@@ -1,0 +1,2 @@
+/Users/gauthammohanraj/Developer/Mobile-App/android/app/.cxx/RelWithDebInfo/364m2z14/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/gauthammohanraj/Developer/Mobile-App/android/app/.cxx/RelWithDebInfo/364m2z14/armeabi-v7a/CMakeFiles/rebuild_cache.dir

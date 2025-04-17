@@ -17,7 +17,7 @@ class StatusView extends StatefulWidget {
 
 class StatusViewState extends State<StatusView> {
   final StatusController controller =
-  Get.put(StatusController(apiUrl: 'https://api.bunkmate.college'));
+  Get.put(StatusController(apiUrl: 'https://api.bunkmate.in'));
 
   final Color bgColor = const Color(0xFF121212);
   final Color cardColor = const Color(0xFF1E1E1E);

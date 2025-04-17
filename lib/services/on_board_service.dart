@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'dart:io';
 
 class OnBoardService {
-    final storage = const FlutterSecureStorage();
-  final String apiUrl = "https://api.bunkmate.college";
+  final storage = const FlutterSecureStorage();
+  final String apiUrl = "https://api.bunkmate.in";
 
   Future<String> getToken() async {
     dynamic token = await storage.read(key: 'token');
