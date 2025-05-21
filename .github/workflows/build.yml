@@ -3,6 +3,7 @@ name: Flutter
 
 on:
   # Runs this action when you push on master
+  workflow_dispatch:
   push:
     branches: [ "main" ]
     tags: 
