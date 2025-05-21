@@ -73,19 +73,12 @@ class StatusController extends GetxController {
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode != 200) {
         await getStatus(date: date);
-        // Get.snackbar(
-        //   'Status Updated',a
-        //   'Status updated successfully!',
-        //   snackPosition: SnackPosition.BOTTOM,
-        // );
-      } else {
-        throw Exception('Failed to update status');
+        throw Exception();
       }
     } catch (e) {
-      print('Error: $e');
-      throw Exception('Failed to update status');
+      throw Exception('Failed to update status: $e');
     }
   }
 

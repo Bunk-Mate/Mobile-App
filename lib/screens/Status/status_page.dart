@@ -28,8 +28,13 @@ class StatusViewState extends State<StatusView> {
   DateTime now = DateTime.now();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     controller.getStatus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: bgColor,
