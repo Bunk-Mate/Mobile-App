@@ -139,33 +139,32 @@ class StatusViewState extends State<StatusView> {
     );
   }
 
+  String _getNextStatus(String currentStatus) {
+    switch (currentStatus.toLowerCase()) {
+      case 'present':
+        return 'bunked';
+      case 'bunked':
+        return 'cancelled';
+      case 'cancelled':
+        return 'present';
+      default:
+        return 'present';
+    }
+  }
+
   Widget _buildCourseItem(Map<String, dynamic> course) {
     String name = course["name"].toString();
     String status = course["status"];
     Color statusColor = _getStatusColor(status);
 
     return GestureDetector(
-      onTap: () =>  {
+      onTap: () {
+        String nextStatus = _getNextStatus(status);
         setState(() {
-          statusColor = _getStatusColor("bunked");
-          status = "bunked";
-        }),
-        _updateCourseStatus(course, "bunked")
-      },
-      onDoubleTap: () => {
-        setState(() {
-          statusColor = _getStatusColor("cancelled");
-          status = "cancelled";
-        }),
-        _updateCourseStatus(course, "cancelled")
-      },
-      onLongPress: () => {
-        setState(() {
-          statusColor = _getStatusColor("present");
-          status = "present";
-        }),
-
-        _updateCourseStatus(course, "present")
+          status = nextStatus;
+          statusColor = _getStatusColor(nextStatus);
+        });
+        _updateCourseStatus(course, nextStatus);
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 0),
@@ -217,7 +216,7 @@ class StatusViewState extends State<StatusView> {
   }
 
   Color _getStatusColor(String status) {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'bunked':
         return Colors.red;
       case 'cancelled':
