@@ -75,7 +75,7 @@ class _NavigationState extends State<Navigation> {
                         color: const Color(0x80000020)
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           'Guide to Status Page',
@@ -86,16 +86,23 @@ class _NavigationState extends State<Navigation> {
                           ),
                         ),
                         const SizedBox(height: 20),
+                        Text(
+                          'Tap to cycle between different attendance states',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
                         buildGuideStep(
-                          'Single Tap to mark bunked',
+                          '',
                           'assets/bunked.png',
                         ),
                         buildGuideStep(
-                          'Double Tap to mark cancelled',
+                          '',
                           'assets/cancelled.png',
                         ),
                         buildGuideStep(
-                          'Long Press to mark present again',
+                          '',
                           'assets/present.png',
                         ),
                         const SizedBox(height: 20),
