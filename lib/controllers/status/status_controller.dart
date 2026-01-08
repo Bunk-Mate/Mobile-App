@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,9 @@ class StatusController extends GetxController {
           HttpHeaders.contentTypeHeader: "application/json"
         },
       );
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       if (response.statusCode == 200) {
         courses.value = jsonDecode(response.body);
         statusUpdate.value = false;
@@ -57,7 +60,9 @@ class StatusController extends GetxController {
         throw Exception('Failed to retrieve status');
       }
     } catch (e) {
-      print('Error: $e');
+      if (kDebugMode) {
+        print('Error: $e');
+      }
       throw Exception('Failed to retrieve status');
     }
   }
@@ -104,7 +109,9 @@ class StatusController extends GetxController {
         throw Exception('Failed to add Holiday');
       }
     } catch (e) {
-      print('Error: $e');
+      if (kDebugMode) {
+        print('Error: $e');
+      }
     }
   }
 
@@ -122,7 +129,9 @@ class StatusController extends GetxController {
         await getStatus(date: picked);
       }
     } catch (e) {
-      print('Error: $e');
+      if (kDebugMode) {
+        print('Error: $e');
+      }
     }
   }
 

@@ -31,7 +31,7 @@ class SignupController extends GetxController {
         Get.off(const LoginScreen());
       }
       else {
-        throw jsonDecode(response.body) ?? 'Unknown Error occured' ;
+        throw jsonDecode(response.body) ?? 'Unknown Error occurred' ;
       }
     } catch (error) {
       Get.back();

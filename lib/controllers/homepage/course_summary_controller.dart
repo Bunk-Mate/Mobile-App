@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bunk_mate/models/course_summary_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:bunk_mate/utils/api_endpoints.dart';
@@ -41,23 +42,33 @@ class CourseSummaryController extends GetxController {
       
       http.Response response = await http.get(url, headers: headers);
 
-      print(response.statusCode);
+      if (kDebugMode) {
+        print(response.statusCode);
+      }
       
       if (response.statusCode == 200) {
         List<dynamic> jsonData = json.decode(response.body);
         var fetchedSummary =
             jsonData.map((data) => CourseSummary.fromJson(data)).toList();
-        print(response.body);
-        print(jsonData[0]);
+        if (kDebugMode) {
+          print(response.body);
+        }
+        if (kDebugMode) {
+          print(jsonData[0]);
+        }
 
         courseSummary.assignAll(fetchedSummary);
-        print("Task Done");
+        if (kDebugMode) {
+          print("Task Done");
+        }
       }
       else if (response.statusCode == 404) {
         Get.offAll(const OnBoardView());
       }
     } catch (error) {
-      print('Error fetching course summary: $error');
+      if (kDebugMode) {
+        print('Error fetching course summary: $error');
+      }
     } finally {
       isLoading.value = false;
     }

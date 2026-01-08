@@ -1,5 +1,6 @@
 import 'package:bunk_mate/controllers/status/status_controller.dart';
 import 'package:bunk_mate/services/storage_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +10,7 @@ import 'package:onboarding_overlay/onboarding_overlay.dart';
 
 class StatusView extends StatefulWidget {
   final FocusNode focusNode;
-  StatusView({super.key, required this.focusNode});
+  const StatusView({super.key, required this.focusNode});
 
   @override
   State<StatusView> createState() => StatusViewState();
@@ -85,7 +86,9 @@ class StatusViewState extends State<StatusView> {
       onboarding.show();
       await StorageService().setOnboardingComplete();
     } else {
-      print("Onboarding is null");
+      if (kDebugMode) {
+        print("Onboarding is null");
+      }
     }
   }
 
@@ -103,10 +106,12 @@ class StatusViewState extends State<StatusView> {
         if (onboarding != null) {
           onboarding.show();
         } else {
-          print("Onboarding is null");
+          if (kDebugMode) {
+            print("Onboarding is null");
+          }
         }
       },
-      child: Icon(Icons.help_outline, size: 40, color: Colors.white),
+      child: const Icon(Icons.help_outline, size: 40, color: Colors.white),
     );
   }
 
@@ -120,7 +125,7 @@ class StatusViewState extends State<StatusView> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
       onPressed: () => controller.selectDate(context),
-      child: Icon(LineIcons.calendar, size: 40, color: Colors.white),
+      child: const Icon(LineIcons.calendar, size: 40, color: Colors.white),
     );
   }
 
@@ -129,11 +134,12 @@ class StatusViewState extends State<StatusView> {
       padding: const EdgeInsets.all(20.0),
       itemCount: controller.courses.length,
       itemBuilder: (BuildContext context, int index) {
-        if (index == 0)
+        if (index == 0) {
           return Focus(
             focusNode: widget.focusNode,
             child: _buildCourseItem(controller.courses[index]),
           );
+        }
         return _buildCourseItem(controller.courses[index]);
       },
     );
@@ -167,7 +173,7 @@ class StatusViewState extends State<StatusView> {
         _updateCourseStatus(course, nextStatus);
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 0),
+        duration: const Duration(milliseconds: 0),
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

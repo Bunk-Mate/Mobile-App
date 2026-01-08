@@ -1,4 +1,5 @@
 import 'package:bunk_mate/models/on_board_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,7 +29,9 @@ class OnBoardService {
         "shared": timetable.isShared
       }),
     );
-    print(response.body);
+    if (kDebugMode) {
+      print(response.body);
+    }
     if (response.statusCode != 201) {
       throw Exception("Could not create timetable");
     }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:bunk_mate/controllers/timetable/time_table_controller.dart';
 
 class TimeTablePage extends StatefulWidget {
@@ -86,7 +85,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
 
         return Obx(() {
           if (controller.schedule.isEmpty) {
-            return Center(
+            return const Center(
               child: Text(
                 '📝 Set Up Your Timetable!\n\n'
                 'Start by adding a course. Once you’ve done that:\n\n'
@@ -292,7 +291,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
       decoration: _getDropdownDecoration(
         prefixIcon: Icons.calendar_today),
       dropdownColor: cardColor,
-      hint: Text('Day' ,style: TextStyle(color: secondaryTextColor)),
+      hint: const Text('Day' ,style: TextStyle(color: secondaryTextColor)),
       style: const TextStyle(color: textColor),
       onChanged: (day) => _day = day!,
       items: days.entries.map((day) {
@@ -310,11 +309,11 @@ class _TimeTablePageState extends State<TimeTablePage> {
         return DropdownButtonFormField<String>(
           decoration: _getDropdownDecoration(
                prefixIcon: Icons.school),
-          hint: Text("No courses available",style: TextStyle(color: secondaryTextColor)),
+          hint: const Text("No courses available",style: TextStyle(color: secondaryTextColor)),
           dropdownColor: cardColor,
           style: const TextStyle(color: textColor),
           value: null,
-          items: [],
+          items: const [],
           onChanged: null,
         );
       }
@@ -323,7 +322,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
         decoration: _getDropdownDecoration(
             prefixIcon: Icons.school),
         dropdownColor: cardColor,
-        hint: Text("Select Existing Course" , style: TextStyle(color: secondaryTextColor),),
+        hint: const Text("Select Existing Course" , style: TextStyle(color: secondaryTextColor),),
         style: const TextStyle(color: textColor),
         value: _useCourseDropDown ? null : "New Course",
         onChanged: (scheduleUrl) {

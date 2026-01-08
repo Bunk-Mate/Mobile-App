@@ -70,7 +70,7 @@ class LoginController extends GetxController {
         isLogged.value = true;
       } else {
         isLogged.value = false;
-        throw jsonDecode(response.body) ?? 'Unknown Error occured';
+        throw jsonDecode(response.body) ?? 'Unknown Error occurred';
       }
     } catch (error) {
       Get.back();

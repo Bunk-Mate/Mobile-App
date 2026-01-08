@@ -41,7 +41,7 @@ class OnBoardController extends GetxController {
         Get.snackbar("Success", "TimeTable has been created");
         Get.off( Navigation());
       }).catchError((error) {
-        Get.snackbar("Error", "Could not create timetableld");
+        Get.snackbar("Error", "Could not create timetableId");
       });
     } else {
       Get.snackbar("Error", "Please enter all details!");
