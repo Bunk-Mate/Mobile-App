@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:bunk_mate/models/time_table_model.dart';
 import 'package:bunk_mate/utils/api_endpoints.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -103,7 +104,9 @@ class TimeTableController extends GetxController {
           "schedules": {"day_of_week": day},
         }),
       );
-    print(response.body);
+    if (kDebugMode) {
+      print(response.body);
+    }
       if (response.statusCode == 201) {
         await getSchedule();
         Get.snackbar("Success", "Course has been added!");
@@ -116,12 +119,12 @@ class TimeTableController extends GetxController {
   }
 
   void _handleError(http.Response response) {
-    String message;
     try {
       final responseBody = jsonDecode(response.body);
-      message = responseBody['detail'] ?? 'Unknown error occurred';
+      final String message = responseBody['detail'] ?? 'Unknown error occurred (Status: ${response.statusCode})';
+      Get.snackbar("API Error", message);
     } catch (e) {
-      message = 'Failed to parse error response';
+      Get.snackbar("Error", "An error occurred with status code: ${response.statusCode}");
     }
   }
 }

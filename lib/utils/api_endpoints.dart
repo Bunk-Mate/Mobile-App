@@ -14,9 +14,6 @@ class _AuthEndPoints {
 class _HomeEndPoints {
   final String courseSummary = 'statquery' ;
 }
-class _StatusEndPoints {
-  final String status = 'datequery?date=' ;
-}
 
 class _TimeTableEndPoints {
   final String timetable = 'schedules' ; 

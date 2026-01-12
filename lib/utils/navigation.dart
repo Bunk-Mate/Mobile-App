@@ -2,6 +2,7 @@ import 'package:bunk_mate/controllers/navigation/navigation_controller.dart';
 import 'package:bunk_mate/screens/Status/status_page.dart';
 import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/screens/homepage/homepage_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
@@ -37,7 +38,9 @@ class _NavigationState extends State<Navigation> {
     if (index == 0) {
       homePageKey.currentState?.refreshData();
     } else if (index == 1) {
-      print("in if");
+      if (kDebugMode) {
+        print("in if");
+      }
       statusPageKey.currentState?.showPageGuide();
     }
     controller.updateIndex(index);
@@ -71,15 +74,15 @@ class _NavigationState extends State<Navigation> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     padding: const EdgeInsets.all(25),
-                    decoration: BoxDecoration(
-                        color: const Color(0x80000020)
+                    decoration: const BoxDecoration(
+                        color: Color(0x80000020)
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Guide to Status Page',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

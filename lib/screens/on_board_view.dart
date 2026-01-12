@@ -20,7 +20,6 @@ class _OnBoardViewState extends State<OnBoardView> {
   @override
   Widget build(BuildContext context) {
     const Color bgColor = Color(0xFF121212);
-    const Color cardColor = Color(0xFF1E1E1E);
     const Color textColor = Colors.white;
 
     return Scaffold(
