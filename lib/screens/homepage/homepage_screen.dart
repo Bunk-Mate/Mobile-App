@@ -1,4 +1,5 @@
 import 'package:bunk_mate/screens/on_board_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:bunk_mate/screens/auth/login_screen.dart';
 import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final CourseSummaryController courseSummaryController =
-  Get.put(CourseSummaryController());
+      Get.put(CourseSummaryController());
   final LoginController loginController = Get.put(LoginController());
 
   final Color bgColor = const Color(0xFF121212);
@@ -46,12 +47,14 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'Bunk-Mate',
           style: TextStyle(
             color: textColor,
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            fontFamily: GoogleFonts.lexend().fontFamily,
           ),
         ),
         backgroundColor: bgColor,
@@ -163,10 +166,10 @@ class HomePageState extends State<HomePage> {
 
   Widget _buildOverallAttendance() {
     double overallAttendance = courseSummaryController.courseSummary
-        .map((subject) => subject.percentage is int
-        ? subject.percentage.toDouble()
-        : subject.percentage)
-        .reduce((a, b) => a + b) /
+            .map((subject) => subject.percentage is int
+                ? subject.percentage.toDouble()
+                : subject.percentage)
+            .reduce((a, b) => a + b) /
         courseSummaryController.courseSummary.length;
 
     IconData getEmojiIconBasedOnAttendance(double attendance) {
@@ -220,12 +223,10 @@ class HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 15),
-
         ],
       ),
     );
   }
-
 
   Widget _buildSubjectList() {
     return ListView.separated(
@@ -284,8 +285,10 @@ class HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: percentage / 100,
-                    backgroundColor: _getAttendanceColor(percentage).withOpacity(0.2),
-                    valueColor: AlwaysStoppedAnimation(_getAttendanceColor(percentage)),
+                    backgroundColor:
+                        _getAttendanceColor(percentage).withOpacity(0.2),
+                    valueColor:
+                        AlwaysStoppedAnimation(_getAttendanceColor(percentage)),
                     minHeight: 8,
                   ),
                 ),
@@ -341,10 +344,18 @@ class HomePageState extends State<HomePage> {
     bool success = await loginController.logoutfunction();
     if (!success) {
       Get.off(const LoginScreen());
-      Get.snackbar("Logout Successful", "You were logged out successfully");
+      Get.snackbar(
+        "Logout Successful",
+        "You were logged out successfully",
+        colorText: Colors.white,
+      );
       Get.deleteAll();
     } else {
-      Get.snackbar("Error", "You weren't logged out. Try again.");
+      Get.snackbar(
+        "Error",
+        "You weren't logged out. Try again.",
+        colorText: Colors.white,
+      );
       Get.to(Navigation());
     }
   }

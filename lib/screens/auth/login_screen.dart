@@ -202,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen>
           if (success) {
             Get.off(Navigation());
           } else {
-            _showErrorSnackbar("Login failed. Please try again.");
+            _showErrorSnackbar("Login failed. Please check credentials.");
           }
         }
       },

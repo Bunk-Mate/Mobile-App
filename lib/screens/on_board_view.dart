@@ -1,4 +1,5 @@
 import 'package:bunk_mate/controllers/onBoard/on_board_controller.dart';
+import 'package:bunk_mate/screens/TimeTable/time_table_page.dart';
 import 'package:bunk_mate/services/on_board_service.dart';
 import 'package:bunk_mate/utils/navigation.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ class _OnBoardViewState extends State<OnBoardView> {
   @override
   Widget build(BuildContext context) {
     const Color bgColor = Color(0xFF121212);
-    const Color cardColor = Color(0xFF1E1E1E);
     const Color textColor = Colors.white;
 
     return Scaffold(
@@ -46,7 +46,7 @@ class _OnBoardViewState extends State<OnBoardView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(
-                    () => DropdownButtonFormField(
+                () => DropdownButtonFormField(
                   items: _controller.presets.map((preset) {
                     return DropdownMenuItem(
                       value: preset['id'],
@@ -69,19 +69,18 @@ class _OnBoardViewState extends State<OnBoardView> {
                           actions: [
                             TextButton(
                               child: const Text("Yes"),
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).pop();
-                                _service
-                                    .timeTablePresets(value as int)
-                                    .then((_) {
+                                try {
+                                  await _service.timeTablePresets(value as int);
                                   Get.off(Navigation());
-                                }).catchError((error) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content:
-                                        Text("Could not update timetable")),
+                                } catch (_) {
+                                  Get.snackbar(
+                                    "Error",
+                                    "Could not update timetable",
+                                    colorText: Colors.white,
                                   );
-                                });
+                                }
                               },
                             ),
                             TextButton(
@@ -100,17 +99,23 @@ class _OnBoardViewState extends State<OnBoardView> {
               const SizedBox(height: 16),
               _buildTextField(
                 hintText: 'Timetable Name',
-                onChanged: (timeTableName) => _controller.timeTableName = timeTableName,
+                onChanged: (timeTableName) =>
+                    _controller.timeTableName = timeTableName,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 hintText: 'Minimum Attendance %',
                 onChanged: (minAttendance) {
                   try {
-                    _controller.minAttendance = int.parse(minAttendance);
+                    _controller.threshold = int.parse(minAttendance);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please enter a valid number")),
+                      const SnackBar(
+                        content: Text(
+                          "Please enter a valid number",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     );
                   }
                 },
@@ -122,7 +127,7 @@ class _OnBoardViewState extends State<OnBoardView> {
               _buildDateSelector('End Date', _controller.endDate),
               const SizedBox(height: 16),
               Obx(
-                    () => CheckboxListTile(
+                () => CheckboxListTile(
                   title: const Text(
                     "Share Timetable",
                     style: TextStyle(color: Colors.white, fontSize: 18),
@@ -153,7 +158,7 @@ class _OnBoardViewState extends State<OnBoardView> {
       onChanged: onChanged,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        fillColor: cardColor ,
+        fillColor: cardColor,
         hintText: hintText,
         hintStyle: const TextStyle(color: Colors.white70),
         border: OutlineInputBorder(
@@ -161,12 +166,12 @@ class _OnBoardViewState extends State<OnBoardView> {
           borderSide: const BorderSide(color: Colors.transparent),
         ),
         filled: true,
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.green.shade300),
           borderRadius: BorderRadius.circular(12),
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       ),
     );
   }
@@ -174,7 +179,6 @@ class _OnBoardViewState extends State<OnBoardView> {
   Widget _buildDateSelector(String label, RxString dateController) {
     const Color cardColor = Color(0xFF1E1E1E);
     return GestureDetector(
-
       onTap: () async {
         final DateTime? picked = await showDatePicker(
           context: context,
@@ -187,7 +191,6 @@ class _OnBoardViewState extends State<OnBoardView> {
         }
       },
       child: InputDecorator(
-
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white),
@@ -199,8 +202,10 @@ class _OnBoardViewState extends State<OnBoardView> {
           ),
         ),
         child: Obx(
-              () => Text(
-            dateController.value.isEmpty ? 'Select a date' : dateController.value,
+          () => Text(
+            dateController.value.isEmpty
+                ? 'Select a date'
+                : dateController.value,
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -210,7 +215,17 @@ class _OnBoardViewState extends State<OnBoardView> {
 
   Widget _buildNextButton() {
     return GestureDetector(
-      onTap: _controller.submit,
+      onTap: () {
+        if (!_controller.canProceedToPaintGrid()) {
+          Get.snackbar(
+            "Error",
+            "Please enter all details!",
+            colorText: Colors.white,
+          );
+          return;
+        }
+        Get.to(() => TimeTablePage(onBoardController: _controller));
+      },
       child: Container(
         width: double.infinity,
         height: 50,

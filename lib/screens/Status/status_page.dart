@@ -17,7 +17,7 @@ class StatusView extends StatefulWidget {
 
 class StatusViewState extends State<StatusView> {
   final StatusController controller =
-  Get.put(StatusController(apiUrl: 'https://api.bunkmate.in'));
+      Get.put(StatusController(apiUrl: 'https://api.bunkmate.in'));
 
   final Color bgColor = const Color(0xFF121212);
   final Color cardColor = const Color(0xFF1E1E1E);
@@ -35,10 +35,10 @@ class StatusViewState extends State<StatusView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: bgColor,
         elevation: 0,
         centerTitle: false,
@@ -46,12 +46,15 @@ class StatusViewState extends State<StatusView> {
           padding: const EdgeInsets.only(left: 30),
           child: Obx(() {
             final dayOfWeek = DateFormat('EEEE').format(now);
-            final selectedDay = controller.days[controller.selectedDate.value.weekday] ?? '' ;
+            final selectedDay =
+                controller.days[controller.selectedDate.value.weekday] ?? '';
             return Text(
-              dayOfWeek == selectedDay ? "Today" : (selectedDay.isNotEmpty ? selectedDay : 'No Day Selected'),
+              dayOfWeek == selectedDay
+                  ? "Today"
+                  : (selectedDay.isNotEmpty ? selectedDay : 'No Day Selected'),
               style: TextStyle(
                 color: secondaryTextColor,
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
                 fontFamily: GoogleFonts.lexend().fontFamily,
               ),
@@ -71,7 +74,7 @@ class StatusViewState extends State<StatusView> {
         ],
       ),
       body: Obx(
-            () => controller.courses.isNotEmpty
+        () => controller.courses.isNotEmpty
             ? _buildCourseList()
             : _buildEmptyState(context),
       ),
@@ -181,7 +184,8 @@ class StatusViewState extends State<StatusView> {
           ],
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           leading: Icon(
             controller.getRandomSubjectIcon(),
             size: 36,
@@ -244,7 +248,8 @@ class StatusViewState extends State<StatusView> {
           const SizedBox(height: 20),
           Text(
             "No Courses Scheduled Today!",
-            style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: textColor, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           SizedBox(

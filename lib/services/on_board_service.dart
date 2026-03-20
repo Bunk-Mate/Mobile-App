@@ -24,11 +24,11 @@ class OnBoardService {
         "name": timetable.name,
         "start_date": timetable.startDate,
         "end_date": timetable.endDate,
-        "courses_data": [],
-        "shared": timetable.isShared
+        "threshold": timetable.threshold,
+        "courses_data": timetable.coursesData,
+        "shared": timetable.isShared,
       }),
     );
-    print(response.body);
     if (response.statusCode != 201) {
       throw Exception("Could not create timetable");
     }

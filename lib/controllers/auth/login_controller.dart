@@ -36,16 +36,7 @@ class LoginController extends GetxController {
         throw jsonDecode(response.body);
       }
     } catch (error) {
-      Get.back();
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text('Error'),
-              contentPadding: const EdgeInsets.all(20),
-              children: [Text(error.toString())],
-            );
-          });
+      isLogged.value = false;
     }
     return isLogged.value;
   }
@@ -73,16 +64,7 @@ class LoginController extends GetxController {
         throw jsonDecode(response.body) ?? 'Unknown Error occured';
       }
     } catch (error) {
-      Get.back();
-      showDialog(
-          context: Get.context!,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text('Error'),
-              contentPadding: const EdgeInsets.all(20),
-              children: [Text(error.toString())],
-            );
-          });
+      isLogged.value = false;
     }
     return isLogged.value;
   }
